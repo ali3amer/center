@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Counter;
+use App\Livewire\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,7 @@ use App\Livewire\Counter;
 */
  
 Route::get('/counter', Counter::class);
+Route::get('/user', User::class);
 Route::get('/', function () {
     return view('welcome');
 });
