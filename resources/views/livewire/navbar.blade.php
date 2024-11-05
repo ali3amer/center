@@ -1,12 +1,11 @@
 @php
     $links = [
-        ['patient' , 'المرضى', 'face-frown'],
-        ['result' , 'النتائج', 'file'],
-        ['category' , 'الاقسام', 'cubes'],
-        ['test' , 'التحاليل', 'flask'],
-        ['insurance' , 'التأمينات', 'cash-register'],
-        ['employee' , 'الموظفين', 'hospital-user'],
-        ['expense' , 'المصروفات', 'dollar'],
+        ['course' , 'الكورسات', 'face-frown'],
+        ['teacher' , 'المدربين', 'file'],
+        ['student' , 'الطلاب', 'users'],
+        ['hall' , 'القاعات', 'home'],
+        ['employee' , 'الموظفين', 'cash-register'],
+        ['expense' , 'المصروفات', 'hospital-user'],
         ['user' , 'المستخدمين', 'user'],
         ['report' , 'التقارير', 'file-lines'],
 ];
@@ -53,7 +52,7 @@
 </style>
 <div id="sideBar"
      class="w-64 bg-cyan-600 space-y-6 px-2 py-4 absolute inset-y-0 right-0 transform translate-x-full transition duration-200 ease-in-out md:relative md:-translate-x-0">
-    <a href="" class="flex  justify-center text-white space-x-5 space-x-reverse ">
+    <a href="" class="flex justify-center text-white space-x-5 space-x-reverse ">
         <span class="text-2xl font-extrabold text-white">نظام إدارة المعامل</span>
     </a>
     <nav>
