@@ -2,7 +2,7 @@
     <button class="inline-block mx-6" id="sideBarBtn">
         <i class="fa fa-bars"></i>
     </button>
-    <span class="mx-6 text-3xl">{{$header ?? "header Name"}}</span>
+    <span class="mx-6 text-3xl">{{$header ?? ""}}</span>
 
 {{--    <div class="w-2/3 mx-6 text-left text-2xl"> المستخدم :  {{auth()->user()->name ?? "" }}</div>--}}
 

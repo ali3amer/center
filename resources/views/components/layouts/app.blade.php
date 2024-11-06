@@ -17,6 +17,7 @@
 <div class="relative flex min-h-screen bg-gray-100">
     <livewire:navbar/>
     <div class="flex-1">
+        <livewire:header :header="$title"/>
         {{ $slot }}
     </div>
 </div>
