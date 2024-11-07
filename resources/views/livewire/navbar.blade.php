@@ -53,7 +53,7 @@
 <div id="sideBar"
      class="w-64 bg-cyan-600 space-y-6 px-2 py-4 absolute inset-y-0 right-0 transform translate-x-full transition duration-200 ease-in-out md:relative md:-translate-x-0">
     <a href="" class="flex justify-center text-white space-x-5 space-x-reverse ">
-        <span class="text-2xl font-extrabold text-white">نظام إدارة المعامل</span>
+        <span class="text-2xl font-extrabold text-white">نظام إدارة مركز معاً للتدريب</span>
     </a>
     <nav>
         @foreach($links as $link)
