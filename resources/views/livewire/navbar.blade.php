@@ -1,8 +1,8 @@
 @php
     $links = [
-        ['course' , 'الكورسات', 'face-frown'],
+        ['course' , 'البرامج التدريبية', 'face-frown'],
         ['teacher' , 'المدربين', 'file'],
-        ['student' , 'الطلاب', 'users'],
+        ['student' , 'الدارسين', 'graduation-cap'],
         ['hall' , 'القاعات', 'home'],
         ['employee' , 'الموظفين', 'cash-register'],
         ['expense' , 'المصروفات', 'hospital-user'],
