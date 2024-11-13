@@ -27,9 +27,9 @@
 <script src="{{asset('js/scripts.js')}}"></script>
 
 @livewireScripts
-{{--<script src="{{asset('js/sweetalert2.js')}}"></script>--}}
-{{--<x-livewire-alert::scripts />--}}
-{{--<script src="{{ asset('vendor/livewire-alert/livewire-alert.js') }}"></script>--}}
-{{--<x-livewire-alert::flash />--}}
+<script src="{{asset('js/sweetalert2.js')}}"></script>
+<x-livewire-alert::scripts/>
+<script src="{{ asset('vendor/livewire-alert/livewire-alert.js') }}"></script>
+<x-livewire-alert::flash/>
 </body>
 </html>

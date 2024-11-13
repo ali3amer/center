@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     use HasFactory;
+    public $guarded = [];
+
+    public function batchStudents()
+    {
+        return $this->hasMany(BatchStudent::class);
+    }
 }

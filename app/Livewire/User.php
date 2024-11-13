@@ -10,16 +10,12 @@ class User extends Component
 public $name;
 public $email;
 public $phone;
+public $data = [];
 
-    public function change()
-    {
-        dd($this->name);
-}
+
     public function save()
     {
-        sleep(1000000);
 
-        dd(2);
     }
     public function edit()
     {

@@ -10,8 +10,8 @@
                         wire:model.defer="formData.{{ $field['name'] }}"
                     />
                 @endforeach
-                    <div  class="mb-0 flex px-3 mt-2 items-center w-1/6">
-                    <x-button type="submit" py="2" color="bg-cyan-700" label="حفظ"/>
+                    <div  class="mb-0 flex px-3 mt-2 items-end w-1/6">
+                    <x-button type="submit" py="3" color="bg-cyan-700" label="حفظ"/>
                     </div>
             </div>
     </form>

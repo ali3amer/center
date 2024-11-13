@@ -11,7 +11,7 @@
         <tbody class="text-center">
         @foreach ($data as $item)
             <tr class="border-b"> <!-- إضافة حد فاصل لتمييز الصفوف -->
-                @foreach ($columns as $column)
+                @foreach ($columns as $index => $column)
                     <td class="px-1 py-4 text-xs whitespace-nowrap text-wrap">
                         {{ $item[$column] ?? '' }}
                     </td>
