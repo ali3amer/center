@@ -1,6 +1,6 @@
 <div>
 
-    <form wire:submit.prevent="$parent.save" class="w-full">
+    <form wire:submit.prevent="$parent.{{ $action }}" class="w-full">
             <div class="flex flex-wrap">
                 @foreach ($fields as $field)
                     <x-input

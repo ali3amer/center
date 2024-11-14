@@ -1,16 +1,6 @@
-<div>
-    <x-container>
-        <livewire:dynamic-form
-            submit-method="customSubmit"
-            :$fields
-            :submit-params="['parameter1', 42]"
-        />
-    </x-container>
-
-
-    <x-container>
-        <div class="overflow-x-auto">
-            <livewire:dynamic-table :columns="$columns" :data="$data"/>
-        </div>
-    </x-container>
+<div class="">
+    <form wire:submit.prevent="save">
+        <input type="text" wire:change="chcek" wire:model.live="arabic_name"> {{ $arabic_name }}
+        <button>aa</button>
+    </form>
 </div>

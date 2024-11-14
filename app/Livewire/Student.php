@@ -13,8 +13,7 @@ class Student extends Component
     use WithPagination;
 
     protected $listeners = [
-        'deleteInsurance',
-        'deleteInsuranceDebt',
+        'delete',
     ];
     public $id = null;
     public $arabic_name = '';
@@ -25,18 +24,10 @@ class Student extends Component
     public $email = '';
     public $address = '';
     public $image = null;
-    public $fields = [
-        ['name' => 'arabic_name', 'label' => 'الإسم بالعربي', 'width' => '1/3'],
-        ['name' => 'english_name', 'label' => 'الإسم بالإنجليزي', 'width' => '1/3'],
-        ['name' => 'email', 'label' => 'الإيميل', 'width' => '1/3'],
-        ['name' => 'national_id', 'label' => 'الرقم الوطني', 'width' => '1/6'],
-        ['name' => 'phone', 'label' => 'الهاتف', 'width' => '1/6'],
-        ['name' => 'address', 'label' => 'العنوان', 'width' => '1/3'],
-    ];
-    public $columns = ['الاسم', 'الهاتف', 'العنوان'];
 
     public function save()
     {
+        dd($this->arabic_name);
         if ($this->id == null) {
             \App\Models\Student::create([
                 'arabic_name' => $this->arabic_name,
@@ -58,7 +49,7 @@ class Student extends Component
                 'gender' => $this->gender,
             ]);
         }
-        $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
+//        $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
 
     }
 
@@ -74,16 +65,19 @@ class Student extends Component
         $this->address = $student->address;
     }
 
+    public function chcek()
+    {
+        dd($this->arabic_name);
+    }
+
     public function delete($id)
     {
         \App\Models\Student::where('id', '=', $id)->delete();
     }
 
-    #[Title('الطلاب')]
+    #[Title('الدارسين')]
     public function render()
     {
-        return view('livewire.student', [
-            'data' => \App\Models\Student::all(),
-        ]);
+        return view('livewire.student');
     }
 }
