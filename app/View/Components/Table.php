@@ -20,7 +20,7 @@ class Table extends Component
      *
      * @return void
      */
-    public function __construct($headers = [], $rows = [], $cells = [])
+    public function __construct($headers = [], $rows, $cells = [])
     {
         $this->headers = $headers;
         $this->rows = $rows;

@@ -2,23 +2,24 @@
 
 namespace App\Livewire;
 
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
-class Student extends Component
+class Trainer extends Component
 {
     use LivewireAlert;
-    protected $listeners = [
-        'delete',
-    ];
+    use WithPagination, WithoutUrlPagination;
 
     public $headers = ['الإسم بالعربي', 'الجنس', 'الهاتف'];
     public $cells = ['arabic_name' => 'arabic_name', 'gender' => 'gender', 'phone' => 'phone'];
-
-    public $id = null;
+    protected $listeners = [
+        'delete',
+    ];
+    public $id = 0;
     #[Rule('required', message: 'هذا الحقل مطلوب')]
     public $arabic_name = '';
     public $english_name = '';
@@ -27,7 +28,7 @@ class Student extends Component
     public $phone = '';
     public $email = '';
     public $address = '';
-    public $image = null;
+    public $image = '';
     public $genders = ['male' => 'ذكر', 'female' => 'انثى'];
     public $search = '';
 
@@ -40,7 +41,7 @@ class Student extends Component
     {
         if ($this->id == 0) {
             $this->validate();
-            \App\Models\Student::create([
+            \App\Models\Trainer::create([
                 'arabic_name' => $this->arabic_name,
                 'english_name' => $this->english_name,
                 'national_id' => $this->national_id,
@@ -50,7 +51,7 @@ class Student extends Component
                 'address' => $this->address,
             ]);
         } else {
-            \App\Models\Student::where('id', $this->id)->update([
+            \App\Models\Trainer::where('id', $this->id)->update([
                 'arabic_name' => $this->arabic_name,
                 'english_name' => $this->english_name,
                 'national_id' => $this->national_id,
@@ -65,17 +66,17 @@ class Student extends Component
         $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
     }
 
-    public function edit($Student)
+    public function edit($trainer)
     {
-        $this->id = $Student['id'];
-        $this->arabic_name = $Student['arabic_name'];
-        $this->english_name = $Student['english_name'];
-        $this->national_id = $Student['national_id'];
-        $this->gender = $Student['gender'];
-        $this->phone = $Student['phone'];
-        $this->email = $Student['email'];
-        $this->address = $Student['address'];
-        $this->image = $Student['image'];
+        $this->id = $trainer['id'];
+        $this->arabic_name = $trainer['arabic_name'];
+        $this->english_name = $trainer['english_name'];
+        $this->national_id = $trainer['national_id'];
+        $this->gender = $trainer['gender'];
+        $this->phone = $trainer['phone'];
+        $this->email = $trainer['email'];
+        $this->address = $trainer['address'];
+        $this->image = $trainer['image'];
     }
 
     public function deleteMessage($id)
@@ -95,7 +96,7 @@ class Student extends Component
 
     public function delete($data)
     {
-        \App\Models\Student::where('id', $data['inputAttributes']['id'])->delete();
+        \App\Models\Trainer::where('id', $data['inputAttributes']['id'])->delete();
         $this->resetData();
         $this->alert('success', 'تم الحذف بنجاح', ['timerProgressBar' => true]);
     }
@@ -104,14 +105,11 @@ class Student extends Component
     {
         $this->reset('arabic_name', 'english_name', 'national_id', 'gender', 'phone', 'email', 'address', 'image', 'id', 'search');
     }
-
-    use WithPagination;
-
-    #[Title('الدارسين')]
+    #[Title('المدربين')]
     public function render()
     {
-        return view('livewire.student', [
-            'students' => \App\Models\Student::where('arabic_name', 'like', '%'.$this->search.'%')->paginate(10)
+        return view('livewire.trainer', [
+            'trainers' => \App\Models\Trainer::where('arabic_name', 'like', '%'.$this->search.'%')->paginate(10),
         ]);
     }
 }

@@ -1,12 +1,12 @@
 @php
     $links = [
-        ['course' , 'البرامج التدريبية', 'face-frown'],
-        ['teacher' , 'المدربين', 'file'],
+        ['course' , 'البرامج التدريبية', 'book-open-reader'],
+        ['trainer' , 'المدربين', 'person-chalkboard'],
         ['student' , 'الدارسين', 'graduation-cap'],
         ['hall' , 'القاعات', 'home'],
-        ['employee' , 'الموظفين', 'cash-register'],
-        ['expense' , 'المصروفات', 'hospital-user'],
-        ['user' , 'المستخدمين', 'user'],
+        ['employee' , 'الموظفين', 'user-tie'],
+        ['expense' , 'المصروفات', 'money-bill-wave'],
+        ['user' , 'المستخدمين', 'users'],
         ['report' , 'التقارير', 'file-lines'],
 ];
 @endphp

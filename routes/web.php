@@ -6,7 +6,7 @@ use App\Livewire\Expense;
 use App\Livewire\Hall;
 use App\Livewire\Report;
 use App\Livewire\Student;
-use App\Livewire\Teacher;
+use App\Livewire\Trainer;
 use App\Livewire\User;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +26,7 @@ Route::get('/employee', Employee::class);
 Route::get('/expense', Expense::class);
 Route::get('/hall', Hall::class);
 Route::get('/student', Student::class);
-Route::get('/teacher', Teacher::class);
+Route::get('/trainer', Trainer::class);
 Route::get('/report', Report::class);
 Route::get('/user', User::class);
 Route::get('/', function () {
