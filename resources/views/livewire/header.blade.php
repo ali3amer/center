@@ -1,8 +1,8 @@
-<div class="bg-white shadow py-4 font-extrabold flex text-cyan-800 px-3">
+<div class="bg-white items-center shadow py-4 font-extrabold flex text-cyan-800 px-3">
     <button class="inline-block mx-6" id="sideBarBtn">
         <i class="fa fa-bars"></i>
     </button>
-    <span class="mx-6 text-3xl">{{$header ?? ""}}</span>
+    <span class="mx-6 w-1/3 text-2xl">{{$header ?? ""}}</span>
 
     <div class="w-2/3 mx-6 text-left text-2xl"> المستخدم :  {{auth()->user()->name ?? "" }}</div>
 

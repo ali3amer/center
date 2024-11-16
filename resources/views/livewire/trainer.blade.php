@@ -7,7 +7,7 @@
             <x-input name="phone" width="1/3" label="الهاتف"  />
             <x-input name="email" width="1/3" label="البريد الالكتروني"  />
 
-            <x-button type="submit" label="حفظ" />
+            <x-button type="submit" width="1/3" label="حفظ" />
         </form>
     </x-container>
 

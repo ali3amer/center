@@ -6,11 +6,14 @@ use Livewire\Attributes\Rule;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
 class Student extends Component
 {
     use LivewireAlert;
+    use WithPagination, WithoutUrlPagination;
+
     protected $listeners = [
         'delete',
     ];
@@ -30,6 +33,7 @@ class Student extends Component
     public $image = null;
     public $genders = ['male' => 'ذكر', 'female' => 'انثى'];
     public $search = '';
+    public $batchMode = false;
 
     public function mount()
     {
@@ -105,7 +109,13 @@ class Student extends Component
         $this->reset('arabic_name', 'english_name', 'national_id', 'gender', 'phone', 'email', 'address', 'image', 'id', 'search');
     }
 
-    use WithPagination;
+    public function choose($student)
+    {
+        $this->batchMode = true;
+        $this->student_id = $student['id'];
+        $this->edit($student);
+    }
+
 
     #[Title('الدارسين')]
     public function render()

@@ -9,4 +9,19 @@ class Batch extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    public function trainer()
+    {
+        return $this->belongsTo(Trainer::class);
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->trainerName = $this->trainer->arabic_name;
+    }
 }

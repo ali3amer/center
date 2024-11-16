@@ -20,6 +20,7 @@ class Course extends Component
         'delete',
     ];
     public $id = 0;
+    public $course_id = null;
     #[Rule('required', message: 'هذا الحقل مطلوب')]
     public $arabic_name = '';
     public $english_name = '';
@@ -31,6 +32,10 @@ class Course extends Component
 
     public $types = ['course' => 'كورس', 'session' => 'دورة', 'workshop' => 'ورشه'];
     public $durations = ['hour' => 'ساعه', 'day' => 'يوم'];
+    /**
+     * @var true
+     */
+    public bool $batchMode = false;
 
     public function mount()
     {
@@ -98,10 +103,16 @@ class Course extends Component
 
     public function resetData()
     {
-        $this->reset('arabic_name', 'english_name', 'type', 'price', 'duration', 'duration_value', 'id', 'search');
+        $this->reset('arabic_name', 'english_name', 'type', 'price', 'duration', 'duration_value', 'id', 'search', 'course_id');
     }
 
-    #[Title('الكورسات')]
+    public function choose($course)
+    {
+        $this->course_id = $course['id'];
+        $this->batchMode = true;
+        $this->edit($course);
+    }
+    #[Title('البرامج التدريبية')]
     public function render()
     {
         return view('livewire.course', [

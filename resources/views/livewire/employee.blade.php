@@ -6,7 +6,7 @@
             <x-input name="email" width="1/3" label="البريد الالكتروني" />
             <x-input name="position" width="1/3" label="الوظيفة" />
             <x-input name="salary" width="1/3" label="المرتب" />
-            <x-button type="submit"  label="حفظ" />
+            <x-button type="submit"  width="1/3" label="حفظ" />
         </form>
     </x-container>
 

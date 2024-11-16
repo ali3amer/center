@@ -1,5 +1,8 @@
+@props(['choose' => false, 'search' => true])
 <div>
-    <x-input name="search" label="" placeholder="بحث ....." width="1/3" wire:model.live="search" />
+    @if($search)
+        <x-input name="search" label="" placeholder="بحث ....." width="1/3" wire:model.live="search"/>
+    @endif
     <table class="table-auto w-full relative mt-2 max-h-96">
         <thead class="bg-cyan-700 text-white">
         <tr>
@@ -16,7 +19,7 @@
                     <td class="px-1 py-1 text-xs whitespace-nowrap text-wrap">
                         @if(!is_array($cell))
                             @if(!is_numeric($cell))
-                            {{ $row[$cell] }}
+                                {{ $row[$cell] }}
                             @else
                                 @dd($row[$cell])
                             @endif
@@ -25,10 +28,16 @@
                         @endif
                     </td>
                 @endforeach
-                    <td class="px-6 py-1 whitespace-nowrap">
-                        <button class="bg-cyan-300 rounded text-white px-2 py-1" wire:click="edit({{$row}})"><i class="fa fa-pen fa-xs"></i></button>
-                        <button class="bg-red-600 rounded text-white px-2 py-1" wire:click="deleteMessage({{$row['id']}})"><i class="fa fa-close fa-xs"></i></button>
-                    </td>
+                <td class="px-6 py-1 whitespace-nowrap">
+                    <button class="bg-cyan-300 rounded text-white px-2 py-1" wire:click="edit({{$row}})"><i
+                            class="fa fa-pen fa-xs"></i></button>
+                    <button class="bg-red-600 rounded text-white px-2 py-1" wire:click="deleteMessage({{$row['id']}})">
+                        <i class="fa fa-close fa-xs"></i></button>
+                    @if($choose)
+                        <button class="bg-yellow-400 rounded text-white px-2 py-1" wire:click="choose({{$row}})"><i
+                                class="fa fa-eye fa-xs"></i></button>
+                    @endif
+                </td>
             </tr>
         @endforeach
         </tbody>

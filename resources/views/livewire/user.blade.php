@@ -1,11 +1,11 @@
 <div>
     <x-container>
         <form wire:submit="save" class="flex flex-wrap">
-            <x-input name="name" width="1/3" label="الإسم"/>
-            <x-input name="username" width="1/3" label="الإسم المستخدم"/>
-            <x-input name="password" type="password" width="1/3" label="كلمة السر"/>
+            <x-input name="name" width="1/4" label="الإسم"/>
+            <x-input name="username" width="1/4" label="الإسم المستخدم"/>
+            <x-input name="password" type="password" width="1/4" label="كلمة السر"/>
 
-            <x-button type="submit" label="حفظ"/>
+            <x-button type="submit" width="1/4" label="حفظ"/>
         </form>
     </x-container>
 
