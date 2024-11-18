@@ -1,16 +1,16 @@
 <div>
     <x-container>
-        <form wire:submit="save" class="flex flex-wrap">
-            <x-input name="arabic_name" :disabled="$batchMode" width="1/3" label="الإسم بالعربي"/>
-            <x-input name="english_name" :disabled="$batchMode" width="1/3" label="الإسم بالانجليزي"/>
-            <x-select name="gender" :disabled="$batchMode" width="1/3" :options="$genders" label="الجنس"/>
-            <x-input name="phone" :disabled="$batchMode" width="1/3" label="الهاتف"/>
-            <x-input name="email" :disabled="$batchMode" width="1/3" label="البريد الالكتروني"/>
+        <form wire:submit="save" class="grid gap-x-1 grid-cols-3">
+            <x-input name="arabic_name" :disabled="$batchMode" label="الإسم بالعربي"/>
+            <x-input name="english_name" :disabled="$batchMode" label="الإسم بالانجليزي"/>
+            <x-select name="gender" :disabled="$batchMode" :options="$genders" label="الجنس"/>
+            <x-input name="phone" :disabled="$batchMode" label="الهاتف"/>
+            <x-input name="email" :disabled="$batchMode" label="البريد الالكتروني"/>
 
             @if(!$batchMode)
-                <x-button type="submit" width="1/3" label="حفظ"/>
+                <x-button type="submit" label="حفظ"/>
             @else
-                <x-button type="button" color="bg-red-600" wire:click="$toggle('batchMode')" width="1/4" label=""
+                <x-button type="button" color="bg-red-600" wire:click="resetData" width="1/4" label=""
                           icon="fa-close"/>
             @endif
         </form>

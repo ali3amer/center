@@ -19,9 +19,9 @@
                     <td class="px-1 py-1 text-xs whitespace-nowrap text-wrap">
                         @if(!is_array($cell))
                             @if(!is_numeric($cell))
-                                {{ $row[$cell] }}
+                                {{ $row->$cell }}
                             @else
-                                @dd($row[$cell])
+                                @dd($row->$cell)
                             @endif
                         @else
                             {{$cell[$row[$key]]}}

@@ -19,16 +19,18 @@ class Hall extends Component
     protected $listeners = [
         'delete',
     ];
-    public $id = 0;
+    public $id = null;
     #[Rule('required', message: 'هذا الحقل مطلوب')]
     public $name = '';
     public $price = 0;
     public $chairs = 0;
     public $search = '';
+    public bool $rentalMode = false;
+    public $hall_id = null;
 
     public function save()
     {
-        if ($this->id == 0) {
+        if ($this->id == null) {
             $this->validate();
             \App\Models\Hall::create([
                 'name' => $this->name,
@@ -78,7 +80,15 @@ class Hall extends Component
 
     public function resetData()
     {
-        $this->reset('name', 'price', 'chairs', 'id', 'search');
+        $this->reset('name', 'price', 'chairs', 'id', 'search', 'rentalMode');
+    }
+
+    public function choose($hall)
+    {
+        $this->hall_id = $hall['id'];
+        $this->edit($hall);
+        $this->rentalMode = true;
+
     }
     #[Title('القاعات')]
     public function render()

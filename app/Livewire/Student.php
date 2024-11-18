@@ -34,6 +34,7 @@ class Student extends Component
     public $genders = ['male' => 'ذكر', 'female' => 'انثى'];
     public $search = '';
     public $batchMode = false;
+    public $student_id = null;
 
     public function mount()
     {
@@ -106,7 +107,7 @@ class Student extends Component
 
     public function resetData()
     {
-        $this->reset('arabic_name', 'english_name', 'national_id', 'gender', 'phone', 'email', 'address', 'image', 'id', 'search');
+        $this->reset('arabic_name', 'english_name', 'national_id', 'gender', 'phone', 'email', 'address', 'image', 'id', 'search', 'student_id', 'batchMode');
     }
 
     public function choose($student)

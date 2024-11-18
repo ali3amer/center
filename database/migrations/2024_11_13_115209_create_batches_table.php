@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('trainer_id')->references('id')->on('trainers')->onDelete('cascade')->onUpdate('cascade');
             $table->date('start_date');
             $table->date('end_date');
+            $table->boolean("completed")->default(false);
             $table->timestamps();
         });
     }

@@ -13,8 +13,8 @@ class Batch extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['المدرب', 'تاريخ البداية', 'تاريخ النهاية'];
-    public $cells = ['name', 'start_date', 'end_date'];
+    public $headers = ['المدرب', 'تاريخ البداية', 'تاريخ النهاية', 'مكتمل'];
+    public $cells = ['name' => 'name', 'start_date' => 'start_date', 'end_date' => 'end_date', 'completed' => [true => 'نعم', false => 'لا']];
 
     protected $listeners = [
         'delete',
@@ -25,6 +25,7 @@ class Batch extends Component
     public $trainer_id;
     public $start_date;
     public $end_date;
+    public bool $completed = false;
     public array $trainers = [];
 
     public function mount()
@@ -41,6 +42,7 @@ class Batch extends Component
                 'trainer_id' => $this->trainer_id,
                 'start_date' => $this->start_date,
                 'end_date' => $this->end_date,
+                'completed' => $this->completed,
             ]);
         } else {
             \App\Models\Batch::where('id', $this->id)->update([
@@ -48,6 +50,7 @@ class Batch extends Component
                 'trainer_id' => $this->trainer_id,
                 'start_date' => $this->start_date,
                 'end_date' => $this->end_date,
+                'completed' => $this->completed,
             ]);
         }
         $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
@@ -61,6 +64,7 @@ class Batch extends Component
         $this->trainer_id = $batch['trainer_id'];
         $this->start_date = $batch['start_date'];
         $this->end_date = $batch['end_date'];
+        $this->completed = $batch['completed'];
     }
 
     public function deleteMessage($id)
@@ -87,7 +91,7 @@ class Batch extends Component
 
     public function resetData()
     {
-        $this->reset('trainer_id', 'start_date', 'end_date');
+        $this->reset('trainer_id', 'start_date', 'end_date', 'completed', 'id');
     }
 
     public function render()

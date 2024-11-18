@@ -13,12 +13,16 @@ return new class extends Migration
     {
         Schema::create('hall_rentals', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('hall_id');
+            $table->foreign('hall_id')->references('id')->on('halls')->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');
             $table->enum("type", ['organization', 'government_institution', 'prison'])->default('organization');
-            $table->enum('days',['day', 'hour'])->default(1);
+            $table->enum('duration_type',['day', 'hour'])->default('day');
+            $table->float('duration', 8, 2)->default(0);
             $table->decimal('price', 8, 2)->default(0);
             $table->date('start_date');
             $table->date('end_date');
+            $table->boolean('completed')->default(false);
             $table->timestamps();
         });
     }

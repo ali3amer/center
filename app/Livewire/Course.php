@@ -32,9 +32,6 @@ class Course extends Component
 
     public $types = ['course' => 'كورس', 'session' => 'دورة', 'workshop' => 'ورشه'];
     public $durations = ['hour' => 'ساعه', 'day' => 'يوم'];
-    /**
-     * @var true
-     */
     public bool $batchMode = false;
 
     public function mount()
@@ -44,6 +41,7 @@ class Course extends Component
     }
     public function save()
     {
+        $this->validate();
         if ($this->id == 0) {
             \App\Models\Course::create([
                 'arabic_name' => $this->arabic_name,
@@ -103,7 +101,7 @@ class Course extends Component
 
     public function resetData()
     {
-        $this->reset('arabic_name', 'english_name', 'type', 'price', 'duration', 'duration_value', 'id', 'search', 'course_id');
+        $this->reset('arabic_name', 'english_name', 'type', 'price', 'duration', 'duration_value', 'id', 'search', 'course_id', 'batchMode');
     }
 
     public function choose($course)
