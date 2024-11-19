@@ -19,7 +19,8 @@ class Employee extends Component
     ];
     public $headers = ['الإسم', 'البريد', 'الهاتف', 'العنوان'];
     public $cells = ['name', 'phone', 'email', 'salary'];
-    public $id = 0;
+    public $id = null;
+    public $employee_id = null;
     #[Rule('required', message: 'هذا الحقل مطلوب')]
     public $name = '';
     public $email = '';
@@ -27,6 +28,7 @@ class Employee extends Component
     public $position = '';
     public $salary = 0;
     public $search = '';
+    public bool $employeeExpenseMode = false;
 
     public function save()
     {
@@ -88,6 +90,13 @@ class Employee extends Component
     public function resetData()
     {
         $this->reset('name', 'email', 'phone', 'position', 'salary', 'id', 'search');
+    }
+
+    public function choose($employee)
+    {
+        $this->employee_id = $employee['id'];
+        $this->edit($employee);
+        $this->employeeExpenseMode = true;
     }
 
     #[Title('الموظفين')]

@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('student_payments', function (Blueprint $table) {
+        Schema::create('employee_expenses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('batch_student_id');
-            $table->foreign('batch_student_id')->references('id')->on('batch_students')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('employee_id');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade')->onUpdate('cascade');
             $table->decimal('amount', 8, 2)->default(0);
             $table->date('date');
+            $table->enum('type', ['salary', 'bonus', 'debt', 'paid', 'discount'])->default('salary');
             $table->enum('payment_method', ['cash', 'bank'])->default('cash');
             $table->unsignedBigInteger('bank_id')->nullable();
             $table->foreign('bank_id')->references('id')->on('banks')->onDelete('cascade')->onUpdate('cascade');
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('student_payments');
+        Schema::dropIfExists('employee_expenses');
     }
 };

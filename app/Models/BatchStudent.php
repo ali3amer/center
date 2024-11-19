@@ -19,4 +19,9 @@ class BatchStudent extends Model
     {
         return $this->belongsTo(Batch::class);
     }
+
+    public function batchStudentPayments()
+    {
+        return $this->hasMany(BatchStudentPayment::class);
+    }
 }
