@@ -41,7 +41,6 @@ class EmployeeExpense extends Component
 
     public function save()
     {
-
         if ($this->id == 0) {
             \App\Models\EmployeeExpense::create([
                 'amount' => $this->amount,

@@ -17,7 +17,7 @@
             <x-table :headers="$headers" :rows="$batchStudents" :cells="$cells" :choose="true"/>
         </x-container>
     @else
-        <livewire:employee-expense :$employee_id />
+        <livewire:batch-student-payment :$batch_student_id />
     @endif
 
 
