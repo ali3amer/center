@@ -24,4 +24,5 @@ class BatchStudent extends Model
     {
         return $this->hasMany(BatchStudentPayment::class);
     }
+
 }

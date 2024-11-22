@@ -20,8 +20,19 @@ class Batch extends Model
         return $this->belongsTo(Trainer::class);
     }
 
+    public function batchStudents()
+    {
+        return $this->hasMany(BatchStudent::class);
+    }
+
     public function getNameAttribute()
     {
         return $this->trainerName = $this->trainer->arabic_name;
     }
+
+    public function getStudentCountAttribute()
+    {
+        return $this->batchStudents()->count();
+    }
+
 }

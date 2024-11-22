@@ -1,4 +1,4 @@
-@props(['choose' => false, 'search' => true])
+@props(['choose' => false, 'search' => true, 'buttons' => true])
 <div>
     @if($search)
         <x-input name="search" label="" placeholder="بحث ....." width="1/3" wire:model.live="search"/>
@@ -7,9 +7,11 @@
         <thead class="bg-cyan-700 text-white">
         <tr>
             @foreach ($headers as $header)
-                <th class="py-2 {{$loop->first ? 'rounded-r-2xl' : ''}} px-4">{{$header}}</th>
+                <th class="py-2 {{$loop->first ? 'rounded-r-2xl' : ''}} {{ $loop->last && !$buttons ? 'rounded-l-2xl' : '' }} px-4">{{$header}}</th>
             @endforeach
-            <th class="py-2 px-4 rounded-l-2xl">الإجراءات</th>
+            @if($buttons)
+                    <th class="py-2 px-4 rounded-l-2xl">الإجراءات</th>
+            @endif
         </tr>
         </thead>
         <tbody class="text-center">
@@ -28,16 +30,18 @@
                         @endif
                     </td>
                 @endforeach
-                <td class="px-6 py-1 whitespace-nowrap">
-                    <button class="bg-cyan-300 rounded text-white px-2 py-1" wire:click="edit({{$row}})"><i
-                            class="fa fa-pen fa-xs"></i></button>
-                    <button class="bg-red-600 rounded text-white px-2 py-1" wire:click="deleteMessage({{$row['id']}})">
-                        <i class="fa fa-close fa-xs"></i></button>
-                    @if($choose)
-                        <button class="bg-yellow-400 rounded text-white px-2 py-1" wire:click="choose({{$row}})"><i
-                                class="fa fa-eye fa-xs"></i></button>
-                    @endif
-                </td>
+                @if($buttons)
+                        <td class="px-6 py-1 whitespace-nowrap">
+                            <button class="bg-cyan-300 rounded text-white px-2 py-1" wire:click="edit({{$row}})"><i
+                                    class="fa fa-pen fa-xs"></i></button>
+                            <button class="bg-red-600 rounded text-white px-2 py-1" wire:click="deleteMessage({{$row['id']}})">
+                                <i class="fa fa-close fa-xs"></i></button>
+                            @if($choose)
+                                <button class="bg-yellow-400 rounded text-white px-2 py-1" wire:click="choose({{$row}})"><i
+                                        class="fa fa-eye fa-xs"></i></button>
+                            @endif
+                        </td>
+                @endif
             </tr>
         @endforeach
         </tbody>

@@ -60,14 +60,14 @@ class BatchStudentPayment extends Component
         $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
     }
 
-    public function edit($hallRentalPayment)
+    public function edit($batchStudentPayment)
     {
-        $this->id = $hallRentalPayment['id'];
-        $this->amount = $hallRentalPayment['amount'];
-        $this->date = $hallRentalPayment['date'];
-        $this->payment_method = $hallRentalPayment['payment_method'];
-        $this->bank_id = $hallRentalPayment['bank_id'];
-        $this->transaction_id = $hallRentalPayment['transaction_id'];
+        $this->id = $batchStudentPayment['id'];
+        $this->amount = $batchStudentPayment['amount'];
+        $this->date = $batchStudentPayment['date'];
+        $this->payment_method = $batchStudentPayment['payment_method'];
+        $this->bank_id = $batchStudentPayment['bank_id'];
+        $this->transaction_id = $batchStudentPayment['transaction_id'];
     }
 
     public function deleteMessage($id)

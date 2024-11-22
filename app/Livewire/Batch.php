@@ -13,8 +13,8 @@ class Batch extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['المدرب', 'تاريخ البداية', 'تاريخ النهاية', 'مكتمل'];
-    public $cells = ['name' => 'name', 'start_date' => 'start_date', 'end_date' => 'end_date', 'completed' => [true => 'نعم', false => 'لا']];
+    public $headers = ['المدرب', 'تاريخ البداية', 'تاريخ النهاية', 'مكتمل', 'عدد الدارسين'];
+    public $cells = ['name' => 'name', 'start_date' => 'start_date', 'end_date' => 'end_date', 'completed' => [true => 'نعم', false => 'لا'], 'studentCount'];
 
     protected $listeners = [
         'delete',
@@ -35,6 +35,7 @@ class Batch extends Component
 
     public function save()
     {
+        dd(\App\Models\Batch::first()->student);
         $this->validate();
         if ($this->id == null) {
             \App\Models\Batch::create([
