@@ -10,6 +10,6 @@
         </form>
     </x-container>
     <x-container>
-        <x-table :headers="$headers" :rows="$transfers" :search="false" :cells="$cells"/>
+        <x-table :headers="$headers" :rows="$transfers" :numbers="['amount']" :search="false" :cells="$cells"/>
     </x-container>
 </div>

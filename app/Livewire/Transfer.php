@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Rule;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
@@ -100,7 +101,7 @@ class Transfer extends Component
     {
         $this->reset('id', 'transfer_type', 'amount', 'transaction_id', 'date');
     }
-
+    #[Title('التحويلات')]
     public function render()
     {
         if ($this->date == '') {

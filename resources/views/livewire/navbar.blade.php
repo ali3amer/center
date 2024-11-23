@@ -9,6 +9,8 @@
         ['user' , 'المستخدمين', 'users'],
         ['report' , 'التقارير', 'file-lines'],
         ['settings' , 'الإعدادات', 'cogs'],
+        ['bank' , 'البنوك', 'bank'],
+        ['transfer' , 'التحويلات', 'money-bill-transfer'],
 ];
 @endphp
 <style>

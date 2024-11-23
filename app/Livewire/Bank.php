@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Rule;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
@@ -85,6 +86,7 @@ class Bank extends Component
     {
         $this->reset( 'id', 'bank_name', 'name', 'initial_balance', 'date');
     }
+    #[Title('البنوك')]
     public function render()
     {
         if ($this->date == '') {
