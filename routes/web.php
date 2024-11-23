@@ -5,6 +5,7 @@ use App\Livewire\Employee;
 use App\Livewire\Expense;
 use App\Livewire\Hall;
 use App\Livewire\Report;
+use App\Livewire\Settings;
 use App\Livewire\Student;
 use App\Livewire\Trainer;
 use App\Livewire\User;
@@ -28,6 +29,7 @@ Route::get('/hall', Hall::class);
 Route::get('/student', Student::class);
 Route::get('/trainer', Trainer::class);
 Route::get('/report', Report::class);
+Route::get('/settings', Settings::class);
 Route::get('/user', User::class);
 Route::get('/', function () {
     return view('welcome');

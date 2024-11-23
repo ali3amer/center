@@ -8,6 +8,7 @@
         ['expense' , 'المصروفات', 'money-bill-wave'],
         ['user' , 'المستخدمين', 'users'],
         ['report' , 'التقارير', 'file-lines'],
+        ['settings' , 'الإعدادات', 'cogs'],
 ];
 @endphp
 <style>

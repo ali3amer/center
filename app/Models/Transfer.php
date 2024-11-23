@@ -5,14 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Bank extends Model
+class Transfer extends Model
 {
     use HasFactory;
     protected $guarded = [];
 
-    public function transfers()
+    public function bank()
     {
-        return $this->hasMany(Transfer::class);
+        return $this->belongsTo(Bank::class);
     }
 
+    public function getNameAttribute()
+    {
+        return $this->bank->bank_name;
+    }
 }

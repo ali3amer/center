@@ -35,7 +35,6 @@ class Batch extends Component
 
     public function save()
     {
-        dd(\App\Models\Batch::first()->student);
         $this->validate();
         if ($this->id == null) {
             \App\Models\Batch::create([
