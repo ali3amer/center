@@ -25,4 +25,9 @@ class BatchStudent extends Model
         return $this->hasMany(BatchStudentPayment::class);
     }
 
+    public function getNameAttribute()
+    {
+        return $this->student->arabic_name;
+    }
+
 }

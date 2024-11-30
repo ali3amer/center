@@ -27,7 +27,7 @@ class Batch extends Model
 
     public function getNameAttribute()
     {
-        return $this->trainerName = $this->trainer->arabic_name;
+        return $this->trainer->arabic_name;
     }
 
     public function getStudentCountAttribute()

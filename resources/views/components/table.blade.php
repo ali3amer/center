@@ -1,4 +1,4 @@
-@props(['choose' => false, 'search' => true, 'buttons' => true, 'numbers' => []])
+@props(['choose' => false, 'search' => true, 'buttons' => true, 'edit' => true, 'delete' => true, 'numbers' => [], 'functions' => []])
 <div>
     @if($search)
         <x-input name="search" label="" placeholder="بحث ....." width="1/3" wire:model.live="search"/>
@@ -32,14 +32,24 @@
                 @endforeach
                 @if($buttons)
                     <td class="px-6 py-1 whitespace-nowrap">
-                        <button class="bg-cyan-300 rounded text-white px-2 py-1" wire:click="edit({{$row}})"><i
-                                class="fa fa-pen fa-xs"></i></button>
-                        <button class="bg-red-600 rounded text-white px-2 py-1"
-                                wire:click="deleteMessage({{$row['id']}})">
-                            <i class="fa fa-close fa-xs"></i></button>
+                        @if($edit)
+                            <button class="bg-cyan-300 rounded text-white px-2 py-1" wire:click="edit({{$row}})"><i
+                                    class="fa fa-pen fa-xs"></i></button>
+                        @endif
+                        @if($delete)
+                                <button class="bg-red-600 rounded text-white px-2 py-1"
+                                        wire:click="deleteMessage({{$row['id']}})">
+                                    <i class="fa fa-close fa-xs"></i></button>
+                        @endif
                         @if($choose)
                             <button class="bg-yellow-400 rounded text-white px-2 py-1" wire:click="choose({{$row}})"><i
                                     class="fa fa-eye fa-xs"></i></button>
+                        @endif
+                        @if(!empty($functions))
+                            @foreach($functions[0] as $function)
+                                <button class="bg-yellow-400 rounded text-white px-2 py-1" wire:click="{{$function}}({{$row}})"><i
+                                        class="fa fa-eye fa-xs"></i></button>
+                            @endforeach
                         @endif
                     </td>
                 @endif

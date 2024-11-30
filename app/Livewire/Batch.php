@@ -23,10 +23,16 @@ class Batch extends Component
     public $course_id;
     #[Rule('required', message: 'هذا الحقل مطلوب')]
     public $trainer_id;
-    public $start_date;
-    public $end_date;
+    public $start_date = '';
+    public $end_date = '';
+    public $price = 0;
+    public $certificate_price = 0;
+    public $center_fees = 60;
+    public $trainer_fees = 40;
     public bool $completed = false;
+    public bool $paid = true;
     public array $trainers = [];
+    public $fees = 0;
 
     public function mount()
     {
@@ -43,6 +49,9 @@ class Batch extends Component
                 'start_date' => $this->start_date,
                 'end_date' => $this->end_date,
                 'completed' => $this->completed,
+                'paid' => $this->paid,
+                'price' => $this->price,
+                'certificate_price' => $this->certificate_price,
             ]);
         } else {
             \App\Models\Batch::where('id', $this->id)->update([
@@ -51,6 +60,9 @@ class Batch extends Component
                 'start_date' => $this->start_date,
                 'end_date' => $this->end_date,
                 'completed' => $this->completed,
+                'paid' => $this->paid,
+                'price' => $this->price,
+                'certificate_price' => $this->certificate_price,
             ]);
         }
         $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
@@ -65,6 +77,9 @@ class Batch extends Component
         $this->start_date = $batch['start_date'];
         $this->end_date = $batch['end_date'];
         $this->completed = $batch['completed'];
+        $this->paid = $batch['paid'];
+        $this->price = $batch['price'];
+        $this->certificate_price = $batch['certificate_price'];
     }
 
     public function deleteMessage($id)
@@ -91,11 +106,15 @@ class Batch extends Component
 
     public function resetData()
     {
-        $this->reset('trainer_id', 'start_date', 'end_date', 'completed', 'id');
+        $this->reset('trainer_id', 'start_date', 'end_date', 'completed', 'paid', 'price', 'certificate_price', 'id');
     }
 
     public function render()
     {
+        if ($this->paid) {
+            $this->fees = ($this->price -$this->certificate_price) * $this->center_fees/100;
+        }
+
         if ($this->start_date == '') {
             $this->start_date = date('Y-m-d');
         }
@@ -104,7 +123,7 @@ class Batch extends Component
             $this->end_date = date('Y-m-d');
         }
         return view('livewire.batch', [
-            'batches' => \App\Models\Batch::where('course_id', $this->course_id)->with('trainer')->paginate(10),
+            'batches' => \App\Models\Batch::where('course_id', $this->course_id)->paginate(10),
         ]);
     }
 }

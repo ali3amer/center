@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('arabic_name');
             $table->string('english_name');
             $table->enum('type', ['course', 'session', 'workshop'])->default('course');
-            $table->float('price');
+            $table->decimal('price', 8, 2)->default(0);
             $table->enum('duration', ['hour', 'day'])->default('hour');
             $table->float('duration_value');
             $table->timestamps();

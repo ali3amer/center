@@ -11,6 +11,7 @@ use App\Livewire\Student;
 use App\Livewire\Trainer;
 use App\Livewire\Transfer;
 use App\Livewire\User;
+use App\Livewire\Certification;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +31,7 @@ Route::get('/expense', Expense::class);
 Route::get('/hall', Hall::class);
 Route::get('/student', Student::class);
 Route::get('/trainer', Trainer::class);
+Route::get('/certification', Certification::class);
 Route::get('/report', Report::class);
 Route::get('/settings', Settings::class);
 Route::get('/bank', Bank::class);

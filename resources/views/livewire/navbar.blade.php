@@ -3,6 +3,7 @@
         ['course' , 'البرامج التدريبية', 'book-open-reader'],
         ['trainer' , 'المدربين', 'person-chalkboard'],
         ['student' , 'الدارسين', 'graduation-cap'],
+        ['certification' , 'الشهادات', 'certificate fa-solid'],
         ['hall' , 'القاعات', 'home'],
         ['employee' , 'الموظفين', 'user-tie'],
         ['expense' , 'المصروفات', 'money-bill-wave'],
