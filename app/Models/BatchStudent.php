@@ -24,10 +24,20 @@ class BatchStudent extends Model
     {
         return $this->hasMany(BatchStudentPayment::class);
     }
+    public function certification()
+    {
+        return $this->hasOne(Certification::class);
+    }
 
     public function getNameAttribute()
     {
         return $this->student->arabic_name;
     }
+
+    public function getCertificationIdAttribute()
+    {
+        return $this->certification->certification_id;
+    }
+
 
 }

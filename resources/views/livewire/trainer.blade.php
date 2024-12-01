@@ -1,16 +1,25 @@
 <div>
     <x-container>
         <form wire:submit="save" class="grid gap-x-1 grid-cols-3">
-            <x-input name="arabic_name" label="الإسم بالعربي"  />
-            <x-input name="english_name" label="الإسم بالانجليزي"  />
-            <x-select name="gender" :options="$genders" label="الجنس" />
-            <x-input name="phone" label="الهاتف"  />
-            <x-input name="email" label="البريد الالكتروني"  />
-            <x-button type="submit" label="حفظ" />
+            <x-input name="arabic_name" :disabled="$batchMode" label="الإسم بالعربي"  />
+            <x-input name="english_name" :disabled="$batchMode" label="الإسم بالانجليزي"  />
+            <x-select name="gender" :disabled="$batchMode" :options="$genders" label="الجنس"/>
+            <x-input name="phone" :disabled="$batchMode" label="الهاتف"/>
+            <x-input name="email" :disabled="$batchMode" label="البريد الالكتروني"/>
+            @if(!$batchMode)
+                <x-button type="submit" label="حفظ"/>
+            @else
+                <x-button type="button" color="bg-red-600" wire:click="resetData" width="1/4" label=""
+                          icon="fa-close"/>
+            @endif
         </form>
     </x-container>
 
-    <x-container>
-        <x-table :headers="$headers" :rows="$trainers" :cells="$cells" />
-    </x-container>
+    @if(!$batchMode)
+        <x-container>
+            <x-table :headers="$headers" :rows="$trainers" :choose="true" :cells="$cells" />
+        </x-container>
+    @else
+        <livewire:trainer-batch :$trainer_id />
+    @endif
 </div>

@@ -94,6 +94,8 @@ class BatchStudentPayment extends Component
 
     public function resetData()
     {
+        $this->dispatch('update-price');
+
         $this->reset('amount', 'date', 'payment_method', 'bank_id', 'transaction_id', 'id');
     }
     public function render()

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('batch_trainer_payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('batch_id');
-            $table->foreign('batch_id')->references('id')->on('batchs')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('batch_id')->references('id')->on('batches')->onDelete('cascade')->onUpdate('cascade');
             $table->decimal('amount', 8, 2)->default(0);
             $table->date('date');
             $table->enum('payment_method', ['cash', 'bank'])->default('cash');

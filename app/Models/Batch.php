@@ -29,6 +29,10 @@ class Batch extends Model
     {
         return $this->trainer->arabic_name;
     }
+    public function getCourseNameAttribute()
+    {
+        return $this->course->arabic_name;
+    }
 
     public function getStudentCountAttribute()
     {

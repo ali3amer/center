@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
@@ -32,6 +33,7 @@ class HallRental extends Component
     public bool $completed = false;
     public bool $rentalPaymentMode  = false;
     public $hall_rental_id = null;
+    public $remainder = 0;
 
     public function mount()
     {
@@ -108,7 +110,7 @@ class HallRental extends Component
 
     public function resetData()
     {
-        $this->reset('name', 'type', 'duration_type', 'price', 'duration', 'cost', 'id', 'start_date', 'end_date', 'completed', 'rentalPaymentMode');
+        $this->reset('name', 'type', 'duration_type', 'price', 'duration', 'cost', 'id', 'start_date', 'end_date', 'completed', 'rentalPaymentMode', 'remainder');
     }
 
     public function choose($hallRental)
@@ -118,9 +120,20 @@ class HallRental extends Component
         $this->edit($hallRental);
     }
 
+    #[On('update-hall')]
     public function render()
     {
+        if ($this->start_date == '') {
+            $this->start_date = date('Y-m-d');
+        }
+        if ($this->end_date == '')
+        {
+            $this->end_date = date('Y-m-d');
+        }
         $this->cost = $this->duration * $this->price;
+        if ($this->hall_rental_id != null) {
+            $this->remainder = $this->cost - \App\Models\HallRentalPayment::where('hall_rental_id', $this->hall_rental_id)->sum('amount');
+        }
         return view('livewire.hall-rental', [
             'hallRentals' => \App\Models\HallRental::where('hall_id', $this->hall_id)
                 ->paginate(10),

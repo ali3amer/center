@@ -13,7 +13,7 @@ class Certification extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['الإسم بالعربي', 'نوع البرنامج', 'نوع المده', 'المده'];
+    public $headers = ['الإسم البرنامج', 'نوع البرنامج', 'نوع المده', 'المده'];
     public $cells = ['arabic_name' => 'arabic_name', 'type' => 'type', 'duration' => 'duration', 'duration_value' => 'duration_value'];
     protected $listeners = [
         'delete',
@@ -40,6 +40,7 @@ class Certification extends Component
 
     public function chooseCourse($course)
     {
+        $this->batch = [];
         $this->key = 'batches';
         $this->course = $course;
         $this->headers = ['المدرب', 'تاريخ البداية', 'تاريخ النهاية', 'مكتمل', 'عدد الدارسين'];
@@ -50,20 +51,20 @@ class Certification extends Component
     {
         $this->batch = $batch;
         $this->key = 'batch_students';
-        $this->headers = ['الإسم بالعربي', 'الإسم بالإنجليزي', 'تاريخ التسجيل'];
-        $this->cells = ['arabic_name', 'english_name', 'date'];
+        $this->headers = ['رقم الطالب', 'رقم الشهاده','الإسم بالعربي', 'الإسم بالإنجليزي', 'تاريخ التسجيل'];
+        $this->cells = ['student_id', 'certification_id', 'arabic_name', 'english_name', 'date'];
     }
 
     public function resetCourse()
     {
         $this->key = 'courses';
-        $this->course = [];
-        $this->batch = [];
+        $this->chooseCourse($this->course);
     }
 
     public function resetBatch()
     {
         $this->key = 'batches';
+        $this->chooseBatch($this->batch);
     }
 
     public function deleteMessage($id)

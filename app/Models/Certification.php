@@ -9,4 +9,9 @@ class Certification extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function batchStudent()
+    {
+        return $this->belongsTo(BatchStudent::class);
+    }
 }

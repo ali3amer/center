@@ -8,11 +8,12 @@
                 <x-input name="price" :disabled="$rentalPaymentMode" :live="true" label="السعر"/>
                 <x-input name="duration" :disabled="$rentalPaymentMode" :live="true" label="طول الفتره"/>
             </div>
-            <div class="grid gap-x-1 grid-cols-5">
+            <div class="grid gap-x-1 grid-cols-6">
                 <x-input type="date" name="start_date" :disabled="$rentalPaymentMode" label="بداية الفترة"/>
                 <x-input type="date" name="end_date" :disabled="$rentalPaymentMode" label="نهاية الفترة"/>
                 <x-checkbox name="completed" :disabled="$rentalPaymentMode" label="مكتمل"/>
                 <x-input name="cost" :disabled="true" :live="true" label="التكلفه الكليه"/>
+                <x-input name="remainder" :disabled="true" label="المتبقي"/>
                 @if(!$rentalPaymentMode)
                     <x-button type="submit" :center="true" label="حفظ"/>
                 @else

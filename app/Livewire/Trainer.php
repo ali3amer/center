@@ -30,7 +30,9 @@ class Trainer extends Component
     public $address = '';
     public $image = '';
     public $genders = ['male' => 'ذكر', 'female' => 'انثى'];
+    public bool $batchMode = false;
     public $search = '';
+    public $trainer_id = null;
 
     public function mount()
     {
@@ -101,9 +103,16 @@ class Trainer extends Component
         $this->alert('success', 'تم الحذف بنجاح', ['timerProgressBar' => true]);
     }
 
+    public function choose($trainer)
+    {
+        $this->trainer_id = $trainer['id'];
+        $this->batchMode = true;
+        $this->edit($trainer);
+    }
+
     public function resetData()
     {
-        $this->reset('arabic_name', 'english_name', 'national_id', 'gender', 'phone', 'email', 'address', 'image', 'id', 'search');
+        $this->reset('arabic_name', 'english_name', 'national_id', 'gender', 'phone', 'email', 'address', 'image', 'id', 'search', 'trainer_id', 'batchMode');
     }
     #[Title('المدربين')]
     public function render()

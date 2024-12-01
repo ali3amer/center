@@ -95,6 +95,8 @@ class HallRentalPayment extends Component
 
     public function resetData()
     {
+        $this->dispatch('update-hall');
+
         $this->reset('amount', 'date', 'payment_method', 'bank_id', 'transaction_id', 'id');
     }
 
