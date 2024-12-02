@@ -47,6 +47,8 @@ class Batch extends Component
                 'course_id' => $this->course_id,
                 'trainer_id' => $this->trainer_id,
                 'start_date' => $this->start_date,
+                'center_fees' => $this->center_fees,
+                'trainer_fees' => $this->trainer_fees,
                 'end_date' => $this->end_date,
                 'completed' => $this->completed,
                 'paid' => $this->paid,
@@ -59,6 +61,8 @@ class Batch extends Component
                 'trainer_id' => $this->trainer_id,
                 'start_date' => $this->start_date,
                 'end_date' => $this->end_date,
+                'center_fees' => $this->center_fees,
+                'trainer_fees' => $this->trainer_fees,
                 'completed' => $this->completed,
                 'paid' => $this->paid,
                 'price' => $this->price,
@@ -78,6 +82,8 @@ class Batch extends Component
         $this->end_date = $batch['end_date'];
         $this->completed = $batch['completed'];
         $this->paid = $batch['paid'];
+        $this->center_fees = $batch['center_fees'];
+        $this->trainer_fees = $batch['trainer_fees'];
         $this->price = $batch['price'];
         $this->certificate_price = $batch['certificate_price'];
     }

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -14,8 +15,8 @@ class Expense extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['البند', 'المبلغ', 'التاريخ'];
-    public $cells = ['description' => 'description', 'amount' => 'amount', 'date' => 'date'];
+    public $headers = ['البند', 'التصنيف', 'المبلغ', 'التاريخ'];
+    public $cells = ['description' => 'description', 'name' => 'name', 'amount' => 'amount', 'date' => 'date'];
     protected $listeners = [
         'delete',
     ];
@@ -25,7 +26,15 @@ class Expense extends Component
     public $amount = 0;
     public $date = '';
     public $search = '';
+    public $expense_option_id = null;
+    public $options = [];
+    public bool $optionMode = false;
 
+    #[On('update-expenses')]
+    public function mount()
+    {
+        $this->options = \App\Models\ExpenseOption::pluck('optionName', 'id')->toArray();
+    }
     public function save()
     {
         $this->validate();
@@ -33,12 +42,14 @@ class Expense extends Component
         if ($this->id == 0) {
             \App\Models\Expense::create([
                 'description' => $this->description,
+                'expense_option_id' => $this->expense_option_id,
                 'amount' => floatval($this->amount),
                 'date' => $this->date,
             ]);
         } else {
             \App\Models\Expense::where('id', $this->id)->update([
                 'description' => $this->description,
+                'expense_option_id' => $this->expense_option_id,
                 'amount' => floatval($this->amount),
                 'date' => $this->date,
             ]);
@@ -51,6 +62,7 @@ class Expense extends Component
     {
         $this->id = $expense['id'];
         $this->description = $expense['description'];
+        $this->expense_option_id = $expense['expense_option_id'];
         $this->amount = $expense['amount'];
         $this->date = $expense['date'];
     }
@@ -79,7 +91,7 @@ class Expense extends Component
 
     public function resetData()
     {
-        $this->reset('description', 'amount', 'date', 'search', 'id');
+        $this->reset('description', 'amount', 'date', 'search', 'id', 'expense_option_id');
     }
     #[Title('المصروفات')]
     public function render()

@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('description');
             $table->decimal('amount',10,2);
             $table->date('date');
-            $table->unsignedBigInteger('course_id')->nullable();
-            $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('expense_option_id')->nullable();
+            $table->foreign('expense_option_id')->references('id')->on('expense_options')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

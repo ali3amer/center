@@ -21,8 +21,10 @@
     @endif
 
     @if(!$trainerPaymentMode)
-            <x-container>
-                <x-table :headers="$headers" :rows="$batches" :edit="false" :delete="false" :choose="true" :cells="$cells"/>
-            </x-container>
+        <x-container>
+            <x-table :headers="$headers" :rows="$batches" :edit="false" :delete="false" :choose="true" :cells="$cells"/>
+        </x-container>
+    @else
+        <livewire:trainer-payment :$batch_id />
     @endif
 </div>
