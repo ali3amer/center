@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use Illuminate\Database\Eloquent\Collection;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -13,25 +14,35 @@ class Report extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['المدرب', 'تاريخ البداية', 'تاريخ النهاية', 'مكتمل', 'عدد الدارسين'];
-    public $cells = ['name' => 'name', 'start_date' => 'start_date', 'end_date' => 'end_date', 'completed' => [true => 'نعم', false => 'لا'], 'studentCount'];
+    public $headers = [];
+    public $cells = [];
 
     public $from = '';
     public $to = '';
     public $types = [
-        'daily' => 'تقرير يوميه',
+        'safe' => 'تقرير الخزنه',
         'incomes' => 'تقرير الإيرادات',
         'performance' => 'تقرير الأداء',
         'expenses' => 'تقرير المنصرفات',
         'courses' => 'تقرير منفذ التدريب',
-        'certifications' => 'تقرير شهادات البرامج التدريبيه المنفذه',
+        'certifications' => 'تقرير الشهادات',
     ];
-    public $type = 'daily';
+    public $coruse_types = ['course' => 'كورس', 'session' => 'دورة', 'workshop' => 'ورشه'];
+    public $coruse_type = 'course';
+    public $type = null;
+    public $trainer_id = null;
+    public $trainers = [];
+    public $rows = [];
+
+    public function mount()
+    {
+        $this->trainers = \App\Models\Trainer::pluck("arabic_name", "id")->toArray();
+    }
 
     public function getReport()
     {
-        if ($this->type === 'daily') {
-            $this->daily();
+        if ($this->type === 'safe') {
+            $this->safe();
         } elseif ($this->type === 'incomes') {
             $this->incomes();
         } elseif ($this->type === 'performance') {
@@ -45,7 +56,7 @@ class Report extends Component
         }
     }
 
-    public function daily()
+    public function safe()
     {
 
     }
@@ -57,7 +68,17 @@ class Report extends Component
 
     public function performance()
     {
-
+        $this->cells = ['arabic_name', 'course_type', 'student_count', 'certifications', 'trainer', 'month'];
+        $this->headers = ['إسم البرنامج', 'نوع البرنامج', 'عدد الدارسين', 'عدد الشهادات', 'المدرب', 'الشهر'];
+        $this->rows = \App\Models\Course::all()->map(function ($course) {
+            $course->course_type = $this->coruse_types[$course->type];
+            $course->trainer = $course->batches->whereBetween("start_date", [$this->from, $this->to])->first()->name ?? "";
+            $course->certifications = $course->batches->whereBetween("start_date", [$this->from, $this->to])->sum(function ($batch) {
+                return $batch->batchStudents->where('want_certification', true)->count();
+            });
+            $course->student_count = $course->batches->whereBetween("start_date", [$this->from, $this->to])->sum('studentCount');
+            return $course;
+        });
     }
 
     public function expenses()
@@ -67,23 +88,35 @@ class Report extends Component
 
     public function courses()
     {
-
+        $this->cells = ['arabic_name', 'student_count'];
+        $this->headers = ['إسم البرنامج', 'عدد الدارسين'];
+        $this->rows = \App\Models\Course::all()->map(function ($course) {
+            $course->student_count = $course->batches->whereBetween("start_date", [$this->from, $this->to])->sum('studentCount');
+            return $course;
+        });
     }
 
     public function certifications()
     {
-
+        $this->cells = ['student_id', 'certificationId', 'name', 'course', 'course_type', 'trainer', 'month', 'certificationPrice'];
+        $this->headers = ['الرقم المتسلسل', 'الرقم المتسلسل للشهادة', 'إسم الدارس', 'البرنامج التدريبي', 'نوع البرنامج', 'إسم المدرب', 'الشهر', 'الرسوم'];
+        $this->rows = \App\Models\BatchStudent::whereHas('batch', function ($query) {
+            $query->whereBetween("start_date", [$this->from, $this->to]);
+        })->get();
     }
 
     #[Title('التقارير')]
     public function render()
     {
+
         if ($this->from == '') {
             $this->from = date('Y-m-d');
         }
         if ($this->to == '') {
             $this->to = date('Y-m-d');
         }
-        return view('livewire.report');
+        return view('livewire.report', [
+            'rows' => $this->rows,
+        ]);
     }
 }

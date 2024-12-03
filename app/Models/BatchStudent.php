@@ -33,10 +33,23 @@ class BatchStudent extends Model
     {
         return $this->student->arabic_name;
     }
+    public function getTrainerAttribute()
+    {
+        return $this->batch->name;
+    }
+
+    public function getCourseAttribute()
+    {
+        return $this->batch->coureName;
+    }
 
     public function getCertificationIdAttribute()
     {
         return $this->certification->certification_id;
+    }
+    public function getCertificationPriceAttribute()
+    {
+        return $this->batch->certificate_price;
     }
 
 
