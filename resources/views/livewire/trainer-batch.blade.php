@@ -14,7 +14,7 @@
                 <x-input name="required" :live="true" :disabled="true" label="المطلوب"/>
                 <x-input name="paid" :live="true" :disabled="true" label="المدفوع"/>
                 <x-input name="remainder" :live="true" :disabled="true" label="المتبقي"/>
-                <x-button type="button" color="bg-red-600" wire:click="resetData" width="1/4" label=""
+                <x-button type="button" color="bg-red-600" wire:click="resetData" label=""
                           icon="fa-close"/>
             </div>
         </x-container>

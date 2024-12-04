@@ -9,7 +9,7 @@
             @if(!$batchStudentPaymentMode)
                 <x-button type="submit" :center="true" label="حفظ"/>
             @else
-                <x-button type="button" color="bg-red-600" wire:click="resetData" width="1/4" label=""
+                <x-button type="button" color="bg-red-600" wire:click="resetData" label=""
                           icon="fa-close"/>
             @endif
         </form>

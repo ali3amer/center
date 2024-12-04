@@ -1,14 +1,14 @@
 <div>
     <x-container  title="القاعات">
         <form wire:submit="save" class="grid gap-x-1 grid-cols-4">
-            <x-input name="name" :disabled="$rentalMode" width="1/4" label="الإسم" />
-            <x-input name="chairs" :disabled="$rentalMode" width="1/4" label="عدد الكراسي" />
-            <x-input name="price" :disabled="$rentalMode" width="1/4" label="السعر" />
+            <x-input name="name" :disabled="$rentalMode" label="الإسم" />
+            <x-input name="chairs" :disabled="$rentalMode" label="عدد الكراسي" />
+            <x-input name="price" :disabled="$rentalMode" label="السعر" />
 
             @if(!$rentalMode)
-                <x-button type="submit" :center="true" width="1/4" label="حفظ" />
+                <x-button type="submit" :center="true" label="حفظ" />
             @else
-                <x-button type="button" color="bg-red-600" wire:click="resetData" width="1/4" label=""
+                <x-button type="button" color="bg-red-600" wire:click="resetData" label=""
                           icon="fa-close"/>
             @endif
 

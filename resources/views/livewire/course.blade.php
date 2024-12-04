@@ -7,13 +7,13 @@
                 <x-select name="type" :disabled="$batchMode" :options="$types" label="نوع البرنامج"/>
             </div>
             <div class="grid gap-x-1 grid-cols-4">
-                <x-input name="price" width="1/4" :disabled="$batchMode" label="السعر"/>
-                <x-select name="duration" width="1/4" :disabled="$batchMode" :options="$durations" label="نوع المده"/>
-                <x-input name="duration_value" width="1/4" :disabled="$batchMode" label="المده"/>
+                <x-input name="price" :disabled="$batchMode" label="السعر"/>
+                <x-select name="duration" :disabled="$batchMode" :options="$durations" label="نوع المده"/>
+                <x-input name="duration_value" :disabled="$batchMode" label="المده"/>
                 @if(!$batchMode)
-                    <x-button type="submit" width="1/4" label="حفظ"/>
+                    <x-button type="submit" label="حفظ"/>
                 @else
-                    <x-button type="button" color="bg-red-600" wire:click="resetData" width="1/4" label=""
+                    <x-button type="button" color="bg-red-600" wire:click="resetData" label=""
                               icon="fa-close"/>
                 @endif
             </div>
