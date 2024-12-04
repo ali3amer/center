@@ -1,14 +1,15 @@
 <div>
-    <x-container>
+    <x-container title="مدفوعات للمدرب">
         <form wire:submit="save">
             <div class="grid gap-x-1 grid-cols-3">
                 <x-input name="amount" label="المبلغ"/>
                 <x-input type="date" name="date" label="التاريخ"/>
                 <x-select name="payment_method" :options="$payment_methods" label="وسيلة الدفع"/>
             </div>
-            <div class="grid gap-x-1 grid-cols-3">
+            <div class="grid gap-x-1 grid-cols-4">
                 <x-select name="bank_id" :options="$banks" label="البنك"/>
                 <x-input name="transaction_id" label="رقم الاشعار"/>
+                <x-input name="note" label="ملاحظات"/>
                 <x-button type="submit" :center="true" label="حفظ"/>
             </div>
         </form>

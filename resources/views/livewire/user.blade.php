@@ -1,5 +1,5 @@
 <div>
-    <x-container>
+    <x-container title="المستخدمين">
         <form wire:submit="save" class="grid gap-x-1 grid-cols-4">
             <x-input name="name" label="الإسم"/>
             <x-input name="username" label="الإسم المستخدم"/>

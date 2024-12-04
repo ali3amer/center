@@ -1,5 +1,5 @@
 <div>
-    <x-container>
+    <x-container title="حجوزات القاعه">
         <form wire:submit="save">
             <div class="grid gap-x-1 grid-cols-5">
                 <x-input name="name" :disabled="$rentalPaymentMode" label="الإسم"/>

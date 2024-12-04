@@ -25,7 +25,7 @@ class Bank extends Component
     public $bank_name = '';
     #[Rule('required', message: 'هذا الحقل مطلوب')]
     public $name = '';
-    public $initial_balance = '';
+    public $initial_balance = 0;
     public $date = '';
 
     public function save()

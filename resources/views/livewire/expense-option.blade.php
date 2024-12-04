@@ -1,5 +1,5 @@
 <div>
-    <x-container>
+    <x-container title="تصنيفات المصروفات">
         <form wire:submit="save" class="grid gap-x-1 grid-cols-4">
             <x-input name="optionName" label="التصنيف"/>
             <div class="grid gap-x-1 grid-cols-2">

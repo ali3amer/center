@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('bank_id')->nullable();
             $table->foreign('bank_id')->references('id')->on('banks')->onDelete('cascade')->onUpdate('cascade');
             $table->string('transaction_id')->nullable();
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }

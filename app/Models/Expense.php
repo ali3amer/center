@@ -18,7 +18,12 @@ class Expense extends Model
 
     public function getNameAttribute()
     {
-        return $this->expenseOption->optionName;
+        return $this->expenseOption->optionName ?? "غير مصنف";
+    }
+
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class);
     }
 
 }

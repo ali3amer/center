@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Safe;
 use Illuminate\Database\Eloquent\Collection;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Title;
@@ -16,7 +17,8 @@ class Report extends Component
 
     public $headers = [];
     public $cells = [];
-
+    public $payment_methods = ['cash' => 'كاش', 'bank' => 'بنك'];
+    public $payment_method = 'cash';
     public $from = '';
     public $to = '';
     public $types = [
@@ -32,7 +34,7 @@ class Report extends Component
     public $type = null;
     public $trainer_id = null;
     public $trainers = [];
-    public $rows = [];
+    public $rows;
 
     public function mount()
     {
@@ -58,7 +60,9 @@ class Report extends Component
 
     public function safe()
     {
-
+        $this->cells = ["date", "note", "payment_method" => $this->payment_methods, "bank_id", "transaction_id", "income", "expense"];
+        $this->headers = ['التاريخ', 'البيان', 'طريقة الدفعه', 'البنك', 'رقم العملية', 'إيراد', 'منصرف'];
+        $this->rows = Safe::first()->safeMovements($this->from, $this->to);
     }
 
     public function incomes()

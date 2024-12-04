@@ -1,5 +1,5 @@
 <div>
-    <x-container>
+    <x-container title="مدفوعات الموظف">
         <form wire:submit="save">
             <div class="grid gap-x-1 grid-cols-3">
                 <x-input name="amount" label="المبلغ"/>

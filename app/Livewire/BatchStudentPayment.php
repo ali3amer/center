@@ -16,9 +16,8 @@ class BatchStudentPayment extends Component
         'delete',
     ];
 
-    public $headers = ['المبغ', 'التاريخ', 'وسيلة الدفع'];
-    public $cells = ['amount' => 'amount', 'date' => 'date', 'payment_method' => 'payment_method'];
-
+    public $headers = ['التاريخ', 'المبغ', 'وسيلة الدفع', 'ملاحظات'];
+    public $cells = ['date' => 'date', 'amount' => 'amount', 'payment_method' => 'payment_method', 'note' => 'note'];
     public $batch_student_id;
     public $id = null;
     public $amount = 0;
@@ -28,7 +27,7 @@ class BatchStudentPayment extends Component
     public $bank_id = null;
     public $banks = [];
     public $transaction_id = '';
-    public $hall_id = null;
+    public $note = null;
 
     public function mount()
     {
@@ -46,6 +45,7 @@ class BatchStudentPayment extends Component
                 'batch_student_id' => $this->batch_student_id,
                 'bank_id' => $this->bank_id,
                 'transaction_id' => $this->transaction_id,
+                'note' => $this->note,
             ]);
         } else {
             \App\Models\BatchStudentPayment::where('id', $this->id)->update([
@@ -54,6 +54,7 @@ class BatchStudentPayment extends Component
                 'payment_method' => $this->payment_method,
                 'bank_id' => $this->bank_id,
                 'transaction_id' => $this->transaction_id,
+                'note' => $this->note,
             ]);
         }
         $this->resetData();
@@ -68,6 +69,7 @@ class BatchStudentPayment extends Component
         $this->payment_method = $batchStudentPayment['payment_method'];
         $this->bank_id = $batchStudentPayment['bank_id'];
         $this->transaction_id = $batchStudentPayment['transaction_id'];
+        $this->note = $batchStudentPayment['note'];
     }
 
     public function deleteMessage($id)
@@ -95,6 +97,8 @@ class BatchStudentPayment extends Component
     public function resetData()
     {
         $this->dispatch('update-price');
+
+        $this->dispatch('update-balance');
 
         $this->reset('amount', 'date', 'payment_method', 'bank_id', 'transaction_id', 'id');
     }

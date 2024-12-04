@@ -2,9 +2,11 @@
     <button class="inline-block mx-6" id="sideBarBtn">
         <i class="fa fa-bars"></i>
     </button>
-    <span class="mx-6 w-1/3 text-2xl">{{$header ?? ""}}</span>
+    <div class="mx-3 w-1/4 text-2xl">{{$header ?? ""}}</div>
+    <div class="mx-3 w-1/4 text-2xl">الخزنة : {{ number_format($safe, 2) }} </div>
+    <div class="mx-3 w-1/4 text-2xl">البنك : {{ number_format($bank, 2) }} </div>
 
-    <div class="w-2/3 mx-6 text-left text-2xl"> المستخدم :  {{auth()->user()->name ?? "" }}</div>
+    <div class="w-1/4 mx-3 text-left text-2xl"> المستخدم :  {{auth()->user()->name ?? "" }}</div>
 
     <div class="justify-self-end bg-red-500 hover:bg-red-400 text-white w-25 py-2 px-3 rounded-xl items-end">
         <a class="dropdown-item" href="{{ route('logout') }}"

@@ -1,5 +1,5 @@
 <div>
-    <x-container>
+    <x-container title="الموظفين">
         <form wire:submit="save" class="grid gap-x-1 grid-cols-3">
             <x-input name="name" :disabled="$employeeExpenseMode" label="الإسم" />
             <x-input name="phone" :disabled="$employeeExpenseMode" label="الهاتف" />

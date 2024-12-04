@@ -1,5 +1,5 @@
 <div>
-    <x-container>
+    <x-container title="التحويلات">
         <form wire:submit="save" class="grid gap-x-1 grid-cols-6">
             <x-input type="date" name="date" label="التاريخ"/>
             <x-select name="transfer_type" :options="$transfer_types" label="نوع العملية"/>

@@ -1,5 +1,5 @@
 <div>
-    <x-container>
+    <x-container  title="البرامج التدريبيه للدارس">
         <form wire:submit="save" class="grid gap-x-1 grid-cols-6">
             <x-select name="batch_id" :disabled="$batchStudentPaymentMode" :live="true" :options="$batches" label="الدفعه"/>
             <x-input type="date" name="date" :disabled="$batchStudentPaymentMode" label="تاريخ التسجيل"/>

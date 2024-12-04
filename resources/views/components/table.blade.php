@@ -1,4 +1,4 @@
-@props(['choose' => false, 'index' => false, 'search' => true, 'buttons' => true, 'edit' => true, 'delete' => true, 'paginate' => true, 'numbers' => [], 'functions' => []])
+@props(['choose' => false, 'index' => false, 'search' => true, 'buttons' => true, 'edit' => true, 'delete' => true, 'paginate' => true, 'numbers' => [], 'functions' => [], 'array' => false])
 <div>
     @if($search)
         <x-input name="search" label="" placeholder="بحث ....." width="1/3" wire:model.live="search"/>
@@ -31,9 +31,17 @@
                         <td class="px-1 py-1 text-xs whitespace-nowrap text-wrap">
                             @if(!is_array($cell))
                                 @if(in_array($cell, $numbers))
-                                    {{ number_format($row->$cell, 2) }}
+                                    @if($array)
+                                        {{ number_format($row[$cell], 2) }}
+                                    @else
+                                        {{ number_format($row->$cell, 2) }}
+                                    @endif
                                 @else
-                                    {{ $row->$cell }}
+                                    @if($array)
+                                        {{ $row[$cell] }}
+                                    @else
+                                        {{ $row->$cell }}
+                                    @endif
                                 @endif
                             @else
                                 {{$cell[$row[$key]]}}

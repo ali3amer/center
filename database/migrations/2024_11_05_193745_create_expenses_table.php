@@ -18,6 +18,10 @@ return new class extends Migration
             $table->date('date');
             $table->unsignedBigInteger('expense_option_id')->nullable();
             $table->foreign('expense_option_id')->references('id')->on('expense_options')->onDelete('cascade')->onUpdate('cascade');
+            $table->enum('payment_method', ['cash', 'bank'])->default('cash');
+            $table->unsignedBigInteger('bank_id')->nullable();
+            $table->foreign('bank_id')->references('id')->on('banks')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('transaction_id')->nullable();
             $table->timestamps();
         });
     }

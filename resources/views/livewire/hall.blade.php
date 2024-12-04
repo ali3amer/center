@@ -1,5 +1,5 @@
 <div>
-    <x-container>
+    <x-container  title="القاعات">
         <form wire:submit="save" class="grid gap-x-1 grid-cols-4">
             <x-input name="name" :disabled="$rentalMode" width="1/4" label="الإسم" />
             <x-input name="chairs" :disabled="$rentalMode" width="1/4" label="عدد الكراسي" />

@@ -10,4 +10,9 @@ class Hall extends Model
     use HasFactory;
     protected $guarded = [];
 
+    public function hallRentals()
+    {
+        return $this->hasMany(HallRental::class);
+    }
+
 }

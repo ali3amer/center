@@ -1,5 +1,5 @@
 <div>
-    <x-container>
+    <x-container title="البرامج التدريبيه">
         <form wire:submit="save">
             <div class="grid gap-x-1 grid-cols-3">
                 <x-input name="arabic_name" :disabled="$batchMode" label="الإسم بالعربي"/>

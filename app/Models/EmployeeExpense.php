@@ -9,4 +9,14 @@ class EmployeeExpense extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class);
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }

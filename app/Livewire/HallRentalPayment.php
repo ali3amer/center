@@ -17,9 +17,8 @@ class HallRentalPayment extends Component
         'delete',
     ];
 
-    public $headers = ['المبغ', 'التاريخ', 'وسيلة الدفع'];
-    public $cells = ['amount' => 'amount', 'date' => 'date', 'payment_method' => 'payment_method'];
-
+    public $headers = ['التاريخ', 'المبغ', 'وسيلة الدفع', 'ملاحظات'];
+    public $cells = ['date' => 'date', 'amount' => 'amount', 'payment_method' => 'payment_method', 'note' => 'note'];
     public $hall_rental_id;
     public $id = null;
     public $amount = 0;
@@ -30,6 +29,7 @@ class HallRentalPayment extends Component
     public $banks = [];
     public $transaction_id = '';
     public $hall_id = null;
+    public $note = null;
 
     public function mount()
     {
@@ -47,6 +47,7 @@ class HallRentalPayment extends Component
                 'hall_rental_id' => $this->hall_rental_id,
                 'bank_id' => $this->bank_id,
                 'transaction_id' => $this->transaction_id,
+                'note' => $this->note,
             ]);
         } else {
             \App\Models\HallRentalPayment::where('id', $this->id)->update([
@@ -55,6 +56,7 @@ class HallRentalPayment extends Component
                 'payment_method' => $this->payment_method,
                 'bank_id' => $this->bank_id,
                 'transaction_id' => $this->transaction_id,
+                'note' => $this->note,
             ]);
         }
         $this->resetData();
@@ -69,6 +71,7 @@ class HallRentalPayment extends Component
         $this->payment_method = $hallRentalPayment['payment_method'];
         $this->bank_id = $hallRentalPayment['bank_id'];
         $this->transaction_id = $hallRentalPayment['transaction_id'];
+        $this->note = $hallRentalPayment['note'];
     }
 
     public function deleteMessage($id)
@@ -96,6 +99,8 @@ class HallRentalPayment extends Component
     public function resetData()
     {
         $this->dispatch('update-hall');
+
+        $this->dispatch('update-balance');
 
         $this->reset('amount', 'date', 'payment_method', 'bank_id', 'transaction_id', 'id');
     }

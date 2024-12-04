@@ -1,5 +1,5 @@
 <div>
-    <x-container>
+    <x-container title="الدفعه">
         <form wire:submit="save" class="">
             <div class="grid gap-x-1 grid-cols-6">
                 <x-select name="trainer_id" :options="$trainers" label="المدرب"/>
