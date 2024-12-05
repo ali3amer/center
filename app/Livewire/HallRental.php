@@ -131,7 +131,7 @@ class HallRental extends Component
             $this->end_date = date('Y-m-d');
         }
         $this->cost = $this->duration * $this->price;
-        if ($this->hall_rental_id != null) {
+        if ($this->hall_rental_id != null && $this->cost != 0) {
             $this->remainder = $this->cost - \App\Models\HallRentalPayment::where('hall_rental_id', $this->hall_rental_id)->sum('amount');
         }
         return view('livewire.hall-rental', [

@@ -30,11 +30,15 @@ class HallRentalPayment extends Component
     public $transaction_id = '';
     public $hall_id = null;
     public $note = null;
+    public $cost = 0;
+    public $remainder = 0;
+    public $hall_rental;
 
     public function mount()
     {
         $this->cells['payment_method'] = $this->payment_methods;
         $this->banks = \App\Models\Bank::pluck('name', 'id')->toArray();
+        $this->hall_rental = \App\Models\HallRental::find($this->hall_rental_id);
     }
 
     public function save()
@@ -107,6 +111,8 @@ class HallRentalPayment extends Component
 
     public function render()
     {
+        $this->cost = $this->hall_rental->price * $this->hall_rental->duration;
+        $this->remainder = $this->cost - \App\Models\HallRentalPayment::where('hall_rental_id', $this->hall_rental_id)->sum('amount');
         if ($this->date == '') {
             $this->date = date('Y-m-d');
         }

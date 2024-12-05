@@ -3,7 +3,7 @@
 
 <div class=" grow flex w-{{$width}} @if($errors->any() && $center) items-center @else items-end @endif">
     <button @disabled($disabled)
-        type="{{ $type }}" {{ $attributes->merge(['class' => "w-full px-$px mt-$mt py-$py $color text-white rounded hover:$hoverColor"]) }}>
+        type="{{ $type }}" {{ $attributes->merge(['class' => "w-full disabled:bg-cyan-200 px-$px mt-$mt py-$py $color text-white rounded hover:$hoverColor"]) }}>
         {{ $label }}
         @if($icon != '')
             <i class="fa {{$icon}} fa-xs"></i>

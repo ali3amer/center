@@ -107,6 +107,16 @@ class Report extends Component
         $this->rows = \App\Models\BatchStudent::whereHas('batch', function ($query) {
             $query->whereBetween("start_date", [$this->from, $this->to]);
         })->get();
+        $data = [
+            [
+                'quantity' => 1,
+                'description' => '1 Year Subscription',
+                'price' => '129.00'
+            ]
+        ];
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('livewire.pdf', ['data' => $data]);
+        return $pdf->stream();
     }
 
     #[Title('التقارير')]

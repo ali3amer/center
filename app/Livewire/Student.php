@@ -112,6 +112,7 @@ class Student extends Component
 
     public function choose($student)
     {
+
         $this->batchMode = true;
         $this->student_id = $student['id'];
         $this->edit($student);

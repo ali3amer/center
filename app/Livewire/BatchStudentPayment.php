@@ -28,11 +28,17 @@ class BatchStudentPayment extends Component
     public $banks = [];
     public $transaction_id = '';
     public $note = null;
+    public $price = 0;
+    public $remainder = 0;
 
     public function mount()
     {
         $this->cells['payment_method'] = $this->payment_methods;
         $this->banks = \App\Models\Bank::pluck('name', 'id')->toArray();
+
+        $this->price = \App\Models\BatchStudent::find($this->batch_student_id)->batch->price;
+        $this->remainder = $this->price - floatval(\App\Models\BatchStudentPayment::where("batch_student_id", $this->batch_student_id)->sum('amount'));
+
     }
 
     public function save()
@@ -107,6 +113,8 @@ class BatchStudentPayment extends Component
         if ($this->date == '') {
             $this->date = date('Y-m-d');
         }
+        $this->remainder = $this->price - floatval(\App\Models\BatchStudentPayment::where("batch_student_id", $this->batch_student_id)->sum('amount'));
+
         return view('livewire.batch-student-payment', [
             'batchStudentPayments' => \App\Models\BatchStudentPayment::where('batch_student_id', $this->batch_student_id)->paginate(10),
         ]);

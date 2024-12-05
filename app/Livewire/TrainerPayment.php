@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\BatchTrainerPayment;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
@@ -29,11 +30,35 @@ class TrainerPayment extends Component
     public $banks = [];
     public $transaction_id = '';
     public $note = null;
+    public $trainer_id = null;
+    public $certificate_price = 0;
+    public $studentCount = 0;
+    public $cost = 0;
+    public $center_fees = 60;
+    public $trainer_fees = 40;
+    public $paid = 0;
+    public $certificate_cost = 0;
+    public $required = 0;
+    public $remainder = 0;
+    public $price = 0;
 
     public function mount()
     {
         $this->cells['payment_method'] = $this->payment_methods;
         $this->banks = \App\Models\Bank::pluck('name', 'id')->toArray();
+        $batch = \App\Models\Batch::find($this->batch_id);
+        $this->batch_id = $batch['id'];
+        $this->trainer_id = $batch['trainer_id'];
+        $this->certificate_price = $batch['certificate_price'];
+        $this->price = $batch['price'];
+        $this->studentCount = $batch->studentCount;
+        $this->cost = $this->price * $this->studentCount;
+        $this->center_fees = $batch['center_fees'];
+        $this->trainer_fees = $batch['trainer_fees'];
+        $this->paid = BatchTrainerPayment::where('batch_id', $batch['id'])->sum('amount');
+        $this->certificate_cost = $this->certificate_price * \App\Models\BatchStudent::where('batch_id', $batch['id'])->where('want_certification', true)->count();
+        $this->required = ($this->cost - $this->certificate_cost) * $this->trainer_fees / 100;
+        $this->remainder = $this->required - \App\Models\BatchTrainerPayment::where('batch_id', $batch['id'])->sum('amount');
     }
 
     public function save()
@@ -97,10 +122,10 @@ class TrainerPayment extends Component
 
     public function resetData()
     {
-        $this->dispatch('update-balance');
-
+//        $this->dispatch('update-balance');
+        $this->remainder = $this->required - \App\Models\BatchTrainerPayment::where('batch_id', $this->batch_id)->sum('amount');
         $this->reset('amount', 'date', 'payment_method', 'bank_id', 'transaction_id', 'id');
-        $this->dispatch('update-trainer', $this->batch_id);
+//        $this->dispatch('update-trainer', $this->batch_id);
     }
 
     public function render()

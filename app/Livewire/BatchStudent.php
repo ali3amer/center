@@ -22,6 +22,7 @@ class BatchStudent extends Component
     ];
     public $student_id;
     public $id = null;
+    #[Rule('required', message: 'هذا الحقل مطلوب')]
     public $batch_id = null;
     public $date = '';
     public bool $want_certification = false;
@@ -31,6 +32,7 @@ class BatchStudent extends Component
     public $batch_student_id = null;
     public $price = 0;
     public $remainder = 0;
+    public $search = '';
 
     public function mount()
     {
@@ -40,6 +42,7 @@ class BatchStudent extends Component
 
     public function save()
     {
+        $this->validate();
         if ($this->id == null) {
             $batch_student = \App\Models\BatchStudent::create([
                 'student_id' => $this->student_id,
