@@ -102,6 +102,8 @@ class EmployeeExpense extends Component
 
     public function resetData()
     {
+        $this->dispatch('update-balance');
+
         $this->reset('amount', 'type', 'date', 'payment_method', 'bank_id', 'banks', 'transaction_id');
     }
 

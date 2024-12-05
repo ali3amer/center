@@ -21,6 +21,7 @@ return new class extends Migration
             $table->decimal('amount', 10, 2)->default(0);
             $table->string('transaction_id');
             $table->date('date');
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }
