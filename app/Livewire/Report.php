@@ -9,6 +9,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class Report extends Component
 {
@@ -72,51 +73,50 @@ class Report extends Component
 
     public function performance()
     {
-        $this->cells = ['arabic_name', 'course_type', 'student_count', 'certifications', 'trainer', 'month'];
+        $this->cells = ['courseName', 'courseType', 'studentCount', 'certificationsCount', 'name', 'month'];
         $this->headers = ['إسم البرنامج', 'نوع البرنامج', 'عدد الدارسين', 'عدد الشهادات', 'المدرب', 'الشهر'];
-        $this->rows = \App\Models\Course::all()->map(function ($course) {
-            $course->course_type = $this->coruse_types[$course->type];
-            $course->trainer = $course->batches->whereBetween("start_date", [$this->from, $this->to])->first()->name ?? "";
-            $course->certifications = $course->batches->whereBetween("start_date", [$this->from, $this->to])->sum(function ($batch) {
-                return $batch->batchStudents->where('want_certification', true)->count();
-            });
-            $course->student_count = $course->batches->whereBetween("start_date", [$this->from, $this->to])->sum('studentCount');
-            return $course;
-        });
+//        $this->rows = \App\Models\Course::all()->map(function ($course) {
+//            $course->course_type = $this->coruse_types[$course->type];
+//            $course->trainer = $course->batches->whereBetween("start_date", [$this->from, $this->to])->first()->name ?? "";
+//            $course->certifications = $course->batches->whereBetween("start_date", [$this->from, $this->to])->sum(function ($batch) {
+//                return $batch->batchStudents->where('want_certification', true)->count();
+//            });
+//            $course->student_count = $course->batches->whereBetween("start_date", [$this->from, $this->to])->sum('studentCount');
+//            return $course;
+//        });
+
+        $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get();
     }
 
     public function expenses()
     {
+        $this->cells['options'] = ['optionName', 'amount'];
+        $this->headers['options'] = ['التصنيف', 'المبلغ'];
+        $this->rows['options'] = \App\Models\ExpenseOption::all()->map(function ($option) {
+            $option->amount = $option->expenses->whereBetween("date", [$this->from, $this->to])->sum("amount");
+            return $option;
+        });
 
+        $this->cells['expenses'] = ['date', 'description', 'name', 'amount'];
+        $this->headers['expenses'] = ['التاريخ', 'البيان', 'التصنيف', 'المبلغ'];
+        $this->rows['expenses'] = \App\Models\Expense::whereBetween("date", [$this->from, $this->to])->get();
     }
 
     public function courses()
     {
-        $this->cells = ['arabic_name', 'student_count'];
+        $this->cells = ['courseName', 'studentCount'];
         $this->headers = ['إسم البرنامج', 'عدد الدارسين'];
-        $this->rows = \App\Models\Course::all()->map(function ($course) {
-            $course->student_count = $course->batches->whereBetween("start_date", [$this->from, $this->to])->sum('studentCount');
-            return $course;
-        });
+
+        $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get();
     }
 
     public function certifications()
     {
-        $this->cells = ['student_id', 'certificationId', 'name', 'course', 'course_type', 'trainer', 'month', 'certificationPrice'];
+        $this->cells = ['student_id', 'certificationId', 'name', 'course', 'courseType', 'trainer', 'month', 'certificationPrice'];
         $this->headers = ['الرقم المتسلسل', 'الرقم المتسلسل للشهادة', 'إسم الدارس', 'البرنامج التدريبي', 'نوع البرنامج', 'إسم المدرب', 'الشهر', 'الرسوم'];
         $this->rows = \App\Models\BatchStudent::whereHas('batch', function ($query) {
             $query->whereBetween("start_date", [$this->from, $this->to]);
         })->get();
-        $data = [
-            [
-                'quantity' => 1,
-                'description' => '1 Year Subscription',
-                'price' => '129.00'
-            ]
-        ];
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('livewire.pdf', ['data' => $data]);
-        return $pdf->stream();
     }
 
     #[Title('التقارير')]

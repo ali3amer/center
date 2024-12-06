@@ -40,7 +40,7 @@ class BatchStudent extends Model
 
     public function getCourseAttribute()
     {
-        return $this->batch->coureName;
+        return $this->batch->courseName;
     }
 
     public function getCertificationIdAttribute()
@@ -50,6 +50,21 @@ class BatchStudent extends Model
     public function getCertificationPriceAttribute()
     {
         return $this->batch->certificate_price;
+    }
+
+    public function getCourseTypeAttribute()
+    {
+        $type = $this->batch->course->type;
+        if ($type == 'course')
+        {
+            $course_type = 'كورس';
+        } elseif ($type == 'session')
+        {
+            $course_type = 'دورة';
+        } else {
+            $course_type = 'ورشه';
+        }
+        return $course_type;
     }
 
 

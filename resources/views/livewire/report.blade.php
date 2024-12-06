@@ -12,8 +12,19 @@
     </x-container>
 
         @if(!empty($rows))
-        <x-container>
-            <x-table :headers="$headers" :array="true" :buttons="false" :index="!$type == 'safe'" :rows="$rows" :paginate="false" :cells="$cells"/>
-        </x-container>
+        @if($type != 'expenses')
+            <x-container>
+                <x-table :headers="$headers" :array="true" :search="false" :buttons="false" :index="$type == 'safe' ? false : true" :rows="$rows" :paginate="false" :cells="$cells"/>
+            </x-container>
+
+        @else
+            <x-container>
+                <x-table :headers="$headers['options']" :array="true" :search="false" :buttons="false" :index="$type == 'safe' ? false : true" :rows="$rows['options']" :paginate="false" :cells="$cells['options']"/>
+            </x-container>
+
+            <x-container>
+                <x-table :headers="$headers['expenses']" :array="true" :search="false" :buttons="false" :index="$type == 'safe' ? false : true" :rows="$rows['expenses']" :paginate="false" :cells="$cells['expenses']"/>
+            </x-container>
+        @endif
         @endif
 </div>

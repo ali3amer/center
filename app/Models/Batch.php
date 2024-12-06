@@ -42,5 +42,24 @@ class Batch extends Model
     {
         return $this->batchStudents()->count();
     }
+    public function getcertificationsCountAttribute()
+    {
+        return $this->batchStudents->where('want_certification', true)->count();
+    }
+
+    public function getCourseTypeAttribute()
+    {
+        $type = $this->course->type;
+        if ($type == 'course')
+        {
+            $course_type = 'كورس';
+        } elseif ($type == 'session')
+        {
+            $course_type = 'دورة';
+        } else {
+            $course_type = 'ورشه';
+        }
+        return $course_type;
+    }
 
 }

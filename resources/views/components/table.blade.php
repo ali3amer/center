@@ -25,7 +25,7 @@
 
                 <tr class="border-b">
                     @if($index)
-                        <td class="px-4 py-1 whitespace-nowrap text-wrap">{{$rowIndex + 1}}</td>
+                        <td class="px-4 py-1 whitespace-nowrap text-xs text-wrap">{{$rowIndex + 1}}</td>
                     @endif
                     @foreach ($cells as $key => $cell)
                         <td class="px-1 py-1 text-xs whitespace-nowrap text-wrap">

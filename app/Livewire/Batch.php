@@ -115,11 +115,18 @@ class Batch extends Component
         $this->reset('trainer_id', 'start_date', 'end_date', 'completed', 'paid', 'price', 'certificate_price', 'id');
     }
 
-    public function render()
+    public function calc()
     {
         if ($this->paid) {
-            $this->fees = ($this->price -$this->certificate_price) * $this->center_fees/100;
+            $this->fees = (floatval($this->price) - floatval($this->certificate_price)) * $this->center_fees / 100;
         }
+    }
+
+    public function render()
+    {
+//        if ($this->paid) {
+//            $this->fees = (floatval($this->price) - floatval($this->certificate_price)) * $this->center_fees/100;
+//        }
 
         if ($this->start_date == '') {
             $this->start_date = date('Y-m-d');
