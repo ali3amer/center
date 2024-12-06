@@ -11,6 +11,7 @@ use Livewire\Component;
 class User extends Component
 {
     use LivewireAlert;
+
     protected $listeners = [
         'delete',
     ];
@@ -23,6 +24,30 @@ class User extends Component
     public $name = '';
     public $password = '';
     public $search = '';
+    public array $permissions = [];
+    public array $permissionsList = [
+        ['banks', 'البنوك'],
+        ['batches', 'الدفعات'],
+        ['batchStudents', 'الدارسيم بالدفعه'],
+        ['batchStudentPayments', 'مدفوعات الدارسين'],
+        ['certifications', 'الشهادات'],
+        ['courses', 'البرامج التدريبيه'],
+        ['employees', 'الموظفين'],
+        ['employeeExpenses', 'مدفوعات الموظفين'],
+        ['expenses', 'المصروفات'],
+        ['expenseOptions', 'تصنيفات المصروفات'],
+        ['halls', 'القاعات'],
+        ['hallRentals', 'إيجارالقاعات'],
+        ['hallRentalPayments', 'مدفوعات القاعات'],
+        ['reports', 'التقارير'],
+        ['settings', 'الاعدادات'],
+        ['students', 'الدارسين'],
+        ['trainers', 'المدربين'],
+        ['trainerBatches', 'مدربين الدفعات'],
+        ['trainerPayments', 'مدفوعات المدربين'],
+        ['transfers', 'التحويلات'],
+        ['users', 'المستخدمين'],
+    ];
 
     protected function rules()
     {
@@ -44,11 +69,14 @@ class User extends Component
     {
         if ($this->id == null) {
             $this->validate();
-            \App\Models\User::create([
+            $user = \App\Models\User::create([
                 'name' => $this->name,
                 'username' => $this->username,
                 'password' => Hash::make($this->password),
             ]);
+            $user->addRole('user');
+
+            $user->syncPermissions($this->permissions);
         } else {
             $user = \App\Models\User::find($this->id);
             $user->name = $this->name;
@@ -56,14 +84,22 @@ class User extends Component
             if (!empty($this->password)) {
                 $user->password = Hash::make($this->password);
             }
+            if ($user->id != 1) {
+                $user->syncPermissions($this->permissions);
+            }
+
             $user->save();
         }
+
+        $this->permissions = [];
+
         $this->resetData();
         $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
     }
 
     public function edit($user)
     {
+        $this->permissions = \App\Models\User::find($user['id'])->allPermissions()->pluck('name')->toArray();
         $this->id = $user['id'];
         $this->name = $user['name'];
         $this->username = $user['username'];
@@ -86,6 +122,9 @@ class User extends Component
 
     public function delete($data)
     {
+        $user = \App\Models\User::find($data['inputAttributes']['id']);
+        $user->syncPermissions([]);
+
         \App\Models\User::where('id', $data['inputAttributes']['id'])->delete();
         $this->resetData();
         $this->alert('success', 'تم الحذف بنجاح', ['timerProgressBar' => true]);
@@ -95,11 +134,12 @@ class User extends Component
     {
         $this->reset('name', 'username', 'password', 'id', 'search');
     }
+
     #[Title('المستخدمين')]
     public function render()
     {
         return view('livewire.user', [
-            'users' => \App\Models\User::where('name', 'like', '%'.$this->search.'%')->where("id", "!=", 1)->where('id', '!=', auth()->id())->paginate(10)
+            'users' => \App\Models\User::where('name', 'like', '%' . $this->search . '%')->paginate(10)
         ]);
     }
 }

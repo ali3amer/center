@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Safe;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\App;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -117,6 +118,25 @@ class Report extends Component
         $this->rows = \App\Models\BatchStudent::whereHas('batch', function ($query) {
             $query->whereBetween("start_date", [$this->from, $this->to]);
         })->get();
+    }
+
+    public function downloadPDF()
+    {
+        $data = [
+            [
+                'quantity' => 1,
+                'description' => '1 Year Subscription',
+                'price' => '129.00'
+            ]
+        ];
+
+        // تحميل الـ PDF
+        $pdf = Pdf::loadView('pdf', ['data' => $data]);
+
+        // تنزيل الملف مباشرة
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->output();
+        }, 'invoice.pdf');
     }
 
     #[Title('التقارير')]

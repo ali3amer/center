@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Safe extends Model
 {
     use HasFactory;
-
+    protected $guarded = [];
     public function safeMovements($from, $to)
     {
         $movements = [];

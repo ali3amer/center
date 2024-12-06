@@ -1,4 +1,7 @@
 <div>
+    <x-container>
+        <button wire:click="downloadPDF" class="btn btn-primary">Download PDF</button>
+    </x-container>
     <x-container title="التقارير">
         <form wire:submit="getReport" class="grid gap-x-1 grid-cols-{{ $type == 'certifications' ? '5' : '4' }}">
             <x-select name="type" :options="$types" :live="true" label="نوع التقرير"/>
