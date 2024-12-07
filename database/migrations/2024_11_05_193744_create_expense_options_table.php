@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('expense_options', function (Blueprint $table) {
             $table->id();
             $table->string('optionName');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

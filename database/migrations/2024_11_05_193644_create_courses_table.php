@@ -19,6 +19,8 @@ return new class extends Migration
             $table->decimal('price', 8, 2)->default(0);
             $table->enum('duration', ['hour', 'day'])->default('hour');
             $table->float('duration_value');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

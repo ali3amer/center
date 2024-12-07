@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('batch_student_id');
             $table->foreign('batch_student_id')->references('id')->on('batch_students')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('certification_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

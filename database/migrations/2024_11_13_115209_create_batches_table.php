@@ -25,6 +25,8 @@ return new class extends Migration
             $table->date('end_date');
             $table->boolean("completed")->default(false);
             $table->boolean("paid")->default(true);
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
