@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{asset("fontawesome-free-6.4.2-web\css\all.min.css")}}">
 
     @vite('resources/js/app.js')
-    <title>{{ $title ?? 'نظام إدارة المعامل' }}</title>
+    <title>{{ $title ?? 'نظام إدارة مركز معاً للتدريب' }}</title>
 </head>
 <body dir="rtl">
 <div class="w-full h-screen flex">
@@ -26,8 +26,8 @@
                                name="username" value="{{ old('username') }}" required autocomplete="off" autofocus>
 
                         @error('username')
-                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
+                        <span class="invalid-feedback text-red-500" role="alert">
+                                        <strong>إسم المستخدم أو كلمة المرور غير صحيح</strong>
                                     </span>
                         @enderror
                     </div>
@@ -41,12 +41,6 @@
                         <input id="password" placeholder="كلمة المرور" autocomplete="off" type="password"
                                class="w-full font-extrabold text-white bg-transparent text-center  py-1.5 pr-2 border-b-2 border-white outline-0 placeholder:text-gray-300 sm:text-sm sm:leading-6" name="password"
                                required autocomplete="current-password">
-
-                        @error('password')
-                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                        @enderror
                     </div>
                 </div>
 

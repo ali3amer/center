@@ -118,26 +118,35 @@ class Report extends Component
         $this->rows = \App\Models\BatchStudent::whereHas('batch', function ($query) {
             $query->whereBetween("start_date", [$this->from, $this->to]);
         })->get();
+        session()->put('pdf_data', [
+            'rows' => $this->rows,
+            'headers' => $this->headers,
+            'cells' => $this->cells,
+        ]);
+        $this->redirectToPdf();
     }
 
-    public function downloadPDF()
+    public function showPDF()
     {
-        $data = [
-            [
-                'quantity' => 1,
-                'description' => '1 Year Subscription',
-                'price' => '129.00'
-            ]
-        ];
-
+        $data = session('pdf_data');
         // تحميل الـ PDF
-        $pdf = Pdf::loadView('pdf', ['data' => $data]);
+        $pdf = Pdf::loadView('pdf', ['rows' => $data['rows'], 'cells' => $data['cells'], 'headers' => $data['headers']])->setPaper('a4', 'landscape');
 
         // تنزيل الملف مباشرة
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->output();
-        }, 'invoice.pdf');
+//        return response()->streamDownload(function () use ($pdf) {
+//            echo $pdf->output();
+//        }, 'invoice.pdf');
+
+        return response($pdf->stream('invoice.pdf'), 200)
+            ->header('Content-Type', 'application/pdf');
     }
+
+    public function redirectToPdf()
+    {
+        $url = route('view.pdf'); // رابط الـ Route الذي يعرض PDF
+        $this->dispatch('openPdf', $url);
+    }
+
 
     #[Title('التقارير')]
     public function render()

@@ -38,6 +38,8 @@ class LoginController extends Controller
         $this->middleware('auth')->only('logout');
     }
 
+
+
     public function username()
     {
         return 'username';

@@ -27,6 +27,7 @@ class Table extends Component
         $this->cells = $cells;
     }
 
+
     /**
      * Get the view / contents that represent the component.
      */

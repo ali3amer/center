@@ -29,6 +29,10 @@ class Header extends Component
             - \App\Models\Expense::where('payment_method', 'bank')->sum('amount')
             + \App\Models\Transfer::where('transfer_type', 'cash_to_bank')->sum('amount')
             - \App\Models\Transfer::where('transfer_type', 'bank_to_cash')->sum('amount');
+        session([
+            'safe_balance' => $this->safe,
+            'bank_balance' => $this->bank,
+        ]);
     }
 
     public function render()

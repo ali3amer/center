@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{asset("fontawesome-free-6.4.2-web\css\all.min.css")}}">
     {{--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">--}}
     @vite('resources/js/app.js')
-    <title>{{ $title ?? 'نظام إدارة معامل' }}</title>
+    <title>{{ $title ?? 'نظام إدارة مركز معاً للتدريب' }}</title>
 </head>
 <body dir="rtl">
 
@@ -31,5 +31,10 @@
 <x-livewire-alert::scripts/>
 <script src="{{ asset('vendor/livewire-alert/livewire-alert.js') }}"></script>
 <x-livewire-alert::flash/>
+<script>
+    Livewire.on('openPdf', url => {
+        window.open(url, '_blank');
+    });
+</script>
 </body>
 </html>

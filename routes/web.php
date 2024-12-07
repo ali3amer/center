@@ -25,18 +25,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/course', Course::class);
-Route::get('/employee', Employee::class);
-Route::get('/expense', Expense::class);
-Route::get('/hall', Hall::class);
-Route::get('/student', Student::class);
-Route::get('/trainer', Trainer::class);
-Route::get('/certification', Certification::class);
-Route::get('/report', Report::class);
-Route::get('/settings', Settings::class);
-Route::get('/bank', Bank::class);
-Route::get('/transfer', Transfer::class);
-Route::get('/user', User::class);
+
+Route::get('/view-pdf', [Report::class, 'showPDF'])->name('view.pdf');
+
+Route::group(['middleware' => 'auth'], function () {
+    // Authentication Routes...
+    Route::get('/course', Course::class);
+    Route::get('/employee', Employee::class);
+    Route::get('/expense', Expense::class);
+    Route::get('/hall', Hall::class);
+    Route::get('/student', Student::class);
+    Route::get('/trainer', Trainer::class);
+    Route::get('/certification', Certification::class);
+    Route::get('/report', Report::class);
+    Route::get('/settings', Settings::class);
+    Route::get('/bank', Bank::class);
+    Route::get('/transfer', Transfer::class);
+    Route::get('/user', User::class);
+
+
+});
+
 Route::get('/', function () {
     return view('welcome');
 });

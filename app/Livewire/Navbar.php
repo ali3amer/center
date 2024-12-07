@@ -7,6 +7,7 @@ use Livewire\Component;
 
 class Navbar extends Component
 {
+
     public function render()
     {
         if (!Auth::check()) {
