@@ -7,9 +7,9 @@
             <x-input name="position" :disabled="$employeeExpenseMode" label="الوظيفة" />
             <x-input name="salary" :disabled="$employeeExpenseMode" label="المرتب" />
             @if(!$employeeExpenseMode)
-                <x-button type="submit" :center="true" label="حفظ"/>
+                <x-button model="employees" type="submit" :center="true" label="حفظ"/>
             @else
-                <x-button type="button" color="bg-red-600" wire:click="resetData" label=""
+                <x-button model="employees" type="button" color="bg-red-600" wire:click="resetData" label=""
                           icon="fa-close"/>
             @endif
         </form>
@@ -17,7 +17,7 @@
 
     @if(!$employeeExpenseMode)
     <x-container>
-        <x-table :headers="$headers" :rows="$employees" :choose="true" :cells="$cells" />
+        <x-table :headers="$headers" model="employees" chooseModel="employeeExpenses" :rows="$employees" :choose="true" :cells="$cells" />
     </x-container>
     @else
         <livewire:employee-expense :$employee_id />

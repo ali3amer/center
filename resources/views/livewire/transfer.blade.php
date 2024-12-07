@@ -6,10 +6,10 @@
             <x-select name="bank_id" :options="$banks" label="البنك"/>
             <x-input name="transaction_id" label="رقم العملية"/>
             <x-input name="amount" label="المبلغ"/>
-            <x-button type="submit" label="حفظ"/>
+            <x-button model="transfers" type="submit" label="حفظ"/>
         </form>
     </x-container>
     <x-container>
-        <x-table :headers="$headers" :rows="$transfers" :numbers="['amount']" :search="false" :cells="$cells"/>
+        <x-table :headers="$headers" model="transfers" :rows="$transfers" :numbers="['amount']" :search="false" :cells="$cells"/>
     </x-container>
 </div>

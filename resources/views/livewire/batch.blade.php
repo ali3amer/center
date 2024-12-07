@@ -14,12 +14,12 @@
                 <x-input type="date" name="end_date" label="تاريخ النهايه"/>
                 <x-checkbox name="completed" label="مكتمل" />
                 <x-input name="fees" :disabled="true" label="الصافي"/>
-                <x-button type="submit" label="حفظ"/>
+                <x-button type="submit" model="batches" label="حفظ"/>
             </div>
         </form>
     </x-container>
 
     <x-container>
-        <x-table :headers="$headers" :rows="$batches" :search="false" :cells="$cells" />
+        <x-table :headers="$headers" :rows="$batches" model="batches" :search="false" :cells="$cells" />
     </x-container>
 </div>

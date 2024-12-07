@@ -23,7 +23,7 @@ class Certification extends Component
     public $functions = [
         'courses' => ['chooseCourse'],
         'batches' => ['chooseBatch'],
-        'batch_students' => []
+        'batchStudents' => []
     ];
     public $key = 'courses';
     public $course = [];
@@ -50,7 +50,7 @@ class Certification extends Component
     public function chooseBatch($batch)
     {
         $this->batch = $batch;
-        $this->key = 'batch_students';
+        $this->key = 'batchStudents';
         $this->headers = ['رقم الطالب', 'رقم الشهاده','الإسم بالعربي', 'الإسم بالإنجليزي', 'تاريخ التسجيل'];
         $this->cells = ['student_id', 'certification_id', 'arabic_name', 'english_name', 'date'];
     }
@@ -89,7 +89,7 @@ class Certification extends Component
             $query = \App\Models\Course::where('arabic_name', 'like', '%' . $this->search . '%')->paginate(10);
         } elseif ($this->key == 'batches') {
             $query = \App\Models\Batch::where('course_id', $this->course['id'])->paginate(10);
-        } elseif ($this->key == 'batch_students') {
+        } elseif ($this->key == 'batchStudents') {
             $query = \App\Models\BatchStudent::where('batch_id', $this->batch['id'])->join('students', 'students.id', '=', 'batch_students.student_id')->select('students.*', 'batch_students.*')->where('students.arabic_name', 'like', '%' . $this->search . '%')->paginate(10);
         }
         return view('livewire.certification', [

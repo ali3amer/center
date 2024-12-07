@@ -6,9 +6,9 @@
             <x-input name="price" :disabled="$rentalMode" label="السعر" />
 
             @if(!$rentalMode)
-                <x-button type="submit" :center="true" label="حفظ" />
+                <x-button model="halls" type="submit" :center="true" label="حفظ" />
             @else
-                <x-button type="button" color="bg-red-600" wire:click="resetData" label=""
+                <x-button model="halls" type="button" color="bg-red-600" wire:click="resetData" label=""
                           icon="fa-close"/>
             @endif
 
@@ -17,7 +17,7 @@
 
     @if(!$rentalMode)
         <x-container>
-            <x-table :headers="$headers" :rows="$halls" :choose="true" :cells="$cells" />
+            <x-table :headers="$headers" model="halls" chooseModel="hallRentals" :rows="$halls" :choose="true" :cells="$cells" />
         </x-container>
     @else
         <livewire:hall-rental :$hall_id />

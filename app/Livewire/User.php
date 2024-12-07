@@ -25,6 +25,21 @@ class User extends Component
     public $password = '';
     public $search = '';
     public array $permissions = [];
+    protected function rules()
+    {
+        return [
+            'username' => 'required|unique:users,username,' . $this->id
+        ];
+    }
+
+    protected function messages()
+    {
+        return [
+            'username.required' => 'الرجاء إدخال إسم المستخدم',
+            'username.unique' => 'هذا المستخدم موجود مسبقاً'
+        ];
+    }
+
     public array $permissionsList = [
         ['banks', 'البنوك'],
         ['batches', 'الدفعات'],
@@ -44,25 +59,11 @@ class User extends Component
         ['students', 'الدارسين'],
         ['trainers', 'المدربين'],
         ['trainerBatches', 'مدربين الدفعات'],
-        ['trainerPayments', 'مدفوعات المدربين'],
+        ['batchTrainerPayments', 'مدفوعات المدربين'],
         ['transfers', 'التحويلات'],
         ['users', 'المستخدمين'],
+        ['permissions', 'الصلاحيات'],
     ];
-
-    protected function rules()
-    {
-        return [
-            'username' => 'required|unique:users,username,' . $this->id
-        ];
-    }
-
-    protected function messages()
-    {
-        return [
-            'username.required' => 'الرجاء إدخال إسم المستخدم',
-            'username.unique' => 'هذا المستخدم موجود مسبقاً'
-        ];
-    }
 
 
     public function save()

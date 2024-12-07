@@ -21,8 +21,9 @@ return [
             'students' => 'c,r,u,d',
             'trainers' => 'c,r,u,d',
             'trainerBatches' => 'c,r,u,d',
-            'trainerPayments' => 'c,r,u,d',
+            'batchTrainerPayments' => 'c,r,u,d',
             'transfers' => 'c,r,u,d',
+            'permissions' => 'c,r,u,d',
             'users' => 'c,r,u,d',
         ],
         'user' => []

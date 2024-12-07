@@ -5,10 +5,10 @@
             <x-input name="name" label="إسم صاحب الحساب"/>
             <x-input name="initial_balance" label="الرصيد الافتتاحي"/>
             <x-input type="date" name="date" label="التاريخ"/>
-            <x-button type="submit" label="حفظ"/>
+            <x-button model="banks" type="submit" label="حفظ"/>
         </form>
     </x-container>
     <x-container>
-        <x-table :headers="$headers" :rows="$banks" :search="false" :cells="$cells"/>
+        <x-table :headers="$headers" model="banks" :rows="$banks" :search="false" :cells="$cells"/>
     </x-container>
 </div>

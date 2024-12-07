@@ -5,6 +5,6 @@
         </x-container>
     @endif
     <x-container>
-        <x-table :headers="$headers" :rows="$rows" :edit="false" :delete="false" :buttons="$key == 'batch_students' ? false : true" :functions="[$functions[$key]]" :cells="$cells"/>
+        <x-table :headers="$headers" :rows="$rows" :edit="false" :delete="false" :model="$key" :buttons="$key == 'batchStudents' ? false : true" :functions="[$functions[$key]]" :cells="$cells"/>
     </x-container>
 </div>

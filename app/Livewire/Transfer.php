@@ -22,7 +22,7 @@ class Transfer extends Component
         'delete',
     ];
     public $id = null;
-    public $transfer_type = '';
+    public $transfer_type = 'cash_to_bank';
     public $bank_id = null;
     public $transfer_types = [
         'cash_to_bank' => 'من الخزنه الى البنك',
@@ -99,6 +99,8 @@ class Transfer extends Component
 
     public function resetData()
     {
+        $this->dispatch('update-balance');
+
         $this->reset('id', 'transfer_type', 'amount', 'transaction_id', 'date');
     }
     #[Title('التحويلات')]

@@ -30,7 +30,7 @@
                 <x-select name="bank_id" :options="$banks" label="البنك"/>
                 <x-input name="transaction_id" label="رقم الاشعار"/>
                 <x-input name="note" label="ملاحظات"/>
-                <x-button type="submit"
+                <x-button type="submit" model="batchTrainerPayments"
                           :disabled="$remainder <= 0 || floatval($amount) == 0 || floatval($amount) > $remainder"
                           :center="true" label="حفظ"/>
             </div>
@@ -38,6 +38,6 @@
     </x-container>
 
     <x-container>
-        <x-table :headers="$headers" :rows="$batchTrainerPayments" :search="false" :cells="$cells"/>
+        <x-table :headers="$headers" model="batchTrainerPayments" :rows="$batchTrainerPayments" :search="false" :cells="$cells"/>
     </x-container>
 </div>

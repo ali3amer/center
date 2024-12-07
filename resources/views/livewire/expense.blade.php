@@ -13,8 +13,8 @@
                     <x-select name="bank_id" :disabled="$payment_method == 'cash'" :options="$banks" label="البنك"/>
                     <x-input name="transaction_id" :disabled="$payment_method == 'cash'" label="رقم الاشعار"/>
                     <div class="grid gap-x-1 grid-cols-2">
-                        <x-button :disabled="floatval($amount) == 0" type="submit" label="حفظ"/>
-                        <x-button wire:click="$toggle('optionMode')" class="bg-yellow-500"
+                        <x-button model="expenses" :disabled="floatval($amount) == 0" type="submit" label="حفظ"/>
+                        <x-button model="expenseOptions" permission="read" wire:click="$toggle('optionMode')" class="bg-yellow-500"
                                   icon="fa-list" label=""/>
                     </div>
                 </div>
@@ -22,7 +22,7 @@
         </x-container>
 
         <x-container>
-            <x-table :headers="$headers" :rows="$expenses" :cells="$cells"/>
+            <x-table :headers="$headers" model="expenses" :rows="$expenses" :cells="$cells"/>
         </x-container>
     @else
         <livewire:expense-option/>

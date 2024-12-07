@@ -1,26 +1,27 @@
-@props(['choose' => false, 'index' => false, 'search' => true, 'buttons' => true, 'edit' => true, 'delete' => true, 'paginate' => true, 'numbers' => [], 'functions' => [], 'array' => false])
+@props(['choose' => false, 'index' => false, 'search' => true, 'buttons' => true, 'edit' => true, 'delete' => true, 'paginate' => true, 'numbers' => [], 'functions' => [], 'array' => false, 'model' => '', 'chooseModel' => ''])
 <div>
-    @if($search)
-        <x-input name="search" label="" placeholder="بحث ....." width="1/3" wire:model.live="search"/>
-    @endif
-    <table class="table-auto w-full relative mt-2 max-h-96">
-        <thead class="bg-cyan-700 text-white">
-        <tr>
-            @if($index)
-                <th class="px-4 py-1 rounded-r-2xl">
-                    #
-                </th>
-            @endif
-            @foreach ($headers as $header)
-                <th class="py-2 {{$loop->first && !$index ? 'rounded-r-2xl' : ''}} {{ $loop->last && !$buttons ? 'rounded-l-2xl' : '' }} px-4">{{$header}}</th>
+    @if(Auth::user()->hasPermission($model.'-read'))
+        @if($search)
+            <x-input name="search" label="" placeholder="بحث ....." width="1/3" wire:model.live="search"/>
+        @endif
+        <table class="table-auto w-full relative mt-2 max-h-96">
+            <thead class="bg-cyan-700 text-white">
+            <tr>
+                @if($index)
+                    <th class="px-4 py-1 rounded-r-2xl">
+                        #
+                    </th>
+                @endif
+                @foreach ($headers as $header)
+                    <th class="py-2 {{$loop->first && !$index ? 'rounded-r-2xl' : ''}} {{ $loop->last && !$buttons ? 'rounded-l-2xl' : '' }} px-4">{{$header}}</th>
 
-            @endforeach
-            @if($buttons)
-                <th class="py-2 px-4 rounded-l-2xl">الإجراءات</th>
-            @endif
-        </tr>
-        </thead>
-        <tbody class="text-center">
+                @endforeach
+                @if($buttons)
+                    <th class="py-2 px-4 rounded-l-2xl">الإجراءات</th>
+                @endif
+            </tr>
+            </thead>
+            <tbody class="text-center">
             @foreach ($rows as $rowIndex => $row)
 
                 <tr class="border-b">
@@ -51,16 +52,16 @@
                     @if($buttons)
                         <td class="px-6 py-1 whitespace-nowrap">
                             @if($edit)
-                                <button class="bg-cyan-300 rounded text-white px-2 py-1" wire:click="edit({{$row}})"><i
+                                <button @disabled(!Auth::user()->hasPermission($model.'-update')) class="bg-cyan-300 rounded text-white px-2 py-1" wire:click="edit({{$row}})"><i
                                         class="fa fa-pen fa-xs"></i></button>
                             @endif
                             @if($delete)
-                                <button class="bg-red-600 rounded text-white px-2 py-1"
+                                <button @disabled(!Auth::user()->hasPermission($model.'-delete')) class="bg-red-600 rounded text-white px-2 py-1"
                                         wire:click="deleteMessage({{$row['id']}})">
                                     <i class="fa fa-close fa-xs"></i></button>
                             @endif
                             @if($choose)
-                                <button class="bg-yellow-400 rounded text-white px-2 py-1"
+                                <button @disabled(!Auth::user()->hasPermission($chooseModel.'-read')) class="bg-yellow-400 rounded text-white px-2 py-1"
                                         wire:click="choose({{$row}})"><i
                                         class="fa fa-eye fa-xs"></i></button>
                             @endif
@@ -75,12 +76,13 @@
                     @endif
                 </tr>
             @endforeach
-        </tbody>
-    </table>
+            </tbody>
+        </table>
 
-    @if($paginate)
-        <div class="px-5 mt-2">
-            {{ $rows->links() }}
-        </div>
+        @if($paginate)
+            <div class="px-5 mt-2">
+                {{ $rows->links() }}
+            </div>
+        @endif
     @endif
 </div>

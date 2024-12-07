@@ -7,9 +7,9 @@
             <x-input name="phone" :disabled="$batchMode" label="الهاتف"/>
             <x-input name="email" :disabled="$batchMode" label="البريد الالكتروني"/>
             @if(!$batchMode)
-                <x-button type="submit" label="حفظ"/>
+                <x-button type="submit" model="trainers" label="حفظ"/>
             @else
-                <x-button type="button" color="bg-red-600" wire:click="resetData" label=""
+                <x-button type="button" model="trainers" color="bg-red-600" wire:click="resetData" label=""
                           icon="fa-close"/>
             @endif
         </form>
@@ -17,7 +17,7 @@
 
     @if(!$batchMode)
         <x-container>
-            <x-table :headers="$headers" :rows="$trainers" :choose="true" :cells="$cells" />
+            <x-table :headers="$headers" model="trainers" chooseModel="trainerBatches" :rows="$trainers" :choose="true" :cells="$cells" />
         </x-container>
     @else
         <livewire:trainer-batch :$trainer_id />

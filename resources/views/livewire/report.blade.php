@@ -10,7 +10,7 @@
             @endif
             <x-input type="date" name="from" label="من تاريخ"/>
             <x-input type="date" name="to" label="الى تاريخ"/>
-            <x-button type="submit" :center="true" label="جلب التقرير"/>
+            <x-button type="submit" model="reports" :center="true" label="جلب التقرير"/>
         </form>
     </x-container>
 

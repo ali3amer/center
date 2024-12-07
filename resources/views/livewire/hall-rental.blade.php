@@ -15,9 +15,9 @@
                 <x-input name="cost" :disabled="true" :live="true" label="التكلفه الكليه"/>
                 <x-input name="remainder" :disabled="true" label="المتبقي"/>
                 @if(!$rentalPaymentMode)
-                    <x-button type="submit" :center="true" label="حفظ"/>
+                    <x-button type="submit" model="hallRentals" label="حفظ"/>
                 @else
-                    <x-button type="button" color="bg-red-600" wire:click="resetData" label=""
+                    <x-button type="button" model="hallRentals" color="bg-red-600" wire:click="resetData" label=""
                               icon="fa-close"/>
                 @endif
             </div>
@@ -26,7 +26,7 @@
 
     @if(!$rentalPaymentMode)
         <x-container>
-            <x-table :headers="$headers" :rows="$hallRentals" :search="false" :choose="true" :cells="$cells" />
+            <x-table :headers="$headers" :rows="$hallRentals" model="hallRentals" chooseModel="hallRentalPayments" :search="false" :choose="true" :cells="$cells" />
         </x-container>
     @else
         <livewire:hall-rental-payment :$hall_rental_id />
