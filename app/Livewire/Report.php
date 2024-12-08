@@ -11,9 +11,11 @@ use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Mpdf\Mpdf;
 
 class Report extends Component
 {
+
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
@@ -101,6 +103,8 @@ class Report extends Component
         $this->cells['expenses'] = ['date', 'description', 'name', 'amount'];
         $this->headers['expenses'] = ['التاريخ', 'البيان', 'التصنيف', 'المبلغ'];
         $this->rows['expenses'] = \App\Models\Expense::whereBetween("date", [$this->from, $this->to])->get();
+
+        $this->putInSession();
     }
 
     public function courses()
@@ -118,32 +122,38 @@ class Report extends Component
         $this->rows = \App\Models\BatchStudent::whereHas('batch', function ($query) {
             $query->whereBetween("start_date", [$this->from, $this->to]);
         })->get();
+        $this->putInSession();
+    }
+
+    public function putInSession()
+    {
         session()->put('pdf_data', [
             'rows' => $this->rows,
             'headers' => $this->headers,
             'cells' => $this->cells,
+            'type' => $this->type,
         ]);
         $this->redirectToPdf();
+
     }
 
     public function showPDF()
     {
         $data = session('pdf_data');
-        // تحميل الـ PDF
-        $pdf = Pdf::loadView('pdf', ['rows' => $data['rows'], 'cells' => $data['cells'], 'headers' => $data['headers']])->setPaper('a4', 'landscape');
 
-        // تنزيل الملف مباشرة
-//        return response()->streamDownload(function () use ($pdf) {
-//            echo $pdf->output();
-//        }, 'invoice.pdf');
+        $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8',
+            'format' => 'A4',
+            'orientation' => 'L'
+        ]);
+        $html = view('pdf', ['rows' => $data['rows'], 'cells' => $data['cells'], 'headers' => $data['headers'], 'type' => $data['type']])->render();
+        $mpdf->WriteHTML($html);
+        $mpdf->Output('mypdf.pdf', 'I');
 
-        return response($pdf->stream('invoice.pdf'), 200)
-            ->header('Content-Type', 'application/pdf');
     }
 
     public function redirectToPdf()
     {
-        $url = route('view.pdf'); // رابط الـ Route الذي يعرض PDF
+        $url = route('view.pdf');
         $this->dispatch('openPdf', $url);
     }
 

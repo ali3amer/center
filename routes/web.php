@@ -27,6 +27,9 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/view-pdf', [Report::class, 'showPDF'])->name('view.pdf');
+Route::get('/pdf', function () {
+    return view('pdf');
+});
 
 Route::group(['middleware' => 'auth'], function () {
     // Authentication Routes...

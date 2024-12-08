@@ -9,11 +9,14 @@
         "barryvdh/laravel-dompdf": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
         "jantinnerezo/livewire-alert": "^3.0",
+        "khaled.alshamaa/ar-php": "^6.3",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.5",
         "livewire/livewire": "^3.5",
+        "mpdf/mpdf": "^8.2",
+        "niklasravnsborg/laravel-pdf": "^4.1",
         "santigarcor/laratrust": "^8.3"
     },
     "require-dev": {
@@ -55,7 +58,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "barryvdh/laravel-debugbar"
+            ]
         }
     },
     "config": {
