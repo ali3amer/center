@@ -6,28 +6,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
     <style>
-        @page {
-            header: page-header;
-        }
-
         * {
             font-family: sans-serif;
             direction: rtl;
             text-align: center;
         }
 
-        @page {
-            margin: 100px 25px;
-        }
 
-        header {
+        .header {
             position: fixed;
-            top: -60px;
-            height: 50px;
-            background-color: #752727;
-            color: white;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px; /* ارتفاع الهيدر */
             text-align: center;
-            line-height: 35px;
+            line-height: 50px;
         }
 
         footer {
@@ -104,17 +97,15 @@
     </style>
 </head>
 <body>
-<htmlpageheader name="page-header">
-    <table style="display:block; margin-bottom: 200px" >
-        <tr>
-            <td></td>
-            <td><img src="{{asset("js/center.jpg")}}" style="width: 200px;"/></td>
-        </tr>
-    </table>
-</htmlpageheader>
+<table style="direction: rtl" class="header">
+    <tr>
+        <td style="width: 200px;text-align: right"><img src="{{asset("js/center.jpg")}}" style="width: 200px;"/></td>
+        <td>aaaaaaaaa</td>
+    </tr>
+</table>
 
 @if($type != 'expenses')
-    <table style="margin-top: 100px">
+    <table>
         <thead>
         <tr>
             @foreach ($headers as $header)
