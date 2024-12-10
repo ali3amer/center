@@ -14,4 +14,9 @@ class Employee extends Model
     {
         return $this->hasMany(EmployeeExpense::class);
     }
+
+    public function getBalanceAttribute()
+    {
+        return $this->employeeExpenses->where('type', 'debt')->sum('amount') - $this->employeeExpenses->where('type', 'paid')->sum('amount') - $this->employeeExpenses->where('type', 'discount')->sum('amount');
+    }
 }

@@ -111,6 +111,12 @@ class HallRentalPayment extends Component
 
     public function render()
     {
+        if ($this->payment_method == 'cash') {
+            $this->bank_id = null;
+        }
+        if ($this->payment_method == "bank" && !empty($this->banks) && $this->bank_id == null) {
+            $this->bank_id = array_key_first($this->banks);
+        }
         $this->cost = $this->hall_rental->price * $this->hall_rental->duration;
         $this->remainder = $this->cost - \App\Models\HallRentalPayment::where('hall_rental_id', $this->hall_rental_id)->sum('amount');
         if ($this->date == '') {

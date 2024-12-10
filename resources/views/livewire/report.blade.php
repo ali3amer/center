@@ -1,7 +1,5 @@
 <div>
-    <x-container>
-        <button wire:click="redirectToPdf" class="btn btn-primary">Download PDF</button>
-    </x-container>
+
     <x-container title="التقارير">
         <form wire:submit="getReport" class="grid gap-x-1 grid-cols-{{ $type == 'certifications' ? '5' : '4' }}">
             <x-select name="type" :options="$types" :live="true" label="نوع التقرير"/>
@@ -16,23 +14,35 @@
 
     @if(!empty($rows))
         @if($type != 'expenses')
+
             <x-container>
-                <x-table :headers="$headers" :search="false" model="reports" :buttons="false"
+                @if($type == 'safe')
+                    <div class="flex">
+                        <x-input name="balance" :disabled="true" width="1/4" label="الرصيد"
+                                 value="{{ $incomes - $expenses }}"/>
+                    </div>
+                @endif
+                <x-table :headers="$headers" :array="true" :footers="$footers" :search="false" model="reports"
+                         :buttons="false"
                          :index="$type == 'safe' ? false : true" :rows="$rows" :paginate="false" :cells="$cells"/>
             </x-container>
 
         @else
-            <x-container>
-                <x-table :headers="$headers['options']" model="reports" :array="true" :search="false" :buttons="false"
-                         :index="$type == 'safe' ? false : true" :rows="$rows['options']" :paginate="false"
-                         :cells="$cells['options']"/>
-            </x-container>
+            @if(isset($headers['options']))
+                <x-container>
+                    <x-table :headers="$headers['options']" model="reports" :array="true" :search="false"
+                             :buttons="false"
+                             :index="$type == 'safe' ? false : true" :rows="$rows['options']" :paginate="false"
+                             :cells="$cells['options']"/>
+                </x-container>
 
-            <x-container>
-                <x-table :headers="$headers['expenses']" model="reports" :array="true" :search="false" :buttons="false"
-                         :index="$type == 'safe' ? false : true" :rows="$rows['expenses']" :paginate="false"
-                         :cells="$cells['expenses']"/>
-            </x-container>
+                <x-container>
+                    <x-table :headers="$headers['expenses']" model="reports" :array="true" :search="false"
+                             :buttons="false"
+                             :index="$type == 'safe' ? false : true" :rows="$rows['expenses']" :paginate="false"
+                             :cells="$cells['expenses']"/>
+                </x-container>
+            @endif
         @endif
     @endif
 </div>

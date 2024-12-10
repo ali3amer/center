@@ -118,22 +118,21 @@
             <tr>
                 @foreach ($cells as $key => $cell)
                     <td>
-                        @if(!is_array($cell))
-                            {{ $row->$cell }}
-                        @else
-                            {{$cell[$row[$key]]}}
-                        @endif
+                        {{$row[$cell]}}
                     </td>
                 @endforeach
             </tr>
         @endforeach
         </tbody>
-        <tfoot>
-        <tr>
-            <td>المجموع:</td>
-            <td>0</td>
-        </tr>
-        </tfoot>
+        @if(!empty($footers))
+            <tfoot>
+            <tr>
+                @foreach ($footers as $key => $footer)
+                    <th>{{$footer}}</th>
+                @endforeach
+            </tr>
+            </tfoot>
+        @endif
     </table>
 @else
     <table style="page-break-after: auto">
@@ -159,12 +158,16 @@
             </tr>
         @endforeach
         </tbody>
-        <tfoot>
-        <tr>
-            <td>المجموع:</td>
-            <td>0</td>
-        </tr>
-        </tfoot>
+        @if(!empty($footers))
+            <tfoot>
+            <tr>
+                @foreach ($footers as $key => $footer)
+                    <th>{{$footer}}</th>
+                @endforeach
+            </tr>
+            </tfoot>
+        @endif
+
     </table>
 
     <table>
@@ -190,12 +193,15 @@
             </tr>
         @endforeach
         </tbody>
-        <tfoot>
-        <tr>
-            <td>المجموع:</td>
-            <td>0</td>
-        </tr>
-        </tfoot>
+        @if(!empty($footers))
+            <tfoot>
+            <tr>
+                @foreach ($footers as $key => $footer)
+                    <th>{{$footer}}</th>
+                @endforeach
+            </tr>
+            </tfoot>
+        @endif
     </table>
 @endif
 

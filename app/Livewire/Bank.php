@@ -14,8 +14,8 @@ class Bank extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['إسم البنك', 'إسم صاحب الحساب', 'الرصيد الافتتاحي', 'التاريخ'];
-    public $cells = ['bank_name', 'name', 'initial_balance', 'date'];
+    public $headers = ['إسم البنك', 'إسم صاحب الحساب', 'الرصيد الافتتاحي', 'الرصيد الحالي', 'التاريخ'];
+    public $cells = ['bank_name', 'name', 'initial_balance', 'balance', 'date'];
 
     protected $listeners = [
         'delete',

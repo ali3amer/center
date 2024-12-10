@@ -31,6 +31,7 @@ class EmployeeExpense extends Component
     public $bank_id = null;
     public $banks = [];
     public $transaction_id = '';
+    public $balance = 0;
 
     public function mount()
     {
@@ -116,6 +117,13 @@ class EmployeeExpense extends Component
 
     public function render()
     {
+        $this->balance = \App\Models\Employee::find($this->employee_id)->balance;
+        if ($this->payment_method == 'cash') {
+            $this->bank_id = null;
+        }
+        if ($this->payment_method == "bank" && !empty($this->banks) && $this->bank_id == null) {
+            $this->bank_id = array_key_first($this->banks);
+        }
         if ($this->date == '') {
             $this->date = date('Y-m-d');
         }

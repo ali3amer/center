@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -65,6 +66,11 @@ class BatchStudent extends Model
             $course_type = 'ورشه';
         }
         return $course_type;
+    }
+
+    public function getMonthAttribute()
+    {
+        return Carbon::parse($this->batch->start_date)->locale('ar')->translatedFormat('F');
     }
 
 

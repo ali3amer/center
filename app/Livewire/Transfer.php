@@ -31,6 +31,7 @@ class Transfer extends Component
     public $amount = '';
     public $transaction_id = '';
     public $date = '';
+    public $note = null;
     public $banks = [];
 
     public function mount()
@@ -48,6 +49,7 @@ class Transfer extends Component
                 'amount' => $this->amount,
                 'transaction_id' => $this->transaction_id,
                 'date' => $this->date,
+                'note' => $this->note,
                 'user_id' => Auth::id(),
             ]);
         } else {
@@ -57,6 +59,7 @@ class Transfer extends Component
                 'amount' => $this->amount,
                 'transaction_id' => $this->transaction_id,
                 'date' => $this->date,
+                'note' => $this->note,
                 'user_id' => Auth::id(),
             ]);
         }
@@ -72,6 +75,7 @@ class Transfer extends Component
         $this->amount = $transfer['amount'];
         $this->transaction_id = $transfer['transaction_id'];
         $this->date = $transfer['date'];
+        $this->note = $transfer['note'];
         $this->bank_id = $transfer['bank_id'];
     }
 
@@ -101,7 +105,7 @@ class Transfer extends Component
     {
         $this->dispatch('update-balance');
 
-        $this->reset('id', 'transfer_type', 'amount', 'transaction_id', 'date');
+        $this->reset('id', 'transfer_type', 'amount', 'transaction_id', 'date', 'note');
     }
     #[Title('التحويلات')]
     public function render()

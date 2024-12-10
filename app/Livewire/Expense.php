@@ -114,6 +114,12 @@ class Expense extends Component
     #[Title('المصروفات')]
     public function render()
     {
+        if ($this->payment_method == 'cash') {
+            $this->bank_id = null;
+        }
+        if ($this->payment_method == "bank" && !empty($this->banks) && $this->bank_id == null) {
+            $this->bank_id = array_key_first($this->banks);
+        }
         if ($this->date == '') {
             $this->date = date('Y-m-d');
         }

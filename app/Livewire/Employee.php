@@ -17,7 +17,7 @@ class Employee extends Component
     protected $listeners = [
         'delete',
     ];
-    public $headers = ['الإسم', 'البريد', 'الهاتف', 'العنوان'];
+    public $headers = ['الإسم', 'البريد', 'الهاتف', 'المرتب'];
     public $cells = ['name', 'phone', 'email', 'salary'];
     public $id = null;
     public $employee_id = null;

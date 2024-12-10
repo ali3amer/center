@@ -22,4 +22,15 @@ class BatchStudentPayment extends Model
         return $this->belongsTo(Bank::class);
     }
 
+    public function getBankNameAttribute()
+    {
+        return $this->bank->bank_name ?? "";
+    }
+
+    public function getPaymentAttribute()
+    {
+        return $this->payment_method == "cash" ? 'كاش' : 'بنك';
+    }
+
+
 }

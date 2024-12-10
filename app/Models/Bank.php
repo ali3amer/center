@@ -35,4 +35,13 @@ class Bank extends Model
     {
         return $this->hasMany(EmployeeExpense::class);
     }
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
+
+    public function getBalanceAttribute()
+    {
+        return $this->initial_balance + $this->batchStudentPayments->sum('amount') + $this->hallRentalPayments->sum('amount') + $this->transfers->where('transfer_type', 'cash_to_bank')->sum('amount') - $this->transfers->where('transfer_type', 'bank_to_cash')->sum('amount') - $this->employeeExpenses->where('type', 'debt')->sum('amount') - $this->employeeExpenses->where('type', 'paid')->sum('amount') - $this->employeeExpenses->where('type', 'discount')->sum('amount') - $this->batchTrainerPayments->sum('amount') - $this->expenses->sum('amount');
+    }
 }

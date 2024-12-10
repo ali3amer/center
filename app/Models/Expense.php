@@ -16,14 +16,24 @@ class Expense extends Model
         return $this->belongsTo(ExpenseOption::class);
     }
 
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class);
+    }
+
+    public function getBankNameAttribute()
+    {
+        return $this->bank->bank_name ?? "";
+    }
+
     public function getNameAttribute()
     {
         return $this->expenseOption->optionName ?? "غير مصنف";
     }
 
-    public function bank()
+    public function getPaymentAttribute()
     {
-        return $this->belongsTo(Bank::class);
+        return $this->payment_method == "cash" ? 'كاش' : 'بنك';
     }
 
 }

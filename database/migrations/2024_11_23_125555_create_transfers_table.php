@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('transfers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('bank_id');
+            $table->unsignedBigInteger('bank_id')->nullable();
             $table->foreign('bank_id')->references('id')->on('banks')->onDelete('cascade')->onUpdate('cascade');
             $table->enum('transfer_type', ['cash_to_bank', 'bank_to_cash'])->default('cash_to_bank');
             $table->decimal('amount', 10, 2)->default(0);

@@ -1,4 +1,4 @@
-@props(['choose' => false, 'index' => false, 'search' => true, 'buttons' => true, 'edit' => true, 'delete' => true, 'paginate' => true, 'numbers' => [], 'functions' => [], 'array' => false, 'model' => '', 'chooseModel' => ''])
+@props(['choose' => false, 'index' => false, 'search' => true, 'buttons' => true, 'edit' => true, 'delete' => true, 'paginate' => true, 'numbers' => [], 'functions' => [], 'array' => false, 'model' => '', 'chooseModel' => '', 'footers' => []])
 <div>
     @if(Auth::user()->hasPermission($model.'-read'))
         @if($search)
@@ -81,6 +81,21 @@
                 </tr>
             @endforeach
             </tbody>
+            @if(!empty($footers))
+                <tfoot class="bg-cyan-700 text-white">
+                <tr>
+                    @php $i = count($headers) @endphp
+                    @if($index)
+                        <th class="px-4 py-1 rounded-r-2xl">
+
+                        </th>
+                    @endif
+                    @foreach ($footers as $key => $footer)
+                        <th class="py-1 {{$loop->first && !$index ? 'rounded-r-2xl' : ''}} {{ $loop->last && !$buttons ? 'rounded-l-2xl' : '' }} px-4">{{$footer}}</th>
+                    @endforeach
+                </tr>
+                </tfoot>
+            @endif
         </table>
 
         @if($paginate)
