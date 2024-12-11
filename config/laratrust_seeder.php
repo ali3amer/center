@@ -8,6 +8,7 @@ return [
             'batchStudents' => 'c,r,u,d',
             'batchStudentPayments' => 'c,r,u,d',
             'certifications' => 'c,r,u,d',
+            'batchCertificationPayments' => 'c,r,u,d',
             'courses' => 'c,r,u,d',
             'employees' => 'c,r,u,d',
             'employeeExpenses' => 'c,r,u,d',

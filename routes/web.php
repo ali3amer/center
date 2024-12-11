@@ -45,14 +45,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/bank', Bank::class);
     Route::get('/transfer', Transfer::class);
     Route::get('/user', User::class);
+    Route::get('/', Course::class);
+    Route::get('/home', Course::class)->name('home');
 
-
-});
-
-Route::get('/', function () {
-    return view('welcome');
 });
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

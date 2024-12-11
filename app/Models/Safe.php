@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Safe extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
+
     public function safeMovements($from, $to)
     {
         $movements = [];
@@ -22,7 +24,7 @@ class Safe extends Model
                 "transaction_id" => $batchStudentPayment->transaction_id,
                 "bank_id" => $batchStudentPayment->bankName,
                 "note" => $batchStudentPayment->batchStudent->name,
-                "created_at" => $batchStudentPayment->created_at,
+                "created_at" => 'الدارس :' . $batchStudentPayment->created_at,
                 "updated_at" => $batchStudentPayment->updated_at,
             ];
         }
@@ -36,9 +38,24 @@ class Safe extends Model
                 "payment_method" => $batchTrainerPayment->payment,
                 "transaction_id" => $batchTrainerPayment->transaction_id,
                 "bank_id" => $batchTrainerPayment->bankName,
-                "note" => $batchTrainerPayment->batch->name,
+                "note" => 'المدرب : ' . $batchTrainerPayment->batch->name,
                 "created_at" => $batchTrainerPayment->created_at,
                 "updated_at" => $batchTrainerPayment->updated_at,
+            ];
+        }
+
+        $batchCertificationPayments = BatchCertificationPayment::whereBetween('date', [$from, $to])->get();
+        foreach ($batchCertificationPayments as $batchCertificationPayment) {
+            $movements[] = [
+                "income" => 0,
+                "expense" => $batchCertificationPayment->amount,
+                "date" => $batchCertificationPayment->date,
+                "payment_method" => $batchCertificationPayment->payment,
+                "transaction_id" => $batchCertificationPayment->transaction_id,
+                "bank_id" => $batchCertificationPayment->bankName,
+                "note" => 'شهادات برنامج : ' . $batchCertificationPayment->batch->courseName,
+                "created_at" => $batchCertificationPayment->created_at,
+                "updated_at" => $batchCertificationPayment->updated_at,
             ];
         }
 
@@ -51,7 +68,7 @@ class Safe extends Model
                 "payment_method" => $hallRentalPayment->payment,
                 "transaction_id" => $hallRentalPayment->transaction_id,
                 "bank_id" => $hallRentalPayment->bankName,
-                "note" => $hallRentalPayment->hallRental->hall->name,
+                "note" => 'قاعة : ' . $hallRentalPayment->hallRental->hall->name,
                 "created_at" => $hallRentalPayment->created_at,
                 "updated_at" => $hallRentalPayment->updated_at,
             ];
@@ -61,12 +78,12 @@ class Safe extends Model
         foreach ($employeeExpenses as $employeeExpense) {
             $movements[] = [
                 "income" => $employeeExpense->type == "paid" ? $employeeExpense->amount : 0,
-                "expense" => $employeeExpense->type != "paid" ? $employeeExpense->amount : 0,
+                "expense" => $employeeExpense->type != "paid" && $employeeExpense->type != "discount" ? $employeeExpense->amount : 0,
                 "date" => $employeeExpense->date,
                 "payment_method" => $employeeExpense->payment,
                 "transaction_id" => $employeeExpense->transaction_id,
                 "bank_id" => $employeeExpense->bankName,
-                "note" => $employeeExpense->employee->name,
+                "note" => 'الموظف' . $employeeExpense->employee->name,
                 "created_at" => $employeeExpense->created_at,
                 "updated_at" => $employeeExpense->updated_at,
             ];
@@ -81,13 +98,13 @@ class Safe extends Model
                 "payment_method" => $expense->payment,
                 "transaction_id" => $expense->transaction_id,
                 "bank_id" => $expense->bankName,
-                "note" => $expense->description . " | " . $expense->name,
+                "note" => 'مصروفات' . $expense->description . " | " . $expense->name,
                 "created_at" => $expense->created_at,
                 "updated_at" => $expense->updated_at,
             ];
         }
 
-        $expense_balance = $expenses->sum('amount') + $batchTrainerPayments->sum('amount') + $employeeExpenses->where('type', '!=', 'paid')->where('type', '!=', 'discount')->sum('amount');
+        $expense_balance = $expenses->sum('amount') + $batchTrainerPayments->sum('amount') + $employeeExpenses->where('type', '!=', 'paid')->where('type', '!=', 'discount')->sum('amount') + $batchCertificationPayments->sum('amount');
         $income_balance = $hallRentalPayments->sum('amount') + $batchStudentPayments->sum('amount');
         return ['movements' => $movements, 'expenses_balance' => $expense_balance, 'income_balance' => $income_balance];
 

@@ -73,6 +73,10 @@ class Certification extends Component
             'cancelButtonColor' => '#4b5563'
         ]);
     }
+    public function resetData()
+    {
+        $this->reset('batchCertificationPayments');
+    }
 
     #[Title("الشهادات")]
     public function render()

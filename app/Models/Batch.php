@@ -30,6 +30,11 @@ class Batch extends Model
     {
         return $this->hasMany(BatchTrainerPayment::class);
     }
+
+    public function batchCertificationPayments()
+    {
+        return $this->hasMany(BatchCertificationPayment::class);
+    }
     public function getNameAttribute()
     {
         return $this->trainer->arabic_name;

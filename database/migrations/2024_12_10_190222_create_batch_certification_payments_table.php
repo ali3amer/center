@@ -13,6 +13,17 @@ return new class extends Migration
     {
         Schema::create('batch_certification_payments', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('batch_id');
+            $table->foreign('batch_id')->references('id')->on('batches')->onDelete('cascade')->onUpdate('cascade');
+            $table->decimal('amount', 8, 2)->default(0);
+            $table->date('date');
+            $table->enum('payment_method', ['cash', 'bank'])->default('cash');
+            $table->unsignedBigInteger('bank_id')->nullable();
+            $table->foreign('bank_id')->references('id')->on('banks')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('transaction_id')->nullable();
+            $table->string('note')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

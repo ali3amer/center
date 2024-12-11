@@ -22,6 +22,7 @@ class Header extends Component
             + \App\Models\EmployeeExpense::where('payment_method', 'cash')->where('type', 'paid')->sum('amount')
             - \App\Models\EmployeeExpense::where('payment_method', 'cash')->where('type', '!=', 'paid')->where('type', '!=', 'discount')->sum('amount')
             - \App\Models\Expense::where('payment_method', 'cash')->sum('amount')
+            - \App\Models\BatchCertificationPayment::where('payment_method', 'cash')->sum('amount')
             + \App\Models\Transfer::where('transfer_type', 'bank_to_cash')->sum('amount')
             - \App\Models\Transfer::where('transfer_type', 'cash_to_bank')->sum('amount');
 
@@ -31,6 +32,7 @@ class Header extends Component
             + \App\Models\EmployeeExpense::where('payment_method', 'bank')->where('type', 'paid')->sum('amount')
             - \App\Models\EmployeeExpense::where('payment_method', 'bank')->where('type', '!=', 'paid')->where('type', '!=', 'discount')->sum('amount')
             - \App\Models\Expense::where('payment_method', 'bank')->sum('amount')
+            - \App\Models\BatchCertificationPayment::where('payment_method', 'bank')->sum('amount')
             + \App\Models\Transfer::where('transfer_type', 'cash_to_bank')->sum('amount')
             - \App\Models\Transfer::where('transfer_type', 'bank_to_cash')->sum('amount');
         session([
