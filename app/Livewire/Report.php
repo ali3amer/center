@@ -91,6 +91,8 @@ class Report extends Component
         $this->headers = ['إسم البرنامج', 'نوع البرنامج', 'عدد الدارسين', 'عدد الشهادات', 'المدرب', 'الشهر'];
 
         $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get();
+        $this->putInSession();
+
     }
 
     public function expenses()

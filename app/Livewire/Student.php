@@ -123,7 +123,7 @@ class Student extends Component
     public function render()
     {
         return view('livewire.student', [
-            'students' => \App\Models\Student::where('arabic_name', 'like', '%'.$this->search.'%')->paginate(10)
+            'students' => \App\Models\Student::where('arabic_name', 'like', '%' . $this->search . '%')->paginate(10)
         ]);
     }
 }

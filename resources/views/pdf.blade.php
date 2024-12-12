@@ -12,6 +12,23 @@
             text-align: center;
         }
 
+        @media print {
+            header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 50px;
+            }
+
+            footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 50px;
+            }
+        }
 
         .header {
             position: fixed;
@@ -97,116 +114,120 @@
     </style>
 </head>
 <body>
-<table style="direction: rtl" class="header">
-    <tr>
-        <td style="width: 200px;text-align: right"><img src="{{asset("js/center.jpg")}}" style="width: 200px;"/></td>
-        <td>aaaaaaaaa</td>
-    </tr>
-</table>
-
-@if($type != 'expenses')
-    <table>
-        <thead>
+<header>
+    <table style="direction: rtl" class="header">
         <tr>
-            @foreach ($headers as $header)
-                <th>{{$header}}</th>
-            @endforeach
+            <td style="width: 200px;text-align: right"><img src="{{asset("js/center.jpg")}}" style="width: 200px;"/></td>
+            <td>aaaaaaaaa</td>
         </tr>
-        </thead>
-        <tbody>
-        @foreach ($rows as $rowIndex => $row)
-            <tr>
-                @foreach ($cells as $key => $cell)
-                    <td>
-                        {{$row[$cell]}}
-                    </td>
-                @endforeach
-            </tr>
-        @endforeach
-        </tbody>
-        @if(!empty($footers))
-            <tfoot>
-            <tr>
-                @foreach ($footers as $key => $footer)
-                    <th>{{$footer}}</th>
-                @endforeach
-            </tr>
-            </tfoot>
-        @endif
     </table>
-@else
-    <table style="page-break-after: auto">
-        <thead>
-        <tr>
-            @foreach ($headers['options'] as $header)
-                <th>{{$header}}</th>
+</header>
+
+@for($i=0;$i<100;$i++)
+    @if($type != 'expenses')
+        <table>
+            <thead>
+            <tr>
+                @foreach ($headers as $header)
+                    <th>{{$header}}</th>
+                @endforeach
+            </tr>
+            </thead>
+            <tbody>
+            @foreach ($rows as $rowIndex => $row)
+                <tr>
+                    @foreach ($cells as $key => $cell)
+                        <td>
+                            {{$row[$cell]}}
+                        </td>
+                    @endforeach
+                </tr>
             @endforeach
-        </tr>
-        </thead>
-        <tbody>
-        @foreach ($rows['options'] as $rowIndex => $row)
+            </tbody>
+            @if(!empty($footers))
+                <tfoot>
+                <tr>
+                    @foreach ($footers as $key => $footer)
+                        <th>{{$footer}}</th>
+                    @endforeach
+                </tr>
+                </tfoot>
+            @endif
+        </table>
+    @else
+        <table style="page-break-after: auto">
+            <thead>
             <tr>
-                @foreach ($cells['options'] as $key => $cell)
-                    <td>
-                        @if(!is_array($cell))
-                            {{ $row->$cell }}
-                        @else
-                            {{$cell[$row[$key]]}}
-                        @endif
-                    </td>
+                @foreach ($headers['options'] as $header)
+                    <th>{{$header}}</th>
                 @endforeach
             </tr>
-        @endforeach
-        </tbody>
-        @if(!empty($footers))
-            <tfoot>
-            <tr>
-                @foreach ($footers as $key => $footer)
-                    <th>{{$footer}}</th>
-                @endforeach
-            </tr>
-            </tfoot>
-        @endif
-
-    </table>
-
-    <table>
-        <thead>
-        <tr>
-            @foreach ($headers['expenses'] as $header)
-                <th>{{$header}}</th>
+            </thead>
+            <tbody>
+            @foreach ($rows['options'] as $rowIndex => $row)
+                <tr>
+                    @foreach ($cells['options'] as $key => $cell)
+                        <td>
+                            @if(!is_array($cell))
+                                {{ $row->$cell }}
+                            @else
+                                {{$cell[$row[$key]]}}
+                            @endif
+                        </td>
+                    @endforeach
+                </tr>
             @endforeach
-        </tr>
-        </thead>
-        <tbody>
-        @foreach ($rows['expenses'] as $rowIndex => $row)
-            <tr>
-                @foreach ($cells['expenses'] as $key => $cell)
-                    <td>
-                        @if(!is_array($cell))
-                            {{ $row->$cell }}
-                        @else
-                            {{$cell[$row[$key]]}}
-                        @endif
-                    </td>
-                @endforeach
-            </tr>
-        @endforeach
-        </tbody>
-        @if(!empty($footers))
-            <tfoot>
-            <tr>
-                @foreach ($footers as $key => $footer)
-                    <th>{{$footer}}</th>
-                @endforeach
-            </tr>
-            </tfoot>
-        @endif
-    </table>
-@endif
+            </tbody>
+            @if(!empty($footers))
+                <tfoot>
+                <tr>
+                    @foreach ($footers as $key => $footer)
+                        <th>{{$footer}}</th>
+                    @endforeach
+                </tr>
+                </tfoot>
+            @endif
 
-<footer>
-    <p>جميع الحقوق محفوظة</p>
-</footer>
+        </table>
+
+        <table>
+            <thead>
+            <tr>
+                @foreach ($headers['expenses'] as $header)
+                    <th>{{$header}}</th>
+                @endforeach
+            </tr>
+            </thead>
+            <tbody>
+            @foreach ($rows['expenses'] as $rowIndex => $row)
+                <tr>
+                    @foreach ($cells['expenses'] as $key => $cell)
+                        <td>
+                            @if(!is_array($cell))
+                                {{ $row->$cell }}
+                            @else
+                                {{$cell[$row[$key]]}}
+                            @endif
+                        </td>
+                    @endforeach
+                </tr>
+            @endforeach
+            </tbody>
+            @if(!empty($footers))
+                <tfoot>
+                <tr>
+                    @foreach ($footers as $key => $footer)
+                        <th>{{$footer}}</th>
+                    @endforeach
+                </tr>
+                </tfoot>
+            @endif
+        </table>
+    @endif
+@endfor
+
+{{--<footer>--}}
+{{--    <p>جميع الحقوق محفوظة</p>--}}
+{{--</footer>--}}
 </body>
 </html>

@@ -104,6 +104,62 @@ class Safe extends Model
             ];
         }
 
+        $cashTransfers = Transfer::whereBetween('date', [$from, $to])->where('transfer_type', 'cash_to_bank')->get();
+
+        foreach ($cashTransfers as $transfer) {
+            $movements[] = [
+                "income" => 0,
+                "expense" => $transfer->amount,
+                "date" => $transfer->date,
+                "payment_method" => "cash",
+                "transaction_id" => $transfer->transaction_id,
+                "bank_id" => $transfer->bankName,
+                "note" => "تحويل من كاش الى بنك",
+                "created_at" => $transfer->created_at,
+                "updated_at" => $transfer->updated_at,
+            ];
+
+            $movements[] = [
+                "income" => $transfer->amount,
+                "expense" => 0,
+                "date" => $transfer->date,
+                "payment_method" => "cash",
+                "transaction_id" => $transfer->transaction_id,
+                "bank_id" => $transfer->bankName,
+                "note" => "تحويل من كاش الى بنك",
+                "created_at" => $transfer->created_at,
+                "updated_at" => $transfer->updated_at,
+            ];
+        }
+
+        $bankTransfers = Transfer::whereBetween('date', [$from, $to])->where('transfer_type', 'bank_to_cash')->get();
+
+        foreach ($bankTransfers as $transfer) {
+            $movements[] = [
+                "income" => 0,
+                "expense" => $transfer->amount,
+                "date" => $transfer->date,
+                "payment_method" => "cash",
+                "transaction_id" => $transfer->transaction_id,
+                "bank_id" => $transfer->bankName,
+                "note" => "تحويل من بنك الى كاش",
+                "created_at" => $transfer->created_at,
+                "updated_at" => $transfer->updated_at,
+            ];
+
+            $movements[] = [
+                "income" => $transfer->amount,
+                "expense" => 0,
+                "date" => $transfer->date,
+                "payment_method" => "cash",
+                "transaction_id" => $transfer->transaction_id,
+                "bank_id" => $transfer->bankName,
+                "note" => "تحويل من بنك الى كاش",
+                "created_at" => $transfer->created_at,
+                "updated_at" => $transfer->updated_at,
+            ];
+        }
+
         $expense_balance = $expenses->sum('amount') + $batchTrainerPayments->sum('amount') + $employeeExpenses->where('type', '!=', 'paid')->where('type', '!=', 'discount')->sum('amount') + $batchCertificationPayments->sum('amount');
         $income_balance = $hallRentalPayments->sum('amount') + $batchStudentPayments->sum('amount');
         return ['movements' => $movements, 'expenses_balance' => $expense_balance, 'income_balance' => $income_balance];
