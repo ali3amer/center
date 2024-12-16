@@ -13,8 +13,8 @@ class HallRental extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['الجهه', 'نوع المؤجر', 'نوع المدة', 'السعر', 'المده', 'التكلفه'];
-    public $cells = ['name' => 'name', 'type' => 'type', 'duration_type' => 'duration_type', 'price' => 'price', 'duration' => 'duration', 'cost' => 'cost'];
+    public $headers = ['الجهه', 'نوع المؤجر', 'من', 'الى', 'المده', 'السعر', 'التكلفه'];
+    public $cells = ['name', 'rentType', 'start_date', 'end_date', "duration", "price", 'cost'];
     protected $listeners = [
         'delete',
     ];
@@ -34,12 +34,6 @@ class HallRental extends Component
     public bool $rentalPaymentMode  = false;
     public $hall_rental_id = null;
     public $remainder = 0;
-
-    public function mount()
-    {
-        $this->cells['type'] = $this->types;
-        $this->cells['duration_type'] = $this->duration_types;
-    }
 
     public function save()
     {

@@ -162,6 +162,7 @@ class Safe extends Model
 
         $expense_balance = $expenses->sum('amount') + $batchTrainerPayments->sum('amount') + $employeeExpenses->where('type', '!=', 'paid')->where('type', '!=', 'discount')->sum('amount') + $batchCertificationPayments->sum('amount');
         $income_balance = $hallRentalPayments->sum('amount') + $batchStudentPayments->sum('amount');
+        $movements = collect($movements)->sortBy('created_at')->toArray();
         return ['movements' => $movements, 'expenses_balance' => $expense_balance, 'income_balance' => $income_balance];
 
     }

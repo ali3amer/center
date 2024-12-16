@@ -28,7 +28,7 @@ class Report extends Component
     public $to = '';
     public $types = [
         'safe' => 'تقرير الخزنه',
-        'incomes' => 'تقرير الإيرادات',
+//        'incomes' => 'تقرير الإيرادات',
         'performance' => 'تقرير الأداء',
         'expenses' => 'تقرير المنصرفات',
         'courses' => 'تقرير منفذ التدريب',
@@ -72,11 +72,11 @@ class Report extends Component
         $this->cells = ["date", "note", "payment_method", "bank_id", "transaction_id", "income", "expense"];
         $this->headers = ['التاريخ', 'البيان', 'طريقة الدفعه', 'البنك', 'رقم العملية', 'إيراد', 'منصرف'];
         $safe = Safe::first()->safeMovements($this->from, $this->to);
-        $this->rows =  collect($safe['movements']);
+        $this->rows = collect($safe['movements']);
         $this->incomes = $safe['income_balance'];
         $this->expenses = $safe['expenses_balance'];
         $this->balance = $this->incomes - $this->expenses;
-        $this->footers = ['الجمله', '', '', '', '', $this->incomes, $this->expenses];
+        $this->footers = ['الجمله', '', '', '', '', number_format($this->incomes, 2), number_format($this->expenses, 2)];
         $this->putInSession();
     }
 
@@ -90,9 +90,21 @@ class Report extends Component
         $this->cells = ['courseName', 'courseType', 'studentCount', 'certificationsCount', 'name', 'month'];
         $this->headers = ['إسم البرنامج', 'نوع البرنامج', 'عدد الدارسين', 'عدد الشهادات', 'المدرب', 'الشهر'];
 
-        $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get();
-        $this->putInSession();
+        if ($this->trainer_id == null) {
+            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get();
+        } else {
+            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id)->get();
+        }
+        $totalCount = 0;
+        $totalCertification = 0;
+        foreach ($this->rows as $row) {
+            $totalCount += $row->studentCount;
+            $totalCertification += $row->certificationsCount;
+        }
 
+        $this->footers = ['الجمله', '', number_format($totalCount, 2), number_format($totalCertification, 2), '', ''];
+
+        $this->putInSession();
     }
 
     public function expenses()
@@ -104,9 +116,23 @@ class Report extends Component
             return $option;
         });
 
+        $totalOptions = 0;
+        foreach ($this->rows['options'] as $row) {
+            $totalOptions += $row->amount;
+        }
+
+        $this->footers['options'] = ['الجمله', number_format($totalOptions, 2)];
+
         $this->cells['expenses'] = ['date', 'description', 'name', 'amount'];
         $this->headers['expenses'] = ['التاريخ', 'البيان', 'التصنيف', 'المبلغ'];
         $this->rows['expenses'] = \App\Models\Expense::whereBetween("date", [$this->from, $this->to])->get();
+
+        $totalExpenses = 0;
+        foreach ($this->rows['expenses'] as $row) {
+            $totalExpenses += $row->amount;
+        }
+
+        $this->footers['expenses'] = ['الجمله', '', '', number_format($totalExpenses, 2)];
 
         $this->putInSession();
     }
@@ -116,7 +142,21 @@ class Report extends Component
         $this->cells = ['courseName', 'studentCount'];
         $this->headers = ['إسم البرنامج', 'عدد الدارسين'];
 
-        $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get();
+        if ($this->trainer_id == null) {
+            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get();
+        } else {
+            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id)->get();
+        }
+
+        $totalCount = 0;
+        foreach ($this->rows as $row) {
+            $totalCount += $row->studentCount;
+        }
+
+        $this->footers = ['الجمله', number_format($totalCount, 2)];
+
+        $this->putInSession();
+
     }
 
     public function certifications()
@@ -130,6 +170,7 @@ class Report extends Component
                 $query->whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id);
             }
         })->get();
+        $this->footers = [];
         $this->putInSession();
     }
 

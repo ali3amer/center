@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class HallRental extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function hall()
@@ -19,6 +20,19 @@ class HallRental extends Model
     {
         return $this->hasMany(HallRentalPayment::class);
     }
+
+    public function getRentTypeAttribute()
+    {
+        if ($this->type == "organization") {
+            $type = "منظمة";
+        } elseif ($this->type == "government_institution") {
+            $type = "حكومي";
+        } else {
+            $type = "شخصي";
+        }
+        return $type;
+    }
+
     public function getCostAttribute()
     {
         return $this->cost = $this->price * $this->duration;
