@@ -2,7 +2,7 @@
 
 
 <div class=" grow flex w-{{$width}} @if($errors->any() && $center) items-center @else items-end @endif">
-    <button @disabled($disabled) @disabled(!Auth::user()->hasPermission($model.'-'.$permisson))
+    <button wire:loading.attr="disabled" @disabled($disabled) @disabled(!Auth::user()->hasPermission($model.'-'.$permisson))
         type="{{ $type }}" {{ $attributes->merge(['class' => "w-full disabled:bg-cyan-200 px-$px mt-$mt py-$py $color text-white rounded hover:$hoverColor"]) }}>
         {{ $label }}
         @if($icon != '')

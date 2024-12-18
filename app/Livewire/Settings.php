@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Safe;
+use Illuminate\Support\Facades\Artisan;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -39,6 +40,12 @@ class Settings extends Component
         ]);
         $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
         $this->dispatch('update-balance');
+    }
+
+    public function dbBackup()
+    {
+        Artisan::call("backup:run  --only-db");
+        $this->alert('success', 'تم النسخ الإحتياطي بنجاح', ['timerProgressBar' => true]);
     }
 
     #[Title('الإعدادات')]

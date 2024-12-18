@@ -68,7 +68,12 @@
             {{--                        class="px-2 {{Route::current()->uri == $link[0] ? 'text-cyan-300' : '' }}"> {{$link[1]}}</span>--}}
             {{--                </a>--}}
             {{--            @endif--}}
-            @if(Auth::user()->hasPermission($link[0].'s-read'))
+        @if($link[0] == "settings")
+            @php $name = $link[0].'-read' @endphp
+            @else
+                @php $name = $link[0].'s-read' @endphp
+        @endif
+            @if(Auth::user()->hasPermission($name))
             <a href="{{$link[0]}}" wire:navigate
                class="flex items-center {{Route::current()->uri == $link[0] ? 'text-cyan-300 rounded bg-cyan-700' : '' }} transition-all duration-200  text-white py-3 group px-4 hover:text-cyan-300 rounded hover:bg-cyan-700">
                 <i class="fa fa-{{$link[2]}} mx-5"></i><span
