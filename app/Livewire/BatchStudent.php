@@ -32,6 +32,7 @@ class BatchStudent extends Component
     public $batch_student_id = null;
     public $price = 0;
     public $remainder = 0;
+    public $certification_id = 0;
     public $search = '';
 
     public function mount()
@@ -51,10 +52,12 @@ class BatchStudent extends Component
                 'date' => $this->date,
             ]);
 
-            \App\Models\Certification::create([
-                'batch_student_id' => $batch_student->id,
-                'certification_id' => \App\Models\Certification::max('certification_id') + 1,
-            ]);
+            if ($this->want_certification) {
+                \App\Models\Certification::create([
+                    'batch_student_id' => $batch_student->id,
+                    'certification_id' => $this->certification_id,
+                ]);
+            }
 
         } else {
             $batch_student = \App\Models\BatchStudent::find($this->id);
@@ -69,7 +72,11 @@ class BatchStudent extends Component
                 if ($check == 0) {
                     \App\Models\Certification::create([
                         'batch_student_id' => $batch_student->id,
-                        'certification_id' => \App\Models\Certification::max('certification_id') + 1,
+                        'certification_id' => $this->certification_id,
+                    ]);
+                } else {
+                    \App\Models\Certification::where('batch_student_id', $batch_student->id)->update([
+                        'certification_id' => $this->certification_id,
                     ]);
                 }
             }
@@ -84,6 +91,7 @@ class BatchStudent extends Component
         $this->student_id = $batchStudent['student_id'];
         $this->batch_id = $batchStudent['batch_id'];
         $this->date = $batchStudent['date'];
+        $this->certification_id = \App\Models\Certification::where("batch_student_id", $batchStudent['id'])->first()->certification_id ?? 0;
         $this->want_certification = $batchStudent['want_certification'];
     }
 
@@ -111,7 +119,7 @@ class BatchStudent extends Component
 
     public function resetData()
     {
-        $this->reset('batch_id', 'id', 'date', 'batchStudentPaymentMode', 'price', 'remainder', 'want_certification');
+        $this->reset('batch_id', 'id', 'date', 'batchStudentPaymentMode', 'price', 'remainder', 'want_certification', 'certification');
     }
 
     public function choose($batchStudent)
@@ -139,6 +147,13 @@ class BatchStudent extends Component
             }
             if ($this->paid) {
                 $this->want_certification = true;
+            }
+            if (!$this->want_certification) {
+             $this->certification_id = 0;
+            }
+
+            if ($this->want_certification && $this->certification_id == 0) {
+                $this->certification_id = \App\Models\Certification::max('certification_id') + 1;
             }
         }
         return view('livewire.batch-student', [

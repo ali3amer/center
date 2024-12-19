@@ -13,8 +13,8 @@ class Certification extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['الإسم بالعربي', 'الإسم بالإنجليزي', 'البرنامج', 'نوع البرنامج', 'الشهر'];
-    public $cells = ['arabic_name', 'english_name', 'courseName', 'courseType', 'month'];
+    public $headers = ['رقم الشهادة', 'الإسم بالعربي', 'الإسم بالإنجليزي', 'البرنامج', 'نوع البرنامج', 'الشهر'];
+    public $cells = ['certification_id', 'arabic_name', 'english_name', 'courseName', 'courseType', 'month'];
     protected $listeners = [
         'delete',
     ];

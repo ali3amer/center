@@ -29,6 +29,7 @@ class Report extends Component
     public $types = [
         'safe' => 'تقرير الخزنه',
 //        'incomes' => 'تقرير الإيرادات',
+        'halls' => 'تقرير القاعات',
         'performance' => 'تقرير الأداء',
         'expenses' => 'تقرير المنصرفات',
         'courses' => 'تقرير منفذ التدريب',
@@ -56,6 +57,8 @@ class Report extends Component
             $this->safe();
         } elseif ($this->type === 'incomes') {
             $this->incomes();
+        } elseif ($this->type == 'halls') {
+            $this->halls();
         } elseif ($this->type === 'performance') {
             $this->performance();
         } elseif ($this->type === 'expenses') {
@@ -78,6 +81,15 @@ class Report extends Component
         $this->balance = $this->incomes - $this->expenses;
         $this->footers = ['الجمله', '', '', '', '', number_format($this->incomes, 2), number_format($this->expenses, 2)];
         $this->putInSession();
+    }
+
+    public function halls()
+    {
+        $this->headers = ['الجهه', 'نوع المؤجر', 'من', 'الى', 'المده', 'السعر', 'التكلفه'];
+        $this->cells = ['name', 'rentType', 'start_date', 'end_date', "duration", "price", 'cost'];
+        $this->rows = \App\Models\HallRental::whereBetween('start_date', [$this->from, $this->to])->get();
+        $this->putInSession();
+
     }
 
     public function incomes()
@@ -182,6 +194,7 @@ class Report extends Component
             'cells' => $this->cells,
             'footers' => $this->footers,
             'type' => $this->type,
+            'types' => $this->types
         ]);
         $this->redirectToPdf();
 
@@ -195,7 +208,7 @@ class Report extends Component
             'format' => 'A4',
             'orientation' => 'L'
         ]);
-        $html = view('pdf', ['rows' => $data['rows'], 'cells' => $data['cells'], 'headers' => $data['headers'], 'footers' => $data['footers'], 'type' => $data['type']])->render();
+        $html = view('pdf', ['rows' => $data['rows'], 'cells' => $data['cells'], 'headers' => $data['headers'], 'footers' => $data['footers'], 'type' => $data['type'], 'types' => $data['types']])->render();
         $mpdf->WriteHTML($html);
         $mpdf->Output('mypdf.pdf', 'I');
 

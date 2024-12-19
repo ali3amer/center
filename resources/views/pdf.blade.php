@@ -2,7 +2,7 @@
 <html>
 <head>
 
-    <title>Invoice</title>
+    <title>التقارير</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
     <style>
@@ -87,16 +87,6 @@
     </style>
 </head>
 <body>
-@php
-    $types = [
-           'safe' => 'تقرير الخزنه',
-           'incomes' => 'تقرير الإيرادات',
-           'performance' => 'تقرير الأداء',
-           'expenses' => 'تقرير المنصرفات',
-           'courses' => 'تقرير منفذ التدريب',
-           'certifications' => 'تقرير الشهادات',
-       ];
-@endphp
 <table style="direction: rtl" class="header">
     <tr>
         <td style="width: 200px;text-align: right"><img src="{{asset("js/center.jpg")}}" style="width: 200px;"/>

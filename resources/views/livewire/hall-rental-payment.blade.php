@@ -10,7 +10,7 @@
                 <x-select name="bank_id" :disabled="$payment_method == 'cash' || ($payment_method == 'bank' && empty($banks))" :options="$banks" label="البنك"/>
                 <x-input name="transaction_id" :disabled="$payment_method == 'cash' || ($payment_method == 'bank' && empty($banks))" label="رقم الاشعار"/>
                 <x-input name="note" label="ملاحظات"/>
-                <x-button type="submit" model="hallRentalPayments" :disabled="($remainder <= 0 || floatval($amount) == 0 || floatval($amount) > $remainder) || (floatval($amount) > session($payment_method.'_balance'))" :center="true" label="حفظ"/>
+                <x-button type="submit" model="hallRentalPayments" :disabled="($remainder <= 0 || floatval($amount) == 0 || floatval($amount) > $remainder)" :center="true" label="حفظ"/>
             </div>
         </form>
     </x-container>

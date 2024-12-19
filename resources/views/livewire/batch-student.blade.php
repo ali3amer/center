@@ -1,17 +1,22 @@
 <div>
     <x-container  title="البرامج التدريبيه للدارس">
-        <form wire:submit="save" class="grid gap-x-1 grid-cols-6">
-            <x-select name="batch_id" :disabled="$batchStudentPaymentMode" :live="true" :options="$batches" label="الدفعه"/>
-            <x-input type="date" name="date" :disabled="$batchStudentPaymentMode" label="تاريخ التسجيل"/>
-            <x-checkbox name="want_certification" :disabled="$batchStudentPaymentMode || $paid" label="هل ترغب في شهاده"/>
-            <x-input name="price" :disabled="true" label="المطلوب"/>
-            <x-input name="remainder" :disabled="true" label="المتبقي"/>
-            @if(!$batchStudentPaymentMode)
-                <x-button model="batchStudents" type="submit" :center="true" label="حفظ"/>
-            @else
-                <x-button model="batchStudents" type="button" color="bg-red-600" wire:click="resetData" label=""
-                          icon="fa-close"/>
-            @endif
+        <form wire:submit="save">
+            <div  class="grid gap-x-1 grid-cols-4">
+                <x-select name="batch_id" :disabled="$batchStudentPaymentMode" :live="true" :options="$batches" label="الدفعه"/>
+                <x-input type="date" name="date" :disabled="$batchStudentPaymentMode" label="تاريخ التسجيل"/>
+                <x-input name="price" :disabled="true" label="المطلوب"/>
+                <x-input name="remainder" :disabled="true" label="المتبقي"/>
+            </div>
+            <div class="grid gap-x-1 grid-cols-3">
+                <x-checkbox name="want_certification" :disabled="$batchStudentPaymentMode || $paid" label="هل ترغب في شهاده"/>
+                <x-input name="certification_id" :disabled="$batchStudentPaymentMode" label="رقم الشهادة"/>
+                @if(!$batchStudentPaymentMode)
+                    <x-button model="batchStudents" type="submit" :center="true" label="حفظ"/>
+                @else
+                    <x-button model="batchStudents" type="button" color="bg-red-600" wire:click="resetData" label=""
+                              icon="fa-close"/>
+                @endif
+            </div>
         </form>
     </x-container>
 
