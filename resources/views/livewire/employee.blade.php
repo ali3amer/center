@@ -17,7 +17,7 @@
 
     @if(!$employeeExpenseMode)
     <x-container>
-        <x-table :headers="$headers" model="employees" chooseModel="employeeExpenses" :rows="$employees" :choose="true" :cells="$cells" />
+        <x-table :headers="$headers" model="employees" :$numbers chooseModel="employeeExpenses" :rows="$employees" :choose="true" :cells="$cells" />
     </x-container>
     @else
         <livewire:employee-expense :$employee_id />

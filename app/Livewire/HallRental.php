@@ -15,6 +15,7 @@ class HallRental extends Component
 
     public $headers = ['الجهه', 'نوع المؤجر', 'من', 'الى', 'المده', 'السعر', 'التكلفه'];
     public $cells = ['name', 'rentType', 'start_date', 'end_date', "duration", "price", 'cost'];
+    public $numbers = ['price', 'cost'];
     protected $listeners = [
         'delete',
     ];
@@ -44,7 +45,7 @@ class HallRental extends Component
                 'type' => $this->type,
                 'duration_type' => $this->duration_type,
                 'duration' => $this->duration,
-                'price' => $this->price,
+                'price' => round(floatval($this->price)),
                 'start_date' => $this->start_date,
                 'end_date' => $this->end_date,
                 'completed' => $this->completed,
@@ -55,7 +56,7 @@ class HallRental extends Component
                 'type' => $this->type,
                 'duration_type' => $this->duration_type,
                 'duration' => $this->duration,
-                'price' => $this->price,
+                'price' => round(floatval($this->price)),
                 'start_date' => $this->start_date,
                 'end_date' => $this->end_date,
                 'completed' => $this->completed,
@@ -72,11 +73,11 @@ class HallRental extends Component
         $this->type = $hallRental['type'];
         $this->duration_type = $hallRental['duration_type'];
         $this->duration = $hallRental['duration'];
-        $this->price = $hallRental['price'];
+        $this->price = round($hallRental['price']);
         $this->start_date = $hallRental['start_date'];
         $this->end_date = $hallRental['end_date'];
         $this->completed = $hallRental['completed'];
-        $this->cost = $this->duration * $this->price;
+        $this->cost = round($this->duration * $this->price);
     }
 
     public function deleteMessage($id)
@@ -126,7 +127,7 @@ class HallRental extends Component
         }
         $this->cost = $this->duration * $this->price;
         if ($this->hall_rental_id != null && $this->cost != 0) {
-            $this->remainder = $this->cost - \App\Models\HallRentalPayment::where('hall_rental_id', $this->hall_rental_id)->sum('amount');
+            $this->remainder = round(floatval($this->cost) - \App\Models\HallRentalPayment::where('hall_rental_id', $this->hall_rental_id)->sum('amount'));
         }
         return view('livewire.hall-rental', [
             'hallRentals' => \App\Models\HallRental::where('hall_id', $this->hall_id)

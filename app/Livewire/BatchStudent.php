@@ -16,7 +16,7 @@ class BatchStudent extends Component
     use WithPagination, WithoutUrlPagination;
 
     public $headers = ['الدفعه', 'تاريخ التسجيل'];
-    public $cells = ['batch_id' => 'arabic_name', 'date' => 'date'];
+    public $cells = ['course', 'date'];
     protected $listeners = [
         'delete',
     ];
@@ -31,6 +31,7 @@ class BatchStudent extends Component
     public bool $batchStudentPaymentMode = false;
     public $batch_student_id = null;
     public $price = 0;
+    public $student_number = 0;
     public $remainder = 0;
     public $certification_id = 0;
     public $search = '';
@@ -38,7 +39,17 @@ class BatchStudent extends Component
     public function mount()
     {
         $this->batches = \App\Models\Batch::where("completed", false)->join('courses', 'batches.course_id', '=', 'courses.id')->select('batches.*', 'courses.arabic_name')->pluck('arabic_name', 'id')->toArray();
-        $this->cells['batch_id'] = $this->batches;
+        $this->check();
+    }
+
+    public function check()
+    {
+        $students = \App\Models\BatchStudent::count();
+        if ($students > 0) {
+            $this->student_number = \App\Models\BatchStudent::max('student_number') + 1;
+        } else {
+            $this->student_number = 1;
+        }
     }
 
     public function save()
@@ -48,6 +59,7 @@ class BatchStudent extends Component
             $batch_student = \App\Models\BatchStudent::create([
                 'student_id' => $this->student_id,
                 'batch_id' => $this->batch_id,
+                'student_number' => $this->student_number,
                 'want_certification' => $this->want_certification,
                 'date' => $this->date,
             ]);
@@ -58,11 +70,14 @@ class BatchStudent extends Component
                     'certification_id' => $this->certification_id,
                 ]);
             }
+            $this->choose($batch_student);
+            $this->resetData();
 
         } else {
             $batch_student = \App\Models\BatchStudent::find($this->id);
             $batch_student->batch_id = $this->batch_id;
             $batch_student->date = $this->date;
+            $this->student_number = $batch_student->student_number;
             $batch_student->want_certification = $this->want_certification;
             $batch_student->save();
             if (!$batch_student->certification) {
@@ -80,8 +95,8 @@ class BatchStudent extends Component
                     ]);
                 }
             }
+            $this->resetData();
         }
-        $this->resetData();
         $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
     }
 
@@ -91,6 +106,7 @@ class BatchStudent extends Component
         $this->student_id = $batchStudent['student_id'];
         $this->batch_id = $batchStudent['batch_id'];
         $this->date = $batchStudent['date'];
+        $this->student_number = $batchStudent['student_number'];
         $this->certification_id = \App\Models\Certification::where("batch_student_id", $batchStudent['id'])->first()->certification_id ?? 0;
         $this->want_certification = $batchStudent['want_certification'];
     }
@@ -119,7 +135,7 @@ class BatchStudent extends Component
 
     public function resetData()
     {
-        $this->reset('batch_id', 'id', 'date', 'batchStudentPaymentMode', 'price', 'remainder', 'want_certification', 'certification');
+        $this->reset('batch_id', 'id', 'date', 'batchStudentPaymentMode', 'price', 'remainder', 'want_certification', 'certification_id', 'student_number');
     }
 
     public function choose($batchStudent)
@@ -140,10 +156,10 @@ class BatchStudent extends Component
         if ($this->batch_id != null) {
             $batch = \App\Models\Batch::find($this->batch_id);
             $this->paid = $batch->paid;
-            $this->price = $batch->price;
+            $this->price = round($batch->price);
             if ($this->batch_student_id != null) {
                 $batch_student = \App\Models\BatchStudent::where("batch_id", $this->batch_id)->where("student_id", $this->student_id)->first()->id;
-                $this->remainder = floatval($batch->price) - floatval(\App\Models\BatchStudentPayment::where("batch_student_id", $batch_student)->sum('amount'));
+                $this->remainder = round(floatval($batch->price) - floatval(\App\Models\BatchStudentPayment::where("batch_student_id", $batch_student)->sum('amount')));
             }
             if ($this->paid) {
                 $this->want_certification = true;
@@ -155,6 +171,10 @@ class BatchStudent extends Component
             if ($this->want_certification && $this->certification_id == 0) {
                 $this->certification_id = \App\Models\Certification::max('certification_id') + 1;
             }
+        }
+
+        if (floatval($this->student_number) == 0) {
+            $this->check();
         }
         return view('livewire.batch-student', [
             'batchStudents' => \App\Models\BatchStudent::where('student_id', $this->student_id)->with("batch.course")->paginate(10)

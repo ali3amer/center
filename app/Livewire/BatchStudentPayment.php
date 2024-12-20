@@ -18,6 +18,7 @@ class BatchStudentPayment extends Component
 
     public $headers = ['التاريخ', 'المبغ', 'وسيلة الدفع', 'ملاحظات'];
     public $cells = ['date' => 'date', 'amount' => 'amount', 'payment_method' => 'payment_method', 'note' => 'note'];
+    public $numbers = ['amount'];
     public $batch_student_id;
     public $id = null;
     public $amount = 0;
@@ -36,8 +37,8 @@ class BatchStudentPayment extends Component
         $this->cells['payment_method'] = $this->payment_methods;
         $this->banks = \App\Models\Bank::pluck('name', 'id')->toArray();
 
-        $this->price = \App\Models\BatchStudent::find($this->batch_student_id)->batch->price;
-        $this->remainder = $this->price - floatval(\App\Models\BatchStudentPayment::where("batch_student_id", $this->batch_student_id)->sum('amount'));
+        $this->price = round(\App\Models\BatchStudent::find($this->batch_student_id)->batch->price);
+        $this->remainder = round(floatval($this->price) - floatval(\App\Models\BatchStudentPayment::where("batch_student_id", $this->batch_student_id)->sum('amount')));
 
     }
 
@@ -45,7 +46,7 @@ class BatchStudentPayment extends Component
     {
         if ($this->id == null) {
             \App\Models\BatchStudentPayment::create([
-                'amount' => $this->amount,
+                'amount' => round(floatval($this->amount)),
                 'date' => $this->date,
                 'payment_method' => $this->payment_method,
                 'batch_student_id' => $this->batch_student_id,
@@ -55,7 +56,7 @@ class BatchStudentPayment extends Component
             ]);
         } else {
             \App\Models\BatchStudentPayment::where('id', $this->id)->update([
-                'amount' => $this->amount,
+                'amount' => round(floatval($this->amount)),
                 'date' => $this->date,
                 'payment_method' => $this->payment_method,
                 'bank_id' => $this->bank_id,
@@ -70,7 +71,7 @@ class BatchStudentPayment extends Component
     public function edit($batchStudentPayment)
     {
         $this->id = $batchStudentPayment['id'];
-        $this->amount = $batchStudentPayment['amount'];
+        $this->amount = round($batchStudentPayment['amount']);
         $this->date = $batchStudentPayment['date'];
         $this->payment_method = $batchStudentPayment['payment_method'];
         $this->bank_id = $batchStudentPayment['bank_id'];
@@ -119,7 +120,7 @@ class BatchStudentPayment extends Component
         if ($this->date == '') {
             $this->date = date('Y-m-d');
         }
-        $this->remainder = $this->price - floatval(\App\Models\BatchStudentPayment::where("batch_student_id", $this->batch_student_id)->sum('amount'));
+        $this->remainder = round(floatval($this->price) - floatval(\App\Models\BatchStudentPayment::where("batch_student_id", $this->batch_student_id)->sum('amount')));
 
         return view('livewire.batch-student-payment', [
             'batchStudentPayments' => \App\Models\BatchStudentPayment::where('batch_student_id', $this->batch_student_id)->paginate(10),

@@ -19,6 +19,7 @@ class HallRentalPayment extends Component
 
     public $headers = ['التاريخ', 'المبغ', 'وسيلة الدفع', 'ملاحظات'];
     public $cells = ['date' => 'date', 'amount' => 'amount', 'payment_method' => 'payment_method', 'note' => 'note'];
+    public $numbers = ['amount'];
     public $hall_rental_id;
     public $id = null;
     public $amount = 0;
@@ -45,7 +46,7 @@ class HallRentalPayment extends Component
     {
         if ($this->id == null) {
             \App\Models\HallRentalPayment::create([
-                'amount' => $this->amount,
+                'amount' => round(floatval($this->amount)),
                 'date' => $this->date,
                 'payment_method' => $this->payment_method,
                 'hall_rental_id' => $this->hall_rental_id,
@@ -55,7 +56,7 @@ class HallRentalPayment extends Component
             ]);
         } else {
             \App\Models\HallRentalPayment::where('id', $this->id)->update([
-                'amount' => $this->amount,
+                'amount' => round(floatval($this->amount)),
                 'date' => $this->date,
                 'payment_method' => $this->payment_method,
                 'bank_id' => $this->bank_id,
@@ -70,7 +71,7 @@ class HallRentalPayment extends Component
     public function edit($hallRentalPayment)
     {
         $this->id = $hallRentalPayment['id'];
-        $this->amount = $hallRentalPayment['amount'];
+        $this->amount = round($hallRentalPayment['amount']);
         $this->date = $hallRentalPayment['date'];
         $this->payment_method = $hallRentalPayment['payment_method'];
         $this->bank_id = $hallRentalPayment['bank_id'];
@@ -117,8 +118,8 @@ class HallRentalPayment extends Component
         if ($this->payment_method == "bank" && !empty($this->banks) && $this->bank_id == null) {
             $this->bank_id = array_key_first($this->banks);
         }
-        $this->cost = $this->hall_rental->price * $this->hall_rental->duration;
-        $this->remainder = $this->cost - \App\Models\HallRentalPayment::where('hall_rental_id', $this->hall_rental_id)->sum('amount');
+        $this->cost = round(floatval($this->hall_rental->price) * floatval($this->hall_rental->duration));
+        $this->remainder = round(floatval($this->cost) - \App\Models\HallRentalPayment::where('hall_rental_id', $this->hall_rental_id)->sum('amount'));
         if ($this->date == '') {
             $this->date = date('Y-m-d');
         }

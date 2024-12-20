@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedBigInteger('trainer_id');
             $table->foreign('trainer_id')->references('id')->on('trainers')->onDelete('cascade')->onUpdate('cascade');
-            $table->decimal('price', 8, 2)->default(0);
+            $table->decimal('price', 10, 2)->default(0);
             $table->decimal('certificate_price', 8, 2)->default(0);
             $table->float('center_fees')->default(60);
             $table->float('trainer_fees')->default(40);

@@ -22,6 +22,7 @@ class Report extends Component
 
     public $headers = [];
     public $cells = [];
+    public $numbers = [];
     public $payment_methods = ['cash' => 'كاش', 'bank' => 'بنك'];
     public $payment_method = 'cash';
     public $from = '';
@@ -68,6 +69,8 @@ class Report extends Component
         } elseif ($this->type === 'certifications') {
             $this->certifications();
         }
+        $this->putInSession();
+
     }
 
     public function safe()
@@ -78,9 +81,9 @@ class Report extends Component
         $this->rows = collect($safe['movements']);
         $this->incomes = $safe['income_balance'];
         $this->expenses = $safe['expenses_balance'];
-        $this->balance = $this->incomes - $this->expenses;
-        $this->footers = ['الجمله', '', '', '', '', number_format($this->incomes, 2), number_format($this->expenses, 2)];
-        $this->putInSession();
+        $this->balance = number_format($this->incomes - $this->expenses);
+        $this->footers = ['الجمله', '', '', '', '', number_format(round($this->incomes)), number_format(round($this->expenses))];
+        $this->numbers = ['income', 'expense'];
     }
 
     public function halls()
@@ -88,7 +91,7 @@ class Report extends Component
         $this->headers = ['الجهه', 'نوع المؤجر', 'من', 'الى', 'المده', 'السعر', 'التكلفه'];
         $this->cells = ['name', 'rentType', 'start_date', 'end_date', "duration", "price", 'cost'];
         $this->rows = \App\Models\HallRental::whereBetween('start_date', [$this->from, $this->to])->get();
-        $this->putInSession();
+        $this->numbers = ['price', 'cost'];
 
     }
 
@@ -114,39 +117,47 @@ class Report extends Component
             $totalCertification += $row->certificationsCount;
         }
 
-        $this->footers = ['الجمله', '', number_format($totalCount, 2), number_format($totalCertification, 2), '', ''];
+        $this->footers = ['الجمله', '', number_format(round($totalCount)), number_format(round($totalCertification)), '', ''];
 
-        $this->putInSession();
     }
 
     public function expenses()
     {
         $this->cells['options'] = ['optionName', 'amount'];
         $this->headers['options'] = ['التصنيف', 'المبلغ'];
-        $this->rows['options'] = \App\Models\ExpenseOption::all()->map(function ($option) {
-            $option->amount = $option->expenses->whereBetween("date", [$this->from, $this->to])->sum("amount");
-            return $option;
-        });
 
-        $totalOptions = 0;
-        foreach ($this->rows['options'] as $row) {
-            $totalOptions += $row->amount;
+        $this->rows['options'][] = [
+            'optionName' => "غير مصنف",
+            'amount' => \App\Models\Expense::whereNull("expense_option_id")->whereBetween("date", [$this->from, $this->to])->sum("amount"),
+        ];
+
+        $expenseOptions = \App\Models\ExpenseOption::all();
+        foreach ($expenseOptions as $option) {
+            $this->rows['options'][] = [
+                'optionName' => $option->optionName,
+                'amount' => $option->expenses->whereBetween("date", [$this->from, $this->to])->sum("amount"),
+            ];
         }
 
-        $this->footers['options'] = ['الجمله', number_format($totalOptions, 2)];
+        $this->numbers['expenses'] = ['amount'];
+        $totalOptions = 0;
+        foreach ($this->rows['options'] as $row) {
+            $totalOptions += $row['amount'];
+        }
+
+        $this->footers['options'] = ['الجمله', number_format(round($totalOptions))];
+        $this->numbers['options'] = ['amount'];
 
         $this->cells['expenses'] = ['date', 'description', 'name', 'amount'];
         $this->headers['expenses'] = ['التاريخ', 'البيان', 'التصنيف', 'المبلغ'];
         $this->rows['expenses'] = \App\Models\Expense::whereBetween("date", [$this->from, $this->to])->get();
-
         $totalExpenses = 0;
         foreach ($this->rows['expenses'] as $row) {
             $totalExpenses += $row->amount;
         }
 
-        $this->footers['expenses'] = ['الجمله', '', '', number_format($totalExpenses, 2)];
-
-        $this->putInSession();
+        $this->footers['expenses'] = ['الجمله', '', '', number_format(round($totalExpenses))];
+        $this->numbers['expenses'] = ['amount'];
     }
 
     public function courses()
@@ -165,9 +176,7 @@ class Report extends Component
             $totalCount += $row->studentCount;
         }
 
-        $this->footers = ['الجمله', number_format($totalCount, 2)];
-
-        $this->putInSession();
+        $this->footers = ['الجمله', number_format(round($totalCount))];
 
     }
 
@@ -183,7 +192,7 @@ class Report extends Component
             }
         })->get();
         $this->footers = [];
-        $this->putInSession();
+        $this->numbers = ['certificationPrice'];
     }
 
     public function putInSession()
@@ -192,6 +201,7 @@ class Report extends Component
             'rows' => $this->rows,
             'headers' => $this->headers,
             'cells' => $this->cells,
+            'numbers' => $this->numbers,
             'footers' => $this->footers,
             'type' => $this->type,
             'types' => $this->types
@@ -208,7 +218,7 @@ class Report extends Component
             'format' => 'A4',
             'orientation' => 'L'
         ]);
-        $html = view('pdf', ['rows' => $data['rows'], 'cells' => $data['cells'], 'headers' => $data['headers'], 'footers' => $data['footers'], 'type' => $data['type'], 'types' => $data['types']])->render();
+        $html = view('pdf', ['rows' => $data['rows'], 'cells' => $data['cells'], 'headers' => $data['headers'], 'numbers' => $data['numbers'], 'footers' => $data['footers'], 'type' => $data['type'], 'types' => $data['types']])->render();
         $mpdf->WriteHTML($html);
         $mpdf->Output('mypdf.pdf', 'I');
 

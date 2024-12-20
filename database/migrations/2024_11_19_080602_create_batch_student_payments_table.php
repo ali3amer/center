@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('batch_student_id');
             $table->foreign('batch_student_id')->references('id')->on('batch_students')->onDelete('cascade')->onUpdate('cascade');
-            $table->decimal('amount', 8, 2)->default(0);
+            $table->decimal('amount', 10, 2)->default(0);
             $table->date('date');
             $table->enum('payment_method', ['cash', 'bank'])->default('cash');
             $table->unsignedBigInteger('bank_id')->nullable();

@@ -33,9 +33,9 @@
                             @if(!is_array($cell))
                                 @if(in_array($cell, $numbers))
                                     @if($array)
-                                        {{ number_format($row[$cell], 2) }}
+                                        {{ number_format($row[$cell]) }}
                                     @else
-                                        {{ number_format($row->$cell, 2) }}
+                                        {{ number_format($row->$cell) }}
                                     @endif
                                 @else
                                     @if($array)

@@ -26,7 +26,7 @@
 
     @if(!$rentalPaymentMode)
         <x-container>
-            <x-table :headers="$headers" :rows="$hallRentals" model="hallRentals" chooseModel="hallRentalPayments" :search="false" :choose="true" :cells="$cells" />
+            <x-table :headers="$headers" :rows="$hallRentals" :$numbers model="hallRentals" chooseModel="hallRentalPayments" :search="false" :choose="true" :cells="$cells" />
         </x-container>
     @else
         <livewire:hall-rental-payment :$hall_rental_id />

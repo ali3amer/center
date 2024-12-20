@@ -16,6 +16,6 @@
     </x-container>
 
     <x-container>
-        <x-table :headers="$headers" model="hallRentalPayments" :rows="$hallRentalPayments" :search="false" :cells="$cells"/>
+        <x-table :headers="$headers" model="hallRentalPayments" :rows="$hallRentalPayments" :$numbers :search="false" :cells="$cells"/>
     </x-container>
 </div>

@@ -16,7 +16,7 @@ class Bank extends Component
 
     public $headers = ['إسم البنك', 'إسم صاحب الحساب', 'الرصيد الافتتاحي', 'الرصيد الحالي', 'التاريخ'];
     public $cells = ['bank_name', 'name', 'initial_balance', 'balance', 'date'];
-
+    public $numbers = ['initial_balance', 'balance'];
     protected $listeners = [
         'delete',
     ];
@@ -35,14 +35,14 @@ class Bank extends Component
             \App\Models\Bank::create([
                 'bank_name' => $this->bank_name,
                 'name' => $this->name,
-                'initial_balance' => $this->initial_balance,
+                'initial_balance' => round(floatval($this->initial_balance)),
                 'date' => $this->date,
             ]);
         } else {
             \App\Models\Bank::where('id', $this->id)->update([
                 'bank_name' => $this->bank_name,
                 'name' => $this->name,
-                'initial_balance' => $this->initial_balance,
+                'initial_balance' => round(floatval($this->initial_balance)),
                 'date' => $this->date,
             ]);
         }
@@ -56,7 +56,7 @@ class Bank extends Component
         $this->id = $bank['id'];
         $this->bank_name = $bank['bank_name'];
         $this->name = $bank['name'];
-        $this->initial_balance = $bank['initial_balance'];
+        $this->initial_balance = round($bank['initial_balance']);
         $this->date = $bank['date'];
     }
 
@@ -84,15 +84,16 @@ class Bank extends Component
 
     public function resetData()
     {
-        $this->reset( 'id', 'bank_name', 'name', 'initial_balance', 'date');
+        $this->reset('id', 'bank_name', 'name', 'initial_balance', 'date');
     }
+
     #[Title('البنوك')]
     public function render()
     {
         if ($this->date == '') {
             $this->date = date('Y-m-d');
         }
-        return view('livewire.bank',[
+        return view('livewire.bank', [
             'banks' => \App\Models\Bank::paginate(10),
         ]);
     }

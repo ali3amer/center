@@ -43,25 +43,28 @@ class Course extends Component
     {
         $this->validate();
         if ($this->id == 0) {
-            \App\Models\Course::create([
+            $course = \App\Models\Course::create([
                 'arabic_name' => $this->arabic_name,
                 'english_name' => $this->english_name,
                 'type' => $this->type,
-                'price' => floatval($this->price),
+                'price' => round(floatval($this->price)),
                 'duration' => $this->duration,
                 'duration_value' => floatval($this->duration_value),
             ]);
+            $this->resetData();
+
+            $this->choose($course);
         } else {
             \App\Models\Course::where('id', $this->id)->update([
                 'arabic_name' => $this->arabic_name,
                 'english_name' => $this->english_name,
                 'type' => $this->type,
-                'price' => floatval($this->price),
+                'price' => round(floatval($this->price)),
                 'duration' => $this->duration,
                 'duration_value' => floatval($this->duration_value),
             ]);
+            $this->resetData();
         }
-        $this->resetData();
         $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
 
     }

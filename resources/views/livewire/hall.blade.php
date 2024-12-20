@@ -2,7 +2,7 @@
     <x-container  title="القاعات">
         <form wire:submit="save" class="grid gap-x-1 grid-cols-4">
             <x-input name="name" :disabled="$rentalMode" label="الإسم" />
-            <x-input name="chairs" :disabled="$rentalMode" label="عدد الكراسي" />
+{{--            <x-input name="chairs" :disabled="$rentalMode" label="عدد الكراسي" />--}}
             <x-input name="price" :disabled="$rentalMode" label="السعر" />
 
             @if(!$rentalMode)
@@ -17,7 +17,7 @@
 
     @if(!$rentalMode)
         <x-container>
-            <x-table :headers="$headers" model="halls" chooseModel="hallRentals" :rows="$halls" :choose="true" :cells="$cells" />
+            <x-table :headers="$headers" model="halls" :$numbers chooseModel="hallRentals" :rows="$halls" :choose="true" :cells="$cells" />
         </x-container>
     @else
         <livewire:hall-rental :$hall_id />

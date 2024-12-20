@@ -19,7 +19,7 @@ class EmployeeExpense extends Component
 
     public $headers = ['المبغ', 'نوع العملية', 'التاريخ', 'وسيلة الدفع'];
     public $cells = ['amount' => 'amount', 'type' => 'type', 'date' => 'date', 'payment_method' => 'payment_method'];
-
+    public $numbers = ['amount'];
     public $employee_id;
     public $id = null;
     public $amount = 0;
@@ -44,7 +44,7 @@ class EmployeeExpense extends Component
     {
         if ($this->id == 0) {
             \App\Models\EmployeeExpense::create([
-                'amount' => $this->amount,
+                'amount' => round(floatval($this->amount)),
                 'date' => $this->date,
                 'payment_method' => $this->payment_method,
                 'bank_id' => $this->bank_id,
@@ -54,7 +54,7 @@ class EmployeeExpense extends Component
             ]);
         } else {
             \App\Models\EmployeeExpense::where('id', $this->id)->update([
-                'amount' => $this->amount,
+                'amount' => round(floatval($this->amount)),
                 'date' => $this->date,
                 'payment_method' => $this->payment_method,
                 'bank_id' => $this->bank_id,
@@ -70,7 +70,7 @@ class EmployeeExpense extends Component
     public function edit($employeeExpense)
     {
         $this->id = $employeeExpense['id'];
-        $this->amount = $employeeExpense['amount'];
+        $this->amount = round($employeeExpense['amount']);
         $this->date = $employeeExpense['date'];
         $this->payment_method = $employeeExpense['payment_method'];
         $this->bank_id = $employeeExpense['bank_id'];

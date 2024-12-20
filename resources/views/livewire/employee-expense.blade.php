@@ -19,6 +19,6 @@
     </x-container>
 
     <x-container>
-        <x-table :headers="$headers" model="employeeExpenses" :rows="$employeeExpenses" :search="false" :cells="$cells"/>
+        <x-table :headers="$headers" model="employeeExpenses" :$numbers :rows="$employeeExpenses" :search="false" :cells="$cells"/>
     </x-container>
 </div>

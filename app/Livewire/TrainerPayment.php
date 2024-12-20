@@ -20,6 +20,7 @@ class TrainerPayment extends Component
 
     public $headers = ['التاريخ', 'المبغ', 'وسيلة الدفع', 'ملاحظات'];
     public $cells = ['date' => 'date', 'amount' => 'amount', 'payment_method' => 'payment_method', 'note' => 'note'];
+    public $numbers = ['amount'];
     public $batch_student_id;
     public $id = null;
     public $amount = 0;
@@ -49,23 +50,23 @@ class TrainerPayment extends Component
         $batch = \App\Models\Batch::find($this->batch_id);
         $this->batch_id = $batch['id'];
         $this->trainer_id = $batch['trainer_id'];
-        $this->certificate_price = $batch['certificate_price'];
-        $this->price = $batch['price'];
+        $this->certificate_price = round($batch['certificate_price']);
+        $this->price = round($batch['price']);
         $this->studentCount = $batch->studentCount;
-        $this->cost = $this->price * $this->studentCount;
+        $this->cost = round($this->price * $this->studentCount);
         $this->center_fees = $batch['center_fees'];
         $this->trainer_fees = $batch['trainer_fees'];
-        $this->paid = BatchTrainerPayment::where('batch_id', $batch['id'])->sum('amount');
-        $this->certificate_cost = $this->certificate_price * \App\Models\BatchStudent::where('batch_id', $batch['id'])->where('want_certification', true)->count();
-        $this->required = ($this->cost - $this->certificate_cost) * $this->trainer_fees / 100;
-        $this->remainder = $this->required - \App\Models\BatchTrainerPayment::where('batch_id', $batch['id'])->sum('amount');
+        $this->paid = round(BatchTrainerPayment::where('batch_id', $batch['id'])->sum('amount'));
+        $this->certificate_cost = round($this->certificate_price * \App\Models\BatchStudent::where('batch_id', $batch['id'])->where('want_certification', true)->count());
+        $this->required = round(($this->cost - $this->certificate_cost) * $this->trainer_fees / 100);
+        $this->remainder = round($this->required - \App\Models\BatchTrainerPayment::where('batch_id', $batch['id'])->sum('amount'));
     }
 
     public function save()
     {
         if ($this->id == null) {
             \App\Models\BatchTrainerPayment::create([
-                'amount' => $this->amount,
+                'amount' => round(floatval($this->amount)),
                 'date' => $this->date,
                 'payment_method' => $this->payment_method,
                 'batch_id' => $this->batch_id,
@@ -75,7 +76,7 @@ class TrainerPayment extends Component
             ]);
         } else {
             \App\Models\BatchTrainerPayment::where('id', $this->id)->update([
-                'amount' => $this->amount,
+                'amount' => round(floatval($this->amount)),
                 'date' => $this->date,
                 'payment_method' => $this->payment_method,
                 'bank_id' => $this->bank_id,
@@ -90,7 +91,7 @@ class TrainerPayment extends Component
     public function edit($batchTrainerPayment)
     {
         $this->id = $batchTrainerPayment['id'];
-        $this->amount = $batchTrainerPayment['amount'];
+        $this->amount = round($batchTrainerPayment['amount']);
         $this->date = $batchTrainerPayment['date'];
         $this->payment_method = $batchTrainerPayment['payment_method'];
         $this->bank_id = $batchTrainerPayment['bank_id'];

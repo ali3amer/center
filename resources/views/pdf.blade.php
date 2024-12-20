@@ -111,7 +111,11 @@
             <tr>
                 @foreach ($cells as $key => $cell)
                     <td style="text-align: center;border: 1px solid black">
-                        {{$row[$cell]}}
+                        @if(in_array($cell,$numbers))
+                            {{number_format(round($row[$cell]))}}
+                        @else
+                            {{$row[$cell]}}
+                        @endif
                     </td>
                 @endforeach
             </tr>
@@ -142,7 +146,11 @@
                 @foreach ($cells['options'] as $key => $cell)
                     <td style="text-align: center;border: 1px solid black;">
                         @if(!is_array($cell))
-                            {{ $row->$cell }}
+                            @if(in_array($cell, $numbers['options']))
+                                {{ number_format($row[$cell]) }}
+                            @else
+                                {{ $row[$cell] }}
+                            @endif
                         @else
                             {{$cell[$row[$key]]}}
                         @endif
@@ -177,7 +185,11 @@
                 @foreach ($cells['expenses'] as $key => $cell)
                     <td  style="text-align: center; border: 1px solid black;">
                         @if(!is_array($cell))
-                            {{ $row->$cell }}
+                            @if(in_array($cell, $numbers['expenses']))
+                                {{ number_format($row->$cell) }}
+                            @else
+                                {{ $row->$cell }}
+                            @endif
                         @else
                             {{$cell[$row[$key]]}}
                         @endif

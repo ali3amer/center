@@ -20,6 +20,6 @@
     </x-container>
 
     <x-container>
-        <x-table :headers="$headers" :rows="$batches" model="batches" :search="false" :cells="$cells" />
+        <x-table :headers="$headers" :rows="$batches" :$numbers model="batches" :search="false" :cells="$cells" />
     </x-container>
 </div>

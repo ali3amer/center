@@ -22,7 +22,7 @@
                                  value="{{ $incomes - $expenses }}"/>
                     </div>
                 @endif
-                <x-table :headers="$headers" :array="true" :footers="$footers" :search="false" model="reports"
+                <x-table :headers="$headers" :$numbers :array="true" :footers="$footers" :search="false" model="reports"
                          :buttons="false"
                          :index="$type == 'safe' ? false : true" :rows="$rows" :paginate="false" :cells="$cells"/>
             </x-container>
@@ -30,14 +30,14 @@
         @else
             @if(isset($headers['options']))
                 <x-container>
-                    <x-table :headers="$headers['options']" model="reports" :array="true" :search="false"
+                    <x-table :headers="$headers['options']" :numbers="$numbers['options']" model="reports" :array="true" :search="false"
                              :buttons="false"
                              :index="$type == 'safe' ? false : true" :rows="$rows['options']" :paginate="false"
                              :cells="$cells['options']"/>
                 </x-container>
 
                 <x-container>
-                    <x-table :headers="$headers['expenses']" model="reports" :array="true" :search="false"
+                    <x-table :headers="$headers['expenses']" :numbers="$numbers['expenses']" model="reports" :array="true" :search="false"
                              :buttons="false"
                              :index="$type == 'safe' ? false : true" :rows="$rows['expenses']" :paginate="false"
                              :cells="$cells['expenses']"/>

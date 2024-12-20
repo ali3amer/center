@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('safes', function (Blueprint $table) {
             $table->id();
-            $table->decimal('initial_balance', 8, 2)->default(0);
+            $table->decimal('initial_balance', 10, 2)->default(0);
             $table->date('date');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');

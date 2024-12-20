@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('batch_students', function (Blueprint $table) {
             $table->id();
+            $table->integer('student_number');
             $table->unsignedBigInteger('batch_id');
             $table->foreign('batch_id')->references('id')->on('batches')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedBigInteger('student_id');

@@ -17,6 +17,7 @@ class Expense extends Component
 
     public $headers = ['البيان', 'التصنيف', 'المبلغ', 'وسيلة الدفع', 'التاريخ'];
     public $cells = ['description' => 'description', 'name' => 'name', 'amount' => 'amount', 'payment_method' => 'payment_method', 'date' => 'date'];
+    public $numbers = ['amount'];
     protected $listeners = [
         'delete',
     ];
@@ -50,7 +51,7 @@ class Expense extends Component
             \App\Models\Expense::create([
                 'description' => $this->description,
                 'expense_option_id' => $this->expense_option_id,
-                'amount' => floatval($this->amount),
+                'amount' => round(floatval($this->amount)),
                 'date' => $this->date,
                 'payment_method' => $this->payment_method,
                 'bank_id' => $this->bank_id,
@@ -60,7 +61,7 @@ class Expense extends Component
             \App\Models\Expense::where('id', $this->id)->update([
                 'description' => $this->description,
                 'expense_option_id' => $this->expense_option_id,
-                'amount' => floatval($this->amount),
+                'amount' => round(floatval($this->amount)),
                 'payment_method' => $this->payment_method,
                 'bank_id' => $this->bank_id,
                 'transaction_id' => $this->transaction_id,
@@ -76,7 +77,7 @@ class Expense extends Component
         $this->id = $expense['id'];
         $this->description = $expense['description'];
         $this->expense_option_id = $expense['expense_option_id'];
-        $this->amount = $expense['amount'];
+        $this->amount = round($expense['amount']);
         $this->date = $expense['date'];
         $this->payment_method = $expense['payment_method'];
         $this->bank_id = $expense['bank_id'];

@@ -16,6 +16,7 @@ class Hall extends Component
 
     public $headers = ['الإسم', 'عدد الكراسي', 'السعر'];
     public $cells = ['name' => 'name', 'chairs' => 'chairs', 'price' => 'price'];
+    public $numbers = ['price'];
     protected $listeners = [
         'delete',
     ];
@@ -32,19 +33,23 @@ class Hall extends Component
     {
         if ($this->id == null) {
             $this->validate();
-            \App\Models\Hall::create([
+            $hall = \App\Models\Hall::create([
                 'name' => $this->name,
-                'price' => $this->price,
+                'price' => round(floatval($this->price)),
                 'chairs' => $this->chairs,
             ]);
+            $this->resetData();
+
+            $this->choose($hall);
         } else {
             \App\Models\Hall::where('id', $this->id)->update([
                 'name' => $this->name,
-                'price' => $this->price,
+                'price' => round(floatval($this->price)),
                 'chairs' => $this->chairs,
             ]);
+            $this->resetData();
+
         }
-        $this->resetData();
         $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
     }
 
@@ -52,7 +57,7 @@ class Hall extends Component
     {
         $this->id = $hall['id'];
         $this->name = $hall['name'];
-        $this->price = $hall['price'];
+        $this->price = round($hall['price']);
         $this->chairs = $hall['chairs'];
     }
 

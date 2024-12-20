@@ -20,6 +20,11 @@ class Certification extends Model
         return $this->batchStudent->student->arabic_name;
     }
 
+    public function getStudentNumberAttribute()
+    {
+        return $this->batchStudent->student_number;
+    }
+
     public function getEnglishNameAttribute()
     {
         return $this->batchStudent->student->english_name;

@@ -27,7 +27,7 @@ class Settings extends Component
                 'date' => $this->date
             ]);
         } else {
-            $this->initial_balance = $safe->initial_balance;
+            $this->initial_balance = number_format(round($safe->initial_balance));
             $this->date = $safe->date;
         }
     }
@@ -35,7 +35,7 @@ class Settings extends Component
     public function editSafe()
     {
         Safe::first()->update([
-            'initial_balance' => floatval($this->initial_balance),
+            'initial_balance' => round($this->initial_balance, 2),
             'date' => $this->date
         ]);
         $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);

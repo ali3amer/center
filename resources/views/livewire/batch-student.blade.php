@@ -7,8 +7,9 @@
                 <x-input name="price" :disabled="true" label="المطلوب"/>
                 <x-input name="remainder" :disabled="true" label="المتبقي"/>
             </div>
-            <div class="grid gap-x-1 grid-cols-3">
-                <x-checkbox name="want_certification" :disabled="$batchStudentPaymentMode || $paid" label="هل ترغب في شهاده"/>
+            <div class="grid gap-x-1 grid-cols-4">
+                <x-checkbox name="want_certification" :live="true" :disabled="$batchStudentPaymentMode || $paid" label="هل ترغب في شهاده"/>
+                <x-input name="student_number" :disabled="$batchStudentPaymentMode" label="رقم الطالب"/>
                 <x-input name="certification_id" :disabled="$batchStudentPaymentMode" label="رقم الشهادة"/>
                 @if(!$batchStudentPaymentMode)
                     <x-button model="batchStudents" type="submit" :center="true" label="حفظ"/>

@@ -45,7 +45,7 @@ class Student extends Component
     {
         if ($this->id == 0) {
             $this->validate();
-            \App\Models\Student::create([
+            $student = \App\Models\Student::create([
                 'arabic_name' => $this->arabic_name,
                 'english_name' => $this->english_name,
                 'national_id' => $this->national_id,
@@ -54,6 +54,8 @@ class Student extends Component
                 'email' => $this->email,
                 'address' => $this->address,
             ]);
+            $this->resetData();
+            $this->choose($student);
         } else {
             \App\Models\Student::where('id', $this->id)->update([
                 'arabic_name' => $this->arabic_name,
@@ -65,8 +67,9 @@ class Student extends Component
                 'address' => $this->address,
                 'image' => $this->image,
             ]);
+            $this->resetData();
+
         }
-        $this->resetData();
         $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
     }
 

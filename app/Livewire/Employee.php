@@ -17,8 +17,9 @@ class Employee extends Component
     protected $listeners = [
         'delete',
     ];
-    public $headers = ['الإسم', 'البريد', 'الهاتف', 'المرتب'];
-    public $cells = ['name', 'phone', 'email', 'salary'];
+    public $headers = ['الإسم', 'الهاتف', 'الرصيد', 'المرتب'];
+    public $cells = ['name', 'phone', 'balance', 'salary'];
+    public $numbers = ['salary', 'balance'];
     public $id = null;
     public $employee_id = null;
     #[Rule('required', message: 'هذا الحقل مطلوب')]
@@ -40,7 +41,7 @@ class Employee extends Component
                 'email' => $this->email,
                 'phone' => $this->phone,
                 'position' => $this->position,
-                'salary' => $this->salary,
+                'salary' => round(floatval($this->salary)),
             ]);
         } else {
             \App\Models\Employee::where('id', $this->id)->update([
@@ -48,7 +49,7 @@ class Employee extends Component
                 'email' => $this->email,
                 'phone' => $this->phone,
                 'position' => $this->position,
-                'salary' => $this->salary,
+                'salary' => round(floatval($this->salary)),
             ]);
         }
         $this->resetData();
@@ -61,7 +62,7 @@ class Employee extends Component
         $this->email = $employee['email'];
         $this->phone = $employee['phone'];
         $this->position = $employee['position'];
-        $this->salary = $employee['salary'];
+        $this->salary = round($employee['salary']);
     }
 
     public function deleteMessage($id)
@@ -89,7 +90,7 @@ class Employee extends Component
 
     public function resetData()
     {
-        $this->reset('name', 'email', 'phone', 'position', 'salary', 'id', 'search');
+        $this->reset('name', 'email', 'phone', 'position', 'salary', 'id', 'search', 'employeeExpenseMode');
     }
 
     public function choose($employee)

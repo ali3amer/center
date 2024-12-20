@@ -38,6 +38,6 @@
     </x-container>
 
     <x-container>
-        <x-table :headers="$headers" model="batchTrainerPayments" :rows="$batchTrainerPayments" :search="false" :cells="$cells"/>
+        <x-table :headers="$headers" model="batchTrainerPayments" :$numbers :rows="$batchTrainerPayments" :search="false" :cells="$cells"/>
     </x-container>
 </div>

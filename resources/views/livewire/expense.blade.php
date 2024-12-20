@@ -22,7 +22,7 @@
         </x-container>
 
         <x-container>
-            <x-table :headers="$headers" model="expenses" :rows="$expenses" :cells="$cells"/>
+            <x-table :headers="$headers" model="expenses" :$numbers :rows="$expenses" :cells="$cells"/>
         </x-container>
     @else
         <livewire:expense-option/>

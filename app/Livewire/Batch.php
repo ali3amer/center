@@ -13,9 +13,9 @@ class Batch extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['المدرب', 'تاريخ البداية', 'تاريخ النهاية', 'مكتمل', 'عدد الدارسين'];
-    public $cells = ['name' => 'name', 'start_date' => 'start_date', 'end_date' => 'end_date', 'completed' => [true => 'نعم', false => 'لا'], 'studentCount'];
-
+    public $headers = ['المدرب', 'السعر', 'تاريخ البداية', 'تاريخ النهاية', 'مكتمل', 'عدد الدارسين'];
+    public $cells = ['name' => 'name', 'price' => 'price', 'start_date' => 'start_date', 'end_date' => 'end_date', 'completed' => [true => 'نعم', false => 'لا'], 'studentCount'];
+    public $numbers = ['price'];
     protected $listeners = [
         'delete',
     ];
@@ -84,8 +84,8 @@ class Batch extends Component
         $this->paid = $batch['paid'];
         $this->center_fees = $batch['center_fees'];
         $this->trainer_fees = $batch['trainer_fees'];
-        $this->price = $batch['price'];
-        $this->certificate_price = $batch['certificate_price'];
+        $this->price = round($batch['price']);
+        $this->certificate_price = round($batch['certificate_price']);
     }
 
     public function deleteMessage($id)
@@ -112,13 +112,13 @@ class Batch extends Component
 
     public function resetData()
     {
-        $this->reset('trainer_id', 'start_date', 'end_date', 'completed', 'paid', 'price', 'certificate_price', 'id');
+        $this->reset('trainer_id', 'start_date', 'end_date', 'completed', 'paid', 'price', 'certificate_price', 'id', 'fees');
     }
 
     public function calc()
     {
         if ($this->paid) {
-            $this->fees = (floatval($this->price) - floatval($this->certificate_price)) * $this->center_fees / 100;
+            $this->fees = round((floatval($this->price) - floatval($this->certificate_price)) * $this->center_fees / 100);
         }
     }
 
