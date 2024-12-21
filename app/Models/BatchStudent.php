@@ -25,10 +25,6 @@ class BatchStudent extends Model
     {
         return $this->hasMany(BatchStudentPayment::class);
     }
-    public function certification()
-    {
-        return $this->hasOne(Certification::class);
-    }
 
     public function getNameAttribute()
     {
@@ -44,10 +40,6 @@ class BatchStudent extends Model
         return $this->batch->courseName;
     }
 
-    public function getCertificationIdAttribute()
-    {
-        return $this->certification->certification_id;
-    }
     public function getCertificationPriceAttribute()
     {
         return $this->batch->certificate_price;

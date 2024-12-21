@@ -14,7 +14,7 @@
                 @if(!$batchStudentPaymentMode)
                     <x-button model="batchStudents" type="submit" :center="true" label="حفظ"/>
                 @else
-                    <x-button model="batchStudents" type="button" color="bg-red-600" wire:click="resetData" label=""
+                    <x-button model="batchStudents" type="button" color="bg-red-600" wire:click="resetData('batchStudentPaymentMode')" label=""
                               icon="fa-close"/>
                 @endif
             </div>

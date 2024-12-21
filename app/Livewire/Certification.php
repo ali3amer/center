@@ -14,7 +14,7 @@ class Certification extends Component
     use WithPagination, WithoutUrlPagination;
 
     public $headers = ['رقم الطالب', 'رقم الشهادة', 'الإسم بالعربي', 'الإسم بالإنجليزي', 'البرنامج', 'نوع البرنامج', 'الشهر'];
-    public $cells = ['studentNumber', 'certification_id', 'arabic_name', 'english_name', 'courseName', 'courseType', 'month'];
+    public $cells = ['student_number', 'certification_id', 'name', 'english_name', 'course', 'courseType', 'month'];
     protected $listeners = [
         'delete',
     ];
@@ -33,27 +33,25 @@ class Certification extends Component
     public function mount()
     {
         $this->courses = \App\Models\Course::all()->pluck('arabic_name', 'id');
-        $this->certifications = \App\Models\Certification::all();
+        $this->certifications = \App\Models\BatchStudent::whereNotNull('certification_id')->where('certification_id', '!=', 0)->get();
     }
 
     public function chooseCourse()
     {
         if ($this->course_id != null) {
             $this->batches = \App\Models\Batch::where('course_id', $this->course_id)->pluck('start_date', 'id');
-            $this->certifications = \App\Models\Certification::whereHas('batchStudent.batch', function ($query) {
+            $this->certifications = \App\Models\BatchStudent::whereHas('batch', function ($query) {
                 $query->where('course_id', $this->course_id);
             })->get();
         } else {
-            $this->certifications = \App\Models\Certification::all();
+            $this->certifications = \App\Models\BatchStudent::whereNotNull('certification_id')->where('certification_id', '!=', 0)->get();
         }
     }
 
     public function chooseBatch()
     {
         if ($this->batch_id != null) {
-            $this->certifications = \App\Models\Certification::whereHas('batchStudent', function ($query) {
-                $query->where('batch_id', $this->batch_id);
-            })->get();
+            $this->certifications = \App\Models\BatchStudent::where('batch_id', $this->batch_id)->get();
         } else {
             $this->chooseCourse();
         }

@@ -83,7 +83,7 @@ class Safe extends Model
                 "payment_method" => $employeeExpense->payment,
                 "transaction_id" => $employeeExpense->transaction_id,
                 "bank_id" => $employeeExpense->bankName,
-                "note" => 'الموظف' . $employeeExpense->employee->name,
+                "note" => 'الموظف : ' . $employeeExpense->employee->name,
                 "created_at" => $employeeExpense->created_at,
                 "updated_at" => $employeeExpense->updated_at,
             ];

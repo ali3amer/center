@@ -39,8 +39,8 @@ class Report extends Component
     public $coruse_types = ['course' => 'كورس', 'session' => 'دورة', 'workshop' => 'ورشه'];
     public $coruse_type = 'course';
     public $type = null;
-    public $trainer_id = null;
-    public $trainers = [];
+    public $course_id = null;
+    public $courses = [];
     public $rows;
     public $incomes = 0;
     public $expenses = 0;
@@ -49,7 +49,7 @@ class Report extends Component
 
     public function mount()
     {
-        $this->trainers = \App\Models\Trainer::pluck("arabic_name", "id")->toArray();
+        $this->courses = \App\Models\Course::pluck("arabic_name", "id")->toArray();
     }
 
     public function getReport()
@@ -76,7 +76,7 @@ class Report extends Component
     public function safe()
     {
         $this->cells = ["date", "note", "payment_method", "bank_id", "transaction_id", "income", "expense"];
-        $this->headers = ['التاريخ', 'البيان', 'طريقة الدفعه', 'البنك', 'رقم العملية', 'إيراد', 'منصرف'];
+        $this->headers = ['التاريخ', 'البيان', 'طريقة الدفع', 'البنك', 'رقم العملية', 'إيراد', 'منصرف'];
         $safe = Safe::first()->safeMovements($this->from, $this->to);
         $this->rows = collect($safe['movements']);
         $this->incomes = $safe['income_balance'];
@@ -105,10 +105,10 @@ class Report extends Component
         $this->cells = ['courseName', 'courseType', 'studentCount', 'certificationsCount', 'name', 'month'];
         $this->headers = ['إسم البرنامج', 'نوع البرنامج', 'عدد الدارسين', 'عدد الشهادات', 'المدرب', 'الشهر'];
 
-        if ($this->trainer_id == null) {
+        if ($this->course_id == null) {
             $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get();
         } else {
-            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id)->get();
+            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('course_id', $this->course_id)->get();
         }
         $totalCount = 0;
         $totalCertification = 0;
@@ -165,10 +165,10 @@ class Report extends Component
         $this->cells = ['courseName', 'studentCount'];
         $this->headers = ['إسم البرنامج', 'عدد الدارسين'];
 
-        if ($this->trainer_id == null) {
+        if ($this->course_id == null) {
             $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get();
         } else {
-            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id)->get();
+            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('course_id', $this->course_id)->get();
         }
 
         $totalCount = 0;
@@ -182,13 +182,13 @@ class Report extends Component
 
     public function certifications()
     {
-        $this->cells = ['student_id', 'certificationId', 'name', 'course', 'courseType', 'trainer', 'month', 'certificationPrice'];
+        $this->cells = ['student_number', 'certification_id', 'name', 'course', 'courseType', 'trainer', 'month', 'certificationPrice'];
         $this->headers = ['الرقم المتسلسل', 'الرقم المتسلسل للشهادة', 'إسم الدارس', 'البرنامج التدريبي', 'نوع البرنامج', 'إسم المدرب', 'الشهر', 'الرسوم'];
         $this->rows = \App\Models\BatchStudent::whereHas('batch', function ($query) {
-            if ($this->trainer_id == null) {
+            if ($this->course_id == null) {
                 $query->whereBetween("start_date", [$this->from, $this->to]);
             } else {
-                $query->whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id);
+                $query->whereBetween("start_date", [$this->from, $this->to])->where('course_id', $this->course_id);
             }
         })->get();
         $this->footers = [];
@@ -228,6 +228,11 @@ class Report extends Component
     {
         $url = route('view.pdf');
         $this->dispatch('openPdf', $url);
+    }
+
+    public function resetData()
+    {
+        $this->reset('headers','cells','numbers','payment_method','course_id','rows','incomes','expenses','balance');
     }
 
 

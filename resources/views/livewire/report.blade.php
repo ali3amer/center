@@ -2,9 +2,9 @@
 
     <x-container title="التقارير">
         <form wire:submit="getReport" class="grid gap-x-1 grid-cols-{{ $type == 'certifications' ||$type == 'performance' || $type == 'courses' ? '5' : '4' }}">
-            <x-select name="type" :options="$types" :live="true" label="نوع التقرير"/>
+            <x-select name="type" wire:change="resetData" :options="$types" :live="true" label="نوع التقرير"/>
             @if($type == 'certifications' ||$type == 'performance' || $type == 'courses')
-                <x-select name="trainer_id" :options="$trainers" label="المدرب"/>
+                <x-select name="trainer_id" :options="$courses" label="البرنامج التدريبي"/>
             @endif
             <x-input type="date" name="from" label="من تاريخ"/>
             <x-input type="date" name="to" label="الى تاريخ"/>

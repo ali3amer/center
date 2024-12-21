@@ -20,6 +20,7 @@ class BatchCertificationPayment extends Component
 
     public $headers = ['التاريخ', 'المبغ', 'وسيلة الدفع', 'ملاحظات'];
     public $cells = ['date', 'amount', 'payment','note'];
+    public $numbers = ['amount'];
     public $batch_student_id;
     public $id = null;
     public $amount = 0;
@@ -48,16 +49,16 @@ class BatchCertificationPayment extends Component
         $batch = \App\Models\Batch::find($this->batch_id);
         $this->batch_id = $batch['id'];
         $this->trainer_id = $batch['trainer_id'];
-        $this->certificate_price = $batch['certificate_price'];
-        $this->price = $batch['price'];
+        $this->certificate_price = round($batch['certificate_price']);
+        $this->price = round($batch['price']);
         $this->studentCount = $batch->studentCount;
         $this->cost = $this->price * $this->studentCount;
         $this->center_fees = $batch['center_fees'];
         $this->trainer_fees = $batch['trainer_fees'];
-        $this->paid = \App\Models\BatchCertificationPayment::where('batch_id', $batch['id'])->sum('amount');
-        $this->certificate_cost = $this->certificate_price * \App\Models\BatchStudent::where('batch_id', $batch['id'])->where('want_certification', true)->count();
-        $this->required = $this->certificate_cost;
-        $this->remainder = $this->required - $this->paid;
+        $this->paid = round(\App\Models\BatchCertificationPayment::where('batch_id', $batch['id'])->sum('amount'));
+        $this->certificate_cost = round($this->certificate_price * \App\Models\BatchStudent::where('batch_id', $batch['id'])->where('want_certification', true)->count());
+        $this->required = round($this->certificate_cost);
+        $this->remainder = round($this->required - $this->paid);
     }
 
     public function save()
@@ -73,7 +74,7 @@ class BatchCertificationPayment extends Component
                 'note' => $this->note,
             ]);
         } else {
-            \App\Models\BatchTrainerPayment::where('id', $this->id)->update([
+            \App\Models\batchCertificationPayment::where('id', $this->id)->update([
                 'amount' => $this->amount,
                 'date' => $this->date,
                 'payment_method' => $this->payment_method,
@@ -89,7 +90,7 @@ class BatchCertificationPayment extends Component
     public function edit($batchTrainerPayment)
     {
         $this->id = $batchTrainerPayment['id'];
-        $this->amount = $batchTrainerPayment['amount'];
+        $this->amount = round($batchTrainerPayment['amount']);
         $this->date = $batchTrainerPayment['date'];
         $this->payment_method = $batchTrainerPayment['payment_method'];
         $this->bank_id = $batchTrainerPayment['bank_id'];

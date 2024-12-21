@@ -39,7 +39,7 @@ class HallRental extends Component
     public function save()
     {
         if ($this->id == null) {
-            \App\Models\HallRental::create([
+            $hallRental = \App\Models\HallRental::create([
                 'hall_id' => $this->hall_id,
                 'name' => $this->name,
                 'type' => $this->type,
@@ -50,6 +50,7 @@ class HallRental extends Component
                 'end_date' => $this->end_date,
                 'completed' => $this->completed,
             ]);
+            $this->choose($hallRental);
         } else {
             \App\Models\HallRental::where('id', $this->id)->update([
                 'name' => $this->name,
@@ -61,9 +62,10 @@ class HallRental extends Component
                 'end_date' => $this->end_date,
                 'completed' => $this->completed,
             ]);
+            $this->resetData();
+
         }
         $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
-        $this->resetData();
     }
 
     public function edit($hallRental)
@@ -103,9 +105,12 @@ class HallRental extends Component
         $this->resetData();
     }
 
-    public function resetData()
+    public function resetData($data = null)
     {
-        $this->reset('name', 'type', 'duration_type', 'price', 'duration', 'cost', 'id', 'start_date', 'end_date', 'completed', 'rentalPaymentMode', 'remainder');
+        if ($data != null) {
+            $this->reset($data);
+        }
+        $this->reset('name', 'type', 'duration_type', 'price', 'duration', 'cost', 'id', 'start_date', 'end_date', 'completed', 'remainder');
     }
 
     public function choose($hallRental)

@@ -38,7 +38,6 @@ class Hall extends Component
                 'price' => round(floatval($this->price)),
                 'chairs' => $this->chairs,
             ]);
-            $this->resetData();
 
             $this->choose($hall);
         } else {

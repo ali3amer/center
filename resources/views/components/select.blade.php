@@ -8,7 +8,7 @@
 
     <!-- Select Field -->
     <select name="{{ $name }}" id="{{ $name }}" @if($live) wire:model.live="{{ $name }}" @else wire:model="{{ $name }}" @endif
-            @disabled($disabled) class="appearance-none text-center block w-full text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white" {{ $attributes }}>
+            @disabled($disabled) @disabled(empty($options)) class="appearance-none text-center block w-full text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white" {{ $attributes }}>
         <!-- Placeholder -->
         <option value="">{{ $placeholder }}</option>
 

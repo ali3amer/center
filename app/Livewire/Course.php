@@ -75,7 +75,7 @@ class Course extends Component
         $this->arabic_name = $course['arabic_name'];
         $this->english_name = $course['english_name'];
         $this->type = $course['type'];
-        $this->price = $course['price'];
+        $this->price = round($course['price']);
         $this->duration = $course['duration'];
         $this->duration_value = $course['duration_value'];
     }

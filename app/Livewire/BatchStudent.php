@@ -15,8 +15,8 @@ class BatchStudent extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['الدفعه', 'تاريخ التسجيل'];
-    public $cells = ['course', 'date'];
+    public $headers = ['رقم الطالب', 'الدفعه', 'تاريخ التسجيل'];
+    public $cells = ['student_number', 'course', 'date'];
     protected $listeners = [
         'delete',
     ];
@@ -39,10 +39,11 @@ class BatchStudent extends Component
     public function mount()
     {
         $this->batches = \App\Models\Batch::where("completed", false)->join('courses', 'batches.course_id', '=', 'courses.id')->select('batches.*', 'courses.arabic_name')->pluck('arabic_name', 'id')->toArray();
-        $this->check();
+        $this->checkStudentNumber();
+        $this->checkCertificationId();
     }
 
-    public function check()
+    public function checkStudentNumber()
     {
         $students = \App\Models\BatchStudent::count();
         if ($students > 0) {
@@ -52,52 +53,57 @@ class BatchStudent extends Component
         }
     }
 
+    public function checkCertificationId()
+    {
+        $certifications = \App\Models\BatchStudent::count();
+        if ($certifications > 0) {
+            $this->certification_id = \App\Models\BatchStudent::max('certification_id') + 1;
+        } else {
+            $this->certification_id = 1;
+        }
+    }
+
     public function save()
     {
-        $this->validate();
-        if ($this->id == null) {
-            $batch_student = \App\Models\BatchStudent::create([
-                'student_id' => $this->student_id,
-                'batch_id' => $this->batch_id,
-                'student_number' => $this->student_number,
-                'want_certification' => $this->want_certification,
-                'date' => $this->date,
+        $check = \App\Models\BatchStudent::where('student_id', $this->student_id)->where('batch_id', $this->batch_id)->first();
+        if ($check) {
+            $this->confirm("هذا الطالب مسجل بهذا البرنامج مسبقاً", [
+                'toast' => false,
+                'showConfirmButton' => false,
+                'confirmButtonText' => 'موافق',
+                'onConfirmed' => "cancelSale",
+                'showCancelButton' => true,
+                'cancelButtonText' => 'إلغاء',
+                'confirmButtonColor' => '#dc2626',
+                'cancelButtonColor' => '#4b5563'
             ]);
-
-            if ($this->want_certification) {
-                \App\Models\Certification::create([
-                    'batch_student_id' => $batch_student->id,
-                    'certification_id' => $this->certification_id,
-                ]);
-            }
-            $this->choose($batch_student);
-            $this->resetData();
-
         } else {
-            $batch_student = \App\Models\BatchStudent::find($this->id);
-            $batch_student->batch_id = $this->batch_id;
-            $batch_student->date = $this->date;
-            $this->student_number = $batch_student->student_number;
-            $batch_student->want_certification = $this->want_certification;
-            $batch_student->save();
-            if (!$batch_student->certification) {
-                \App\Models\Certification::where('batch_student_id', $batch_student->id)->delete();
+            $this->validate();
+            if ($this->id == null) {
+                $batch_student = \App\Models\BatchStudent::create([
+                    'student_id' => $this->student_id,
+                    'batch_id' => $this->batch_id,
+                    'student_number' => round(floatval($this->student_number)),
+                    'certification_id' => $this->want_certification ? round(floatval($this->certification_id)) : null,
+                    'want_certification' => $this->want_certification,
+                    'date' => $this->date,
+                ]);
+
+                $this->choose($batch_student);
+
             } else {
-                $check = \App\Models\Certification::where("batch_student_id", $batch_student->id)->count();
-                if ($check == 0) {
-                    \App\Models\Certification::create([
-                        'batch_student_id' => $batch_student->id,
-                        'certification_id' => $this->certification_id,
-                    ]);
-                } else {
-                    \App\Models\Certification::where('batch_student_id', $batch_student->id)->update([
-                        'certification_id' => $this->certification_id,
-                    ]);
-                }
+                $batch_student = \App\Models\BatchStudent::find($this->id);
+                $batch_student->batch_id = $this->batch_id;
+                $batch_student->date = $this->date;
+                $this->student_number = round(floatval($batch_student->student_number));
+                $this->certification_id = $this->want_certification ? round(floatval($this->certification_id)) : null;
+                $batch_student->want_certification = $this->want_certification;
+                $batch_student->save();
+                $this->resetData();
             }
-            $this->resetData();
+            $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
         }
-        $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
+
     }
 
     public function edit($batchStudent)
@@ -106,8 +112,8 @@ class BatchStudent extends Component
         $this->student_id = $batchStudent['student_id'];
         $this->batch_id = $batchStudent['batch_id'];
         $this->date = $batchStudent['date'];
-        $this->student_number = $batchStudent['student_number'];
-        $this->certification_id = \App\Models\Certification::where("batch_student_id", $batchStudent['id'])->first()->certification_id ?? 0;
+        $this->student_number = round($batchStudent['student_number']);
+        $this->certification_id = $batchStudent['certification_id'];
         $this->want_certification = $batchStudent['want_certification'];
     }
 
@@ -133,9 +139,12 @@ class BatchStudent extends Component
         $this->alert('success', 'تم الحذف بنجاح', ['timerProgressBar' => true]);
     }
 
-    public function resetData()
+    public function resetData($data = null)
     {
-        $this->reset('batch_id', 'id', 'date', 'batchStudentPaymentMode', 'price', 'remainder', 'want_certification', 'certification_id', 'student_number');
+        if ($data != null) {
+            $this->reset($data);
+        }
+        $this->reset('batch_id', 'id', 'date', 'price', 'remainder', 'want_certification', 'certification_id', 'student_number');
     }
 
     public function choose($batchStudent)
@@ -143,7 +152,6 @@ class BatchStudent extends Component
         $this->batch_student_id = $batchStudent['id'];
         $this->edit($batchStudent);
         $this->batchStudentPaymentMode = true;
-
     }
 
     #[On('update-price')]
@@ -157,25 +165,33 @@ class BatchStudent extends Component
             $batch = \App\Models\Batch::find($this->batch_id);
             $this->paid = $batch->paid;
             $this->price = round($batch->price);
+
             if ($this->batch_student_id != null) {
-                $batch_student = \App\Models\BatchStudent::where("batch_id", $this->batch_id)->where("student_id", $this->student_id)->first()->id;
-                $this->remainder = round(floatval($batch->price) - floatval(\App\Models\BatchStudentPayment::where("batch_student_id", $batch_student)->sum('amount')));
+                $batch_student = \App\Models\BatchStudent::where("batch_id", $this->batch_id)->where("student_id", $this->student_id)->first()->id ?? null;
+                if ($batch_student != null) {
+                    $this->remainder = round(floatval($batch->price) - floatval(\App\Models\BatchStudentPayment::where("batch_student_id", $batch_student)->sum('amount')));
+                }
+            } else {
+                $this->remainder = floatval($batch->price);
             }
+
             if ($this->paid) {
                 $this->want_certification = true;
             }
+
             if (!$this->want_certification) {
-             $this->certification_id = 0;
+                $this->certification_id = 0;
             }
 
-            if ($this->want_certification && $this->certification_id == 0) {
-                $this->certification_id = \App\Models\Certification::max('certification_id') + 1;
+            if ($this->want_certification && floatval($this->certification_id) == 0) {
+                $this->checkCertificationId();
             }
         }
 
         if (floatval($this->student_number) == 0) {
-            $this->check();
+            $this->checkStudentNumber();
         }
+
         return view('livewire.batch-student', [
             'batchStudents' => \App\Models\BatchStudent::where('student_id', $this->student_id)->with("batch.course")->paginate(10)
         ]);

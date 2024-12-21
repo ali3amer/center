@@ -17,13 +17,14 @@ class Transfer extends Component
 
     public $headers = ['البنك', 'نوع العملية', 'المبلغ', 'رقم العملية', 'التاريخ'];
     public $cells = ['name' => 'name', 'transfer_type' => 'transfer_type', 'amount' => 'amount', 'transaction_id' => 'transaction_id', 'date' => 'date'];
-
+    public $numbers = ['amount'];
     protected $listeners = [
         'delete',
     ];
     public $id = null;
     public $transfer_type = 'cash_to_bank';
     public $bank_id = null;
+    public bool $disabled = false;
     public $transfer_types = [
         'cash_to_bank' => 'من الخزنه الى البنك',
         'bank_to_cash' => 'من البنك الى الخزنه'
@@ -46,7 +47,7 @@ class Transfer extends Component
             \App\Models\Transfer::create([
                 'bank_id' => $this->bank_id,
                 'transfer_type' => $this->transfer_type,
-                'amount' => $this->amount,
+                'amount' => round(floatval($this->amount)),
                 'transaction_id' => $this->transaction_id,
                 'date' => $this->date,
                 'note' => $this->note,
@@ -56,7 +57,7 @@ class Transfer extends Component
             \App\Models\Transfer::where('id', $this->id)->update([
                 'bank_id' => $this->bank_id,
                 'transfer_type' => $this->transfer_type,
-                'amount' => $this->amount,
+                'amount' => round(floatval($this->amount)),
                 'transaction_id' => $this->transaction_id,
                 'date' => $this->date,
                 'note' => $this->note,
@@ -72,7 +73,7 @@ class Transfer extends Component
     {
         $this->id = $transfer['id'];
         $this->transfer_type = $transfer['transfer_type'];
-        $this->amount = $transfer['amount'];
+        $this->amount = round(floatval($transfer['amount']));
         $this->transaction_id = $transfer['transaction_id'];
         $this->date = $transfer['date'];
         $this->note = $transfer['note'];
@@ -112,6 +113,23 @@ class Transfer extends Component
     {
         if ($this->date == '') {
             $this->date = date('Y-m-d');
+        }
+
+        if ($this->transfer_type == null) {
+            $this->transfer_type = 'cash_to_bank';
+        }
+
+        if (floatval($this->amount) == 0) {
+            $this->disabled = true;
+        } elseif ($this->transfer_type == 'cash_to_bank' && (floatval($this->amount) > session('cash_balance'))) {
+            $this->disabled = true;
+        } elseif ($this->transfer_type == 'bank_to_cash' && (floatval($this->amount) > session('bank_balance'))) {
+            $this->disabled = true;
+        } else {
+            $this->disabled = false;
+        }
+        if (empty($this->banks)) {
+            $this->disabled = true;
         }
         return view('livewire.transfer', [
             'transfers' => \App\Models\Transfer::paginate(10)

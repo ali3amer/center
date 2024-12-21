@@ -124,7 +124,8 @@ class TrainerPayment extends Component
     public function resetData()
     {
         $this->dispatch('update-balance');
-        $this->remainder = $this->required - \App\Models\BatchTrainerPayment::where('batch_id', $this->batch_id)->sum('amount');
+        $this->paid = round(\App\Models\BatchTrainerPayment::where('batch_id', $this->batch_id)->sum('amount'));
+        $this->remainder = $this->required - $this->paid;
         $this->reset('amount', 'date', 'payment_method', 'bank_id', 'transaction_id', 'id');
 //        $this->dispatch('update-trainer', $this->batch_id);
     }
