@@ -15,15 +15,17 @@ class Expense extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['البيان', 'التصنيف', 'المبلغ', 'وسيلة الدفع', 'التاريخ'];
-    public $cells = ['description' => 'description', 'name' => 'name', 'amount' => 'amount', 'payment_method' => 'payment_method', 'date' => 'date'];
-    public $numbers = ['amount'];
+    public $headers = ['البيان', 'التصنيف', 'سعر الوحدة', 'الكمية', 'المبلغ', 'وسيلة الدفع', 'التاريخ'];
+    public $cells = ['description', 'name', 'price', 'quantity', 'amount', 'payment', 'date'];
+    public $numbers = ['amount', 'price'];
     protected $listeners = [
         'delete',
     ];
     public $id = 0;
     #[Rule('required', message: 'هذا الحقل مطلوب')]
     public $description = '';
+    public $quantity = 1;
+    public $price = 0;
     public $amount = 0;
     public $payment_method = 'cash';
     public $payment_methods = ['cash' => 'كاش', 'bank' => 'بنك'];
@@ -39,7 +41,6 @@ class Expense extends Component
     #[On('update-expenses')]
     public function mount()
     {
-        $this->cells['payment_method'] = $this->payment_methods;
         $this->banks = \App\Models\Bank::pluck('name', 'id')->toArray();
         $this->options = \App\Models\ExpenseOption::pluck('optionName', 'id')->toArray();
     }
@@ -51,7 +52,8 @@ class Expense extends Component
             \App\Models\Expense::create([
                 'description' => $this->description,
                 'expense_option_id' => $this->expense_option_id,
-                'amount' => round(floatval($this->amount)),
+                'price' => round(floatval($this->price)),
+                'quantity' => round(floatval($this->quantity)),
                 'date' => $this->date,
                 'payment_method' => $this->payment_method,
                 'bank_id' => $this->bank_id,
@@ -61,7 +63,8 @@ class Expense extends Component
             \App\Models\Expense::where('id', $this->id)->update([
                 'description' => $this->description,
                 'expense_option_id' => $this->expense_option_id,
-                'amount' => round(floatval($this->amount)),
+                'price' => round(floatval($this->price)),
+                'quantity' => round(floatval($this->quantity)),
                 'payment_method' => $this->payment_method,
                 'bank_id' => $this->bank_id,
                 'transaction_id' => $this->transaction_id,
@@ -78,6 +81,8 @@ class Expense extends Component
         $this->description = $expense['description'];
         $this->expense_option_id = $expense['expense_option_id'];
         $this->amount = round($expense['amount']);
+        $this->price = round($expense['price']);
+        $this->quantity = round($expense['quantity']);
         $this->date = $expense['date'];
         $this->payment_method = $expense['payment_method'];
         $this->bank_id = $expense['bank_id'];
@@ -110,11 +115,12 @@ class Expense extends Component
     {
         $this->dispatch('update-balance');
 
-        $this->reset('description', 'amount', 'date', 'search', 'id', 'expense_option_id');
+        $this->reset('description', 'amount', 'price', 'quantity', 'date', 'search', 'id', 'expense_option_id');
     }
     #[Title('المصروفات')]
     public function render()
     {
+        $this->amount = round(floatval($this->price) * floatval($this->quantity));
         if ($this->payment_method == 'cash') {
             $this->bank_id = null;
         }

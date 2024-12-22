@@ -5,11 +5,13 @@
                 <div class="grid gap-x-1 grid-cols-5">
                     <x-input name="description" label="البيان"/>
                     <x-select name="expense_option_id" :options="$options" label="التصنيف"/>
-                    <x-input name="amount" :live="true" label="المبلغ"/>
+                    <x-input name="quantity" :live="true" label="الكمية"/>
+                    <x-input name="price" :live="true" label="سعر الوحدة"/>
+                    <x-input name="amount" :live="true" :disabled="true" label="المبلغ"/>
+                </div>
+                <div class="grid gap-x-1 grid-cols-5">
                     <x-input name="date" type="date" label="التاريخ"/>
                     <x-select name="payment_method" :disabled="$payment_method == 'bank' && empty($banks)" :live="true" :options="$payment_methods" label="وسيلة الدفع"/>
-                </div>
-                <div class="grid gap-x-1 grid-cols-3">
                     <x-select name="bank_id" :disabled="$payment_method == 'cash' || ($payment_method == 'bank' && empty($banks))" :options="$banks" label="البنك"/>
                     <x-input name="transaction_id" :disabled="$payment_method == 'cash' || ($payment_method == 'bank' && empty($banks))" label="رقم الاشعار"/>
                     <div class="grid gap-x-1 grid-cols-2">

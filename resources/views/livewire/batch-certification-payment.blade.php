@@ -24,7 +24,7 @@
             <div class="grid gap-x-1 grid-cols-3">
                 <x-input name="amount" label="المبلغ" :live="true"/>
                 <x-input type="date" name="date" label="التاريخ"/>
-                <x-select name="payment_method" :disabled="$payment_method == 'bank' && empty($banks)" :options="$payment_methods" label="وسيلة الدفع"/>
+                <x-select name="payment_method" :disabled="$payment_method == 'bank' && empty($banks)" :live="true" :options="$payment_methods" label="وسيلة الدفع"/>
             </div>
             <div class="grid gap-x-1 grid-cols-4">
                 <x-select name="bank_id" :disabled="$payment_method == 'cash' || ($payment_method == 'bank' && empty($banks))" :options="$banks" label="البنك"/>

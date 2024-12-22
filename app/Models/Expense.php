@@ -36,4 +36,9 @@ class Expense extends Model
         return $this->payment_method == "cash" ? 'كاش' : 'بنك';
     }
 
+    public function getAmountAttribute()
+    {
+        return $this->quantity * $this->price;
+    }
+
 }
