@@ -17,8 +17,8 @@ class EmployeeExpense extends Component
         'delete',
     ];
 
-    public $headers = ['المبغ', 'نوع العملية', 'التاريخ', 'وسيلة الدفع'];
-    public $cells = ['amount' => 'amount', 'type' => 'type', 'date' => 'date', 'payment_method' => 'payment_method'];
+    public $cells = ['date', 'name', 'employeeExpenseType', 'payment', 'transaction_id', 'amount'];
+    public $headers = ['التاريخ', 'إسم الموظف', 'نوع العملية', 'وسيلة الدفع', 'رقم العملية', 'المبلغ'];
     public $numbers = ['amount'];
     public $employee_id;
     public $id = null;
@@ -35,8 +35,6 @@ class EmployeeExpense extends Component
 
     public function mount()
     {
-        $this->cells['payment_method'] = $this->payment_methods;
-        $this->cells['type'] = $this->types;
         $this->banks = \App\Models\Bank::pluck('name', 'id')->toArray();
     }
 

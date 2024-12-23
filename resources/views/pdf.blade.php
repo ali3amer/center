@@ -171,7 +171,7 @@
 
     </table>
 
-    <table>
+    <table style="border: 1px solid #000; text-align: center; border-collapse: collapse">
         <thead>
         <tr>
             @foreach ($headers['expenses'] as $header)
@@ -182,20 +182,25 @@
         <tbody>
         @foreach ($rows['expenses'] as $rowIndex => $row)
             <tr>
-                @foreach ($cells['expenses'] as $key => $cell)
-                    <td  style="text-align: center; border: 1px solid black;">
-                        @if(!is_array($cell))
-                            @if(in_array($cell, $numbers['expenses']))
-                                {{ number_format($row->$cell) }}
-                            @else
-                                {{ $row->$cell }}
-                            @endif
-                        @else
-                            {{$cell[$row[$key]]}}
-                        @endif
+                <td style="text-align: center;border: 1px solid black;" rowspan="{{ count($row['details']) }}">{{$rowIndex}}</td>
+                @foreach ($row['details'] as $key => $expense)
+                    <td style="text-align: center;border: 1px solid black;">
+                        {{$expense->description}}
                     </td>
-                @endforeach
+                    <td style="text-align: center;border: 1px solid black;">{{number_format($expense->price)}}</td>
+                    <td style="text-align: center;border: 1px solid black;">{{$expense->quantity}}</td>
+                    <td style="text-align: center;border: 1px solid black;">{{number_format($expense->amount)}}</td>
+                    <td style="text-align: center;border: 1px solid black;">{{$expense->date}}</td>
             </tr>
+        @endforeach
+        <tr>
+            <td style="text-align: center;border: 1px solid black; color: white;background-color: #000">الجمله</td>
+            <td style="text-align: center;border: 1px solid black; color: white;background-color: #000"></td>
+            <td style="text-align: center;border: 1px solid black; color: white;background-color: #000"></td>
+            <td style="text-align: center;border: 1px solid black; color: white;background-color: #000"></td>
+            <td style="text-align: center;border: 1px solid black; color: white;background-color: #000">{{number_format($row['total'])}}</td>
+            <td style="text-align: center;border: 1px solid black; color: white;background-color: #000"></td>
+        </tr>
         @endforeach
         </tbody>
         @if(!empty($footers))

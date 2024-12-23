@@ -30,16 +30,16 @@
         @else
             @if(isset($headers['options']))
                 <x-container>
-                    <x-table :headers="$headers['options']" :numbers="$numbers['options']" model="reports" :array="true" :search="false"
+                    <x-table :headers="$headers['options']" :numbers="$numbers['options']" :footers="$footers['options']" model="reports" :array="true" :search="false"
                              :buttons="false"
                              :index="$type == 'safe' ? false : true" :rows="$rows['options']" :paginate="false"
                              :cells="$cells['options']"/>
                 </x-container>
 
                 <x-container>
-                    <x-table :headers="$headers['expenses']" :numbers="$numbers['expenses']" model="reports" :array="true" :search="false"
+                    <x-table :headers="$headers['expenses']" :expenses="true" :numbers="$numbers['expenses']" :footers="$footers['expenses']" model="reports" :array="true" :search="false"
                              :buttons="false"
-                             :index="$type == 'safe' ? false : true" :rows="$rows['expenses']" :paginate="false"
+                             :rows="$rows['expenses']" :paginate="false"
                              :cells="$cells['expenses']"/>
                 </x-container>
             @endif

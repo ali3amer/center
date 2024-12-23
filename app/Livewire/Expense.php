@@ -80,7 +80,7 @@ class Expense extends Component
         $this->id = $expense['id'];
         $this->description = $expense['description'];
         $this->expense_option_id = $expense['expense_option_id'];
-        $this->amount = round($expense['amount']);
+        $this->amount = round($expense['price'] * $expense['quantity']);
         $this->price = round($expense['price']);
         $this->quantity = round($expense['quantity']);
         $this->date = $expense['date'];

@@ -34,6 +34,7 @@ class Report extends Component
         'performance' => 'تقرير الأداء',
         'expenses' => 'تقرير المنصرفات',
         'courses' => 'تقرير منفذ التدريب',
+        'employees' => 'تقرير الموظفين',
         'certifications' => 'تقرير الشهادات',
     ];
     public $coruse_types = ['course' => 'كورس', 'session' => 'دورة', 'workshop' => 'ورشه'];
@@ -66,6 +67,8 @@ class Report extends Component
             $this->expenses();
         } elseif ($this->type === 'courses') {
             $this->courses();
+        } elseif ($this->type == "employees") {
+            $this->employees();
         } elseif ($this->type === 'certifications') {
             $this->certifications();
         }
@@ -128,14 +131,18 @@ class Report extends Component
 
         $this->rows['options'][] = [
             'optionName' => "غير مصنف",
-            'amount' => \App\Models\Expense::whereNull("expense_option_id")->whereBetween("date", [$this->from, $this->to])->sum("amount"),
+            'amount' => \App\Models\Expense::whereNull("expense_option_id")->whereBetween("date", [$this->from, $this->to])->get()->sum(function ($expense) {
+                return $expense->price * $expense->quantity;
+            }),
         ];
 
         $expenseOptions = \App\Models\ExpenseOption::all();
         foreach ($expenseOptions as $option) {
             $this->rows['options'][] = [
                 'optionName' => $option->optionName,
-                'amount' => $option->expenses->whereBetween("date", [$this->from, $this->to])->sum("amount"),
+                'amount' => $option->expenses->whereBetween("date", [$this->from, $this->to])->sum(function ($expense) {
+                    return $expense->price * $expense->quantity;
+                }),
             ];
         }
 
@@ -148,15 +155,29 @@ class Report extends Component
         $this->footers['options'] = ['الجمله', number_format(round($totalOptions))];
         $this->numbers['options'] = ['amount'];
 
-        $this->cells['expenses'] = ['date', 'description', 'name', 'amount'];
-        $this->headers['expenses'] = ['التاريخ', 'البيان', 'التصنيف', 'المبلغ'];
-        $this->rows['expenses'] = \App\Models\Expense::whereBetween("date", [$this->from, $this->to])->get();
+        $this->cells['expenses'] = ['description', 'price', 'quantity', 'amount', 'date'];
+        $this->headers['expenses'] = ['التصنيف', 'البيان', 'سعر الوحده', 'الكمية', 'المبلغ', 'التاريخ'];
+        $this->rows['expenses'] = \App\Models\Expense::whereBetween("date", [$this->from, $this->to])
+            ->get()
+            ->groupBy(function ($expense) {
+                return $expense->name;
+            })
+            ->map(function ($group) {
+                return [
+                    'total' => $group->sum(function ($expense) {
+                        return $expense->price * $expense->quantity;
+                    }),
+                    'details' => $group,
+                ];
+            });
         $totalExpenses = 0;
         foreach ($this->rows['expenses'] as $row) {
-            $totalExpenses += $row->amount;
+            foreach ($row['details'] as $expense) {
+                $totalExpenses += $expense->quantity * $expense->price;
+            }
         }
 
-        $this->footers['expenses'] = ['الجمله', '', '', number_format(round($totalExpenses))];
+        $this->footers['expenses'] = ['الجمله', '', '', '', number_format(round($totalExpenses)), ''];
         $this->numbers['expenses'] = ['amount'];
     }
 
@@ -178,6 +199,16 @@ class Report extends Component
 
         $this->footers = ['الجمله', number_format(round($totalCount))];
 
+    }
+
+    public function employees()
+    {
+        $this->cells = ['date', 'name', 'employeeExpenseType', 'payment', 'transaction_id', 'amount'];
+        $this->headers = ['التاريخ', 'إسم الموظف', 'نوع العملية', 'وسيلة الدفع', 'رقم العملية', 'المبلغ'];
+
+        $this->rows = \App\Models\EmployeeExpense::whereBetween('date', [$this->from, $this->to])->where("type", "!=", "discount")->where("type", "!=", "paid")->get();
+        $this->footers = ['الجمله', '', '', '', '', number_format(round($this->rows->sum("amount")))];
+        $this->numbers = ['amount'];
     }
 
     public function certifications()
@@ -232,7 +263,7 @@ class Report extends Component
 
     public function resetData()
     {
-        $this->reset('headers','cells','numbers','payment_method','course_id','rows','incomes','expenses','balance');
+        $this->reset('headers', 'cells', 'numbers', 'payment_method', 'course_id', 'rows', 'incomes', 'expenses', 'balance');
     }
 
 
