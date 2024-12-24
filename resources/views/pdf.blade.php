@@ -16,6 +16,7 @@
             font-family: sans-serif;
             direction: rtl;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -182,7 +183,8 @@
         <tbody>
         @foreach ($rows['expenses'] as $rowIndex => $row)
             <tr>
-                <td style="text-align: center;border: 1px solid black;" rowspan="{{ count($row['details']) }}">{{$rowIndex}}</td>
+                <td style="text-align: center;border: 1px solid black;"
+                    rowspan="{{ count($row['details']) }}">{{$rowIndex}}</td>
                 @foreach ($row['details'] as $key => $expense)
                     <td style="text-align: center;border: 1px solid black;">
                         {{$expense->description}}

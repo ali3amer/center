@@ -12,6 +12,7 @@ use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Mpdf;
 
 class Report extends Component
@@ -95,6 +96,10 @@ class Report extends Component
         $this->cells = ['name', 'rentType', 'start_date', 'end_date', "duration", "price", 'cost'];
         $this->rows = \App\Models\HallRental::whereBetween('start_date', [$this->from, $this->to])->get();
         $this->numbers = ['price', 'cost'];
+        $sum = $this->rows->sum(function ($row) {
+            return $row->price * $row->duration;
+        });
+        $this->footers = ['الجمله', '', '', '', '', '', number_format($sum)];
 
     }
 
@@ -138,12 +143,16 @@ class Report extends Component
 
         $expenseOptions = \App\Models\ExpenseOption::all();
         foreach ($expenseOptions as $option) {
-            $this->rows['options'][] = [
-                'optionName' => $option->optionName,
-                'amount' => $option->expenses->whereBetween("date", [$this->from, $this->to])->sum(function ($expense) {
-                    return $expense->price * $expense->quantity;
-                }),
-            ];
+            $amount = $option->expenses->whereBetween("date", [$this->from, $this->to])->sum(function ($expense) {
+                return $expense->price * $expense->quantity;
+            });
+
+            if ($amount > 0) {
+                $this->rows['options'][] = [
+                    'optionName' => $option->optionName,
+                    'amount' => $amount,
+                ];
+            }
         }
 
         $this->numbers['expenses'] = ['amount'];
@@ -271,13 +280,17 @@ class Report extends Component
     public function render()
     {
 
+
         if ($this->from == '') {
             $this->from = date('Y-m-d');
         }
         if ($this->to == '') {
             $this->to = date('Y-m-d');
         }
+        $filePath = public_path('center.xlsx');
 
+//        $excelSpreadSheetData = Excel::toCollection(null, $filePath);
+//        dd($excelSpreadSheetData->last());
         return view('livewire.report', [
             'rows' => $this->rows,
         ]);
