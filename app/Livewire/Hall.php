@@ -14,8 +14,8 @@ class Hall extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['الإسم', 'عدد الكراسي', 'السعر'];
-    public $cells = ['name' => 'name', 'chairs' => 'chairs', 'price' => 'price'];
+    public $headers = ['الإسم', 'السعر'];
+    public $cells = ['name', 'price'];
     public $numbers = ['price'];
     protected $listeners = [
         'delete',

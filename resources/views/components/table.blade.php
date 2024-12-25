@@ -71,10 +71,14 @@
                                             class="fa fa-eye fa-xs"></i></button>
                                 @endif
                                 @if(!empty($functions))
-                                    @foreach($functions[0] as $function)
-                                        <button class="bg-yellow-400 rounded text-white px-2 py-1"
-                                                wire:click="{{$function}}({{$row}})"><i
-                                                class="fa fa-eye fa-xs"></i></button>
+                                    @foreach($functions[$row['id']] as $function)
+                                        <button class="{{$function['color']}} rounded text-white px-2 py-1"
+                                                wire:click="{{$function['name']}}({{$row}})">
+                                            @if($function['icon'])
+                                                <i class="fa {{$function['iconName']}} fa-xs"></i>
+                                            @endif
+                                            {{$function['text']}}
+                                        </button>
                                     @endforeach
                                 @endif
                             </td>
@@ -84,7 +88,8 @@
             @else
                 @foreach ($rows as $rowIndex => $row)
                     <tr class="border-b">
-                        <td class="px-4 py-1 whitespace-nowrap text-xs text-wrap" rowspan="{{ count($row['details']) }}">{{$rowIndex}}</td>
+                        <td class="px-4 py-1 whitespace-nowrap text-xs text-wrap"
+                            rowspan="{{ count($row['details']) }}">{{$rowIndex}}</td>
                         @foreach ($row['details'] as $key => $expense)
                             <td class="px-1 py-1 text-xs whitespace-nowrap text-wrap">
                                 {{$expense->description}}

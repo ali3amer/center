@@ -16,6 +16,7 @@ class Batch extends Component
     public $headers = ['المدرب', 'السعر', 'تاريخ البداية', 'تاريخ النهاية', 'مكتمل', 'عدد الدارسين'];
     public $cells = ['name' => 'name', 'price' => 'price', 'start_date' => 'start_date', 'end_date' => 'end_date', 'completed' => [true => 'نعم', false => 'لا'], 'studentCount'];
     public $numbers = ['price'];
+    public $functions = [];
     protected $listeners = [
         'delete',
     ];
@@ -37,6 +38,7 @@ class Batch extends Component
     public function mount()
     {
         $this->trainers = \App\Models\Trainer::pluck('arabic_name', 'id')->toArray();
+        $this->price = round(\App\Models\Course::find($this->course_id)->price);
     }
 
     public function save()
@@ -50,7 +52,6 @@ class Batch extends Component
                 'center_fees' => $this->center_fees,
                 'trainer_fees' => $this->trainer_fees,
                 'end_date' => $this->end_date,
-                'completed' => $this->completed,
                 'paid' => $this->paid,
                 'price' => $this->price,
                 'certificate_price' => $this->certificate_price,
@@ -63,7 +64,6 @@ class Batch extends Component
                 'end_date' => $this->end_date,
                 'center_fees' => $this->center_fees,
                 'trainer_fees' => $this->trainer_fees,
-                'completed' => $this->completed,
                 'paid' => $this->paid,
                 'price' => $this->price,
                 'certificate_price' => $this->certificate_price,
@@ -80,7 +80,6 @@ class Batch extends Component
         $this->trainer_id = $batch['trainer_id'];
         $this->start_date = $batch['start_date'];
         $this->end_date = $batch['end_date'];
-        $this->completed = $batch['completed'];
         $this->paid = $batch['paid'];
         $this->center_fees = $batch['center_fees'];
         $this->trainer_fees = $batch['trainer_fees'];
@@ -115,6 +114,16 @@ class Batch extends Component
         $this->reset('trainer_id', 'start_date', 'end_date', 'completed', 'paid', 'price', 'certificate_price', 'id', 'fees');
     }
 
+    public function changeStatus($batch)
+    {
+        $this->completed = $batch['completed'];
+        \App\Models\Batch::find($batch['id'])->update([
+            'completed' => !$this->completed,
+        ]);
+        $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
+
+    }
+
     public function calc()
     {
         if ($this->paid) {
@@ -135,8 +144,19 @@ class Batch extends Component
         if ($this->end_date == '') {
             $this->end_date = date('Y-m-d');
         }
+        $batches = \App\Models\Batch::where('course_id', $this->course_id);
+        $this->functions = [];
+        foreach ($batches->get() as $batch) {
+            $this->functions[$batch->id][] = [
+                'name' => 'changeStatus',
+                'color' => $batch->completed ? 'bg-red-600' : 'bg-cyan-600',
+                'icon' => true,
+                'iconName' => $batch->completed ? 'fa-lock' : 'fa-lock-open',
+                'text' => '',
+            ];
+        }
         return view('livewire.batch', [
-            'batches' => \App\Models\Batch::where('course_id', $this->course_id)->paginate(10),
+            'batches' => $batches->paginate(10),
         ]);
     }
 }

@@ -26,6 +26,7 @@ class HallRental extends Component
     public $duration_type = 'day';
     public $duration_types = ['day' => 'ايام', 'hour' => 'ساعات'];
     public $types = ['organization' => 'منظمه', 'government_institution' => 'حكومي', 'prison' => 'شخصي'];
+    public $functions = [];
     public $price = 0;
     public $start_date = '';
     public $end_date = '';
@@ -35,6 +36,11 @@ class HallRental extends Component
     public bool $rentalPaymentMode  = false;
     public $hall_rental_id = null;
     public $remainder = 0;
+
+    public function mount()
+    {
+        $this->price = round(\App\Models\Hall::find($this->hall_id)->price);
+    }
 
     public function save()
     {
@@ -48,7 +54,6 @@ class HallRental extends Component
                 'price' => round(floatval($this->price)),
                 'start_date' => $this->start_date,
                 'end_date' => $this->end_date,
-                'completed' => $this->completed,
             ]);
             $this->choose($hallRental);
         } else {
@@ -60,7 +65,6 @@ class HallRental extends Component
                 'price' => round(floatval($this->price)),
                 'start_date' => $this->start_date,
                 'end_date' => $this->end_date,
-                'completed' => $this->completed,
             ]);
             $this->resetData();
 
@@ -78,7 +82,6 @@ class HallRental extends Component
         $this->price = round($hallRental['price']);
         $this->start_date = $hallRental['start_date'];
         $this->end_date = $hallRental['end_date'];
-        $this->completed = $hallRental['completed'];
         $this->cost = round($this->duration * $this->price);
     }
 
@@ -120,6 +123,16 @@ class HallRental extends Component
         $this->edit($hallRental);
     }
 
+    public function changeStatus($hallRental)
+    {
+        $this->completed = $hallRental['completed'];
+        \App\Models\HallRental::find($hallRental['id'])->update([
+            'completed' => !$this->completed,
+        ]);
+        $this->alert('success', 'تم الحفظ بنجاح', ['timerProgressBar' => true]);
+
+    }
+
     #[On('update-hall')]
     public function render()
     {
@@ -133,10 +146,25 @@ class HallRental extends Component
         $this->cost = $this->duration * $this->price;
         if ($this->hall_rental_id != null && $this->cost != 0) {
             $this->remainder = round(floatval($this->cost) - \App\Models\HallRentalPayment::where('hall_rental_id', $this->hall_rental_id)->sum('amount'));
+        } else {
+            $this->remainder = round(floatval($this->cost));
         }
+
+
+        $hallRentals = \App\Models\HallRental::where('hall_id', $this->hall_id);
+        $this->functions = [];
+        foreach ($hallRentals->get() as $hallRental) {
+            $this->functions[$hallRental->id][] = [
+                'name' => 'changeStatus',
+                'color' => $hallRental->completed ? 'bg-red-600' : 'bg-cyan-600',
+                'icon' => true,
+                'iconName' => $hallRental->completed ? 'fa-lock' : 'fa-lock-open',
+                'text' => '',
+            ];
+        }
+
         return view('livewire.hall-rental', [
-            'hallRentals' => \App\Models\HallRental::where('hall_id', $this->hall_id)
-                ->paginate(10),
+            'hallRentals' => $hallRentals->paginate(10),
         ]);
     }
 }

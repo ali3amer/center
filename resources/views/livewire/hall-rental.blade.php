@@ -8,10 +8,9 @@
                 <x-input name="price" :disabled="$rentalPaymentMode" :live="true" label="السعر"/>
                 <x-input name="duration" :disabled="$rentalPaymentMode" :live="true" label="طول الفتره"/>
             </div>
-            <div class="grid gap-x-1 grid-cols-6">
+            <div class="grid gap-x-1 grid-cols-5">
                 <x-input type="date" name="start_date" :disabled="$rentalPaymentMode" label="بداية الفترة"/>
                 <x-input type="date" name="end_date" :disabled="$rentalPaymentMode" label="نهاية الفترة"/>
-                <x-checkbox name="completed" :disabled="$rentalPaymentMode" label="مكتمل"/>
                 <x-input name="cost" :disabled="true" :live="true" label="التكلفه الكليه"/>
                 <x-input name="remainder" :disabled="true" label="المتبقي"/>
                 @if(!$rentalPaymentMode)
@@ -26,7 +25,7 @@
 
     @if(!$rentalPaymentMode)
         <x-container>
-            <x-table :headers="$headers" :rows="$hallRentals" :$numbers model="hallRentals" chooseModel="hallRentalPayments" :search="false" :choose="true" :cells="$cells" />
+            <x-table :headers="$headers" :rows="$hallRentals" :$functions :$numbers model="hallRentals" chooseModel="hallRentalPayments" :search="false" :choose="true" :cells="$cells" />
         </x-container>
     @else
         <livewire:hall-rental-payment :$hall_rental_id />

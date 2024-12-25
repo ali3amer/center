@@ -100,7 +100,6 @@ class Report extends Component
             return $row->price * $row->duration;
         });
         $this->footers = ['الجمله', '', '', '', '', '', number_format($sum)];
-
     }
 
     public function incomes()
@@ -280,7 +279,6 @@ class Report extends Component
     public function render()
     {
 
-
         if ($this->from == '') {
             $this->from = date('Y-m-d');
         }
@@ -289,8 +287,8 @@ class Report extends Component
         }
         $filePath = public_path('center.xlsx');
 
-//        $excelSpreadSheetData = Excel::toCollection(null, $filePath);
-//        dd($excelSpreadSheetData->last());
+        //$excelSpreadSheetData = Excel::toCollection(null, $filePath);
+        //dd($excelSpreadSheetData->last());
         return view('livewire.report', [
             'rows' => $this->rows,
         ]);
