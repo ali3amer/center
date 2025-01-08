@@ -11,7 +11,7 @@
 <body dir="rtl">
 <div class="w-full h-screen flex">
     <div class="m-auto w-1/3 border-1 bg-gradient-to-r to-amber-800 px-3 py-5 shadow-2xl shadow-gray-500 rounded-2xl text-black border-red-300">
-        <img class=" mx-auto border-2 border-amber-500 object-cover rounded-full" src="{{asset("js/center.jpg")}}" style="width: 200px;"/>
+        <img class=" mx-auto border-2 border-amber-500 object-cover rounded-full mt-5" src="{{asset("js/center.jpg")}}" style="width: 200px;"/>
 
         <div class="card-body">
             <form method="POST" action="{{ route('login') }}">

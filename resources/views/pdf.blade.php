@@ -93,7 +93,7 @@
         <td style="width: 200px;text-align: right"><img src="{{asset("js/center.jpg")}}" style="width: 200px;"/>
         </td>
         <td>
-            <h1>مركز معاً للتدريب والتأهيل <br> وتنمية الموارد البشرية</h1>
+            <h1>مركز معاً نستطيع للتدريب والتأهيل <br> وتنمية الموارد البشرية</h1>
         </td>
     </tr>
 </table>

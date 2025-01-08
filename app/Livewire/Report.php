@@ -287,8 +287,70 @@ class Report extends Component
         }
         $filePath = public_path('center.xlsx');
 
-        //$excelSpreadSheetData = Excel::toCollection(null, $filePath);
-        //dd($excelSpreadSheetData->last());
+        $excelSpreadSheetData = Excel::toCollection(null, $filePath);
+        // 15 النوع
+        // 16 رقم المدرب
+        // 17 اسم المدرب
+        //19 رقم البرنامج
+        //20 اسم البرنامج
+        // 23 نوع البرنامج
+        \App\Models\Trainer::where("id", "!=", 0)->delete();
+        for ($i = 1;$i <= 18;$i++) {
+        $row = $excelSpreadSheetData[0][$i];
+        \App\Models\Trainer::create([
+            'id' => $row['16'],
+            'arabic_name' => $row['17'],
+            'gender' => $row['15'],
+            'user_id' => auth()->id(),
+        ]);
+    }
+
+        \App\Models\Course::where("id", "!=", 0)->delete();
+        for ($i = 1;$i <= 33;$i++) {
+            $row = $excelSpreadSheetData[0][$i];
+            \App\Models\Course::create([
+                'id' => $row['19'],
+                'arabic_name' => $row['20'],
+                'type' => $row['23'],
+                'user_id' => auth()->id(),
+            ]);
+        }
+
+        // 9 رقم المدرب
+        //10 رقم البرنامج
+        \App\Models\Batch::where("id", "!=", 0)->delete();
+        $id = 1;
+        for ($i = 1;$i <= 1095;$i++) {
+            $row = $excelSpreadSheetData[0][$i];
+
+            $excelDate = $row[0];
+            if (!is_numeric($excelDate)) {
+                dd($row);
+            }
+
+            $unixTimestamp = ($excelDate - 25569) * 86400; // تحويل إلى الطابع الزمني
+            $date = date('Y-m-d', $unixTimestamp);
+
+            $count = \App\Models\Batch::where('id', $row[11])->count();
+            if ($count == 0) {
+                \App\Models\Batch::create([
+                    'id' => $row[11],
+                    'trainer_id' => $row[9],
+                    'course_id' => $row[10],
+                    'start_date' => $date,
+                    'end_date' => $date,
+                    'user_id' => auth()->id(),
+                ]);
+                $id++;
+            }
+        }
+
+//        $excelDate = $excelSpreadSheetData->first()[1][0];
+//
+//        $unixTimestamp = ($excelDate - 25569) * 86400; // تحويل إلى الطابع الزمني
+//        $this->from = date('Y-m-d', $unixTimestamp);
+//        dd($this->from);
+
         return view('livewire.report', [
             'rows' => $this->rows,
         ]);
