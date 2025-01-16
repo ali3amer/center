@@ -23,7 +23,7 @@
 
     @if(!$batchStudentPaymentMode)
         <x-container>
-            <x-table :headers="$headers" model="batchStudents" chooseModel="batchStudentPayments" :rows="$batchStudents" :cells="$cells" :choose="true"/>
+            <x-table :headers="$headers" model="batchStudents" chooseModel="batchStudentPayments" :rows="$batchStudents" chooseText="مدفوعات الطالب"  :cells="$cells" :choose="true"/>
         </x-container>
     @else
         <livewire:batch-student-payment :$batch_student_id />

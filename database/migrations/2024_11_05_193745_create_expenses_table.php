@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
             $table->string('description');
+            $table->string('note')->nullable();
             $table->float('quantity')->default(1);
             $table->decimal('price');
             $table->date('date');

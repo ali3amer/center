@@ -25,6 +25,7 @@ class Bank extends Component
     public $bank_name = '';
     #[Rule('required', message: 'هذا الحقل مطلوب')]
     public $name = '';
+    public $account_number = null;
     public $initial_balance = 0;
     public $date = '';
 
@@ -35,6 +36,7 @@ class Bank extends Component
             \App\Models\Bank::create([
                 'bank_name' => $this->bank_name,
                 'name' => $this->name,
+                'account_number' => $this->account_number,
                 'initial_balance' => round(floatval($this->initial_balance)),
                 'date' => $this->date,
             ]);
@@ -42,6 +44,7 @@ class Bank extends Component
             \App\Models\Bank::where('id', $this->id)->update([
                 'bank_name' => $this->bank_name,
                 'name' => $this->name,
+                'account_number' => $this->account_number,
                 'initial_balance' => round(floatval($this->initial_balance)),
                 'date' => $this->date,
             ]);
@@ -56,6 +59,7 @@ class Bank extends Component
         $this->id = $bank['id'];
         $this->bank_name = $bank['bank_name'];
         $this->name = $bank['name'];
+        $this->account_number = $bank['account_number'];
         $this->initial_balance = round($bank['initial_balance']);
         $this->date = $bank['date'];
     }
@@ -84,7 +88,7 @@ class Bank extends Component
 
     public function resetData()
     {
-        $this->reset('id', 'bank_name', 'name', 'initial_balance', 'date');
+        $this->reset('id', 'bank_name', 'name', 'initial_balance', 'account_number', 'date');
     }
 
     #[Title('البنوك')]

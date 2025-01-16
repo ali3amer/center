@@ -18,7 +18,7 @@
 
     @if(!$batchMode)
         <x-container>
-            <x-table :headers="$headers" model="students" chooseModel="batchStudents" :rows="$students" :choose="true" :cells="$cells"/>
+            <x-table :headers="$headers" model="students" chooseModel="batchStudents" :rows="$students" chooseText="الدفعات"  :choose="true" :cells="$cells"/>
         </x-container>
     @else
         <livewire:batch-student :$student_id />

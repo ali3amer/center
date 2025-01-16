@@ -33,28 +33,6 @@ class Certification extends Component
     public function mount()
     {
         $this->courses = \App\Models\Course::all()->pluck('arabic_name', 'id');
-        $this->certifications = \App\Models\BatchStudent::whereNotNull('certification_id')->where('certification_id', '!=', 0)->get();
-    }
-
-    public function chooseCourse()
-    {
-        if ($this->course_id != null) {
-            $this->batches = \App\Models\Batch::where('course_id', $this->course_id)->pluck('start_date', 'id');
-            $this->certifications = \App\Models\BatchStudent::whereHas('batch', function ($query) {
-                $query->where('course_id', $this->course_id);
-            })->get();
-        } else {
-            $this->certifications = \App\Models\BatchStudent::whereNotNull('certification_id')->where('certification_id', '!=', 0)->get();
-        }
-    }
-
-    public function chooseBatch()
-    {
-        if ($this->batch_id != null) {
-            $this->certifications = \App\Models\BatchStudent::where('batch_id', $this->batch_id)->get();
-        } else {
-            $this->chooseCourse();
-        }
     }
 
     public function deleteMessage($id)
@@ -71,16 +49,30 @@ class Certification extends Component
             'cancelButtonColor' => '#4b5563'
         ]);
     }
+
     public function resetData()
     {
-        $this->reset('batchCertificationPayments');
+        $this->reset('batchCertificationPayments', 'batch_id');
     }
 
     #[Title("الشهادات")]
     public function render()
     {
+
+        if ($this->course_id != null) {
+            $this->batches = \App\Models\Batch::where('course_id', $this->course_id)->pluck('start_date', 'id');
+            if ($this->batch_id != null) {
+                $rows = \App\Models\BatchStudent::where('batch_id', $this->batch_id)->whereNotNull('certification_id')->where('certification_id', '!=', 0)->paginate(10);
+            } else {
+                $rows = \App\Models\BatchStudent::whereHas('batch', function ($query) {
+                    $query->where('course_id', $this->course_id);
+                })->whereNotNull('certification_id')->where('certification_id', '!=', 0)->paginate(10);
+            }
+        } else {
+            $rows = \App\Models\BatchStudent::whereNotNull('certification_id')->where('certification_id', '!=', 0)->paginate(10);
+        }
         return view('livewire.certification', [
-            'rows' => $this->certifications,
+            'rows' => $rows,
         ]);
     }
 }

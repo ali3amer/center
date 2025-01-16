@@ -4,8 +4,7 @@
             <x-input name="optionName" label="التصنيف"/>
             <div class="grid gap-x-1 grid-cols-2">
                 <x-button type="submit" model="expenseOptions" :center="true" label="حفظ"/>
-                <x-button model="expenses" permission="read" wire:click="$parent.$toggle('optionMode')" :center="true" class="bg-yellow-500" icon="fa-list"
-                          label=""/>
+                <x-button model="expenses" permission="read" wire:click="$parent.$toggle('optionMode')" :center="true" class="bg-yellow-500" label="المصروفات"/>
             </div>
         </form>
     </x-container>

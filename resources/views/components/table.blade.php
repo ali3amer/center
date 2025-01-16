@@ -1,4 +1,4 @@
-@props(['choose' => false, 'expenses' => false, 'index' => false, 'search' => true, 'buttons' => true, 'edit' => true, 'delete' => true, 'paginate' => true, 'numbers' => [], 'functions' => [], 'array' => false, 'model' => '', 'chooseModel' => '', 'footers' => []])
+@props(['choose' => false, 'chooseText' => '', 'expenses' => false, 'index' => false, 'search' => true, 'buttons' => true, 'edit' => true, 'delete' => true, 'paginate' => true, 'numbers' => [], 'functions' => [], 'array' => false, 'model' => '', 'chooseModel' => '', 'footers' => []])
 <div>
     @if(Auth::user()->hasPermission($model.'-read'))
         @if($search)
@@ -55,20 +55,29 @@
                                 @if($edit)
                                     <button
                                         @disabled(!Auth::user()->hasPermission($model.'-update')) class="bg-cyan-300 rounded text-white px-2 py-1"
-                                        wire:click="edit({{$row}})"><i
-                                            class="fa fa-pen fa-xs"></i></button>
+                                        wire:click="edit({{$row}})">
+{{--                                        <i class="fa fa-pen fa-xs"></i>--}}
+                                        تعديل
+                                    </button>
                                 @endif
                                 @if($delete)
                                     <button
                                         @disabled(!Auth::user()->hasPermission($model.'-delete')) class="bg-red-600 rounded text-white px-2 py-1"
                                         wire:click="deleteMessage({{$row['id']}})">
-                                        <i class="fa fa-close fa-xs"></i></button>
+{{--                                        <i class="fa fa-close fa-xs"></i>--}}
+                                        حذف
+                                    </button>
                                 @endif
                                 @if($choose)
                                     <button
                                         @disabled(!Auth::user()->hasPermission($chooseModel.'-read')) class="bg-yellow-400 rounded text-white px-2 py-1"
-                                        wire:click="choose({{$row}})"><i
-                                            class="fa fa-eye fa-xs"></i></button>
+                                        wire:click="choose({{$row}})">
+                                        @if($chooseText == '')
+                                            <i class="fa fa-eye fa-xs"></i>
+                                        @else
+                                            {{ $chooseText }}
+                                        @endif
+                                    </button>
                                 @endif
                                 @if(!empty($functions))
                                     @foreach($functions[$row['id']] as $function)

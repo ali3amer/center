@@ -39,19 +39,24 @@ class Report extends Component
         'certifications' => 'تقرير الشهادات',
     ];
     public $coruse_types = ['course' => 'كورس', 'session' => 'دورة', 'workshop' => 'ورشه'];
+    public $report_types = ["trainer" => "المدرب", "course" => "البرنامج التدريبي"];
+    public $report_type = "trainer";
     public $coruse_type = 'course';
     public $type = null;
     public $course_id = null;
     public $courses = [];
+    public $trainers = [];
     public $rows;
     public $incomes = 0;
     public $expenses = 0;
     public $balance = 0;
     public array $footers = [];
+    public $trainer_id = null;
 
     public function mount()
     {
         $this->courses = \App\Models\Course::pluck("arabic_name", "id")->toArray();
+        $this->trainers = \App\Models\Trainer::pluck("arabic_name", "id")->toArray();
     }
 
     public function getReport()
@@ -73,7 +78,7 @@ class Report extends Component
         } elseif ($this->type === 'certifications') {
             $this->certifications();
         }
-        $this->putInSession();
+//        $this->putInSession();
 
     }
 
@@ -112,10 +117,14 @@ class Report extends Component
         $this->cells = ['courseName', 'courseType', 'studentCount', 'certificationsCount', 'name', 'month'];
         $this->headers = ['إسم البرنامج', 'نوع البرنامج', 'عدد الدارسين', 'عدد الشهادات', 'المدرب', 'الشهر'];
 
-        if ($this->course_id == null) {
+        if ($this->course_id == null && $this->trainer_id == null) {
             $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get();
         } else {
-            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('course_id', $this->course_id)->get();
+            if ($this->report_type == "course") {
+                $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('course_id', $this->course_id)->get();
+            } elseif ($this->report_type == "trainer") {
+                $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id)->get();
+            }
         }
         $totalCount = 0;
         $totalCertification = 0;
@@ -194,10 +203,14 @@ class Report extends Component
         $this->cells = ['courseName', 'studentCount'];
         $this->headers = ['إسم البرنامج', 'عدد الدارسين'];
 
-        if ($this->course_id == null) {
+        if ($this->course_id == null && $this->trainer_id == null) {
             $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get();
         } else {
-            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('course_id', $this->course_id)->get();
+            if ($this->report_type == "course") {
+                $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('course_id', $this->course_id)->get();
+            } elseif ($this->report_type == "trainer") {
+                $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id)->get();
+            }
         }
 
         $totalCount = 0;
@@ -224,10 +237,14 @@ class Report extends Component
         $this->cells = ['student_number', 'certification_id', 'name', 'course', 'courseType', 'trainer', 'month', 'certificationPrice'];
         $this->headers = ['الرقم المتسلسل', 'الرقم المتسلسل للشهادة', 'إسم الدارس', 'البرنامج التدريبي', 'نوع البرنامج', 'إسم المدرب', 'الشهر', 'الرسوم'];
         $this->rows = \App\Models\BatchStudent::whereHas('batch', function ($query) {
-            if ($this->course_id == null) {
-                $query->whereBetween("start_date", [$this->from, $this->to]);
+            if ($this->course_id == null && $this->trainer_id == null) {
+                $query->whereBetween("start_date", [$this->from, $this->to])->whereNotNull("certification_id");
             } else {
-                $query->whereBetween("start_date", [$this->from, $this->to])->where('course_id', $this->course_id);
+                if ($this->report_type == "course") {
+                    $query->whereBetween("start_date", [$this->from, $this->to])->whereNotNull("certification_id")->where('course_id', $this->course_id);
+                } elseif ($this->report_type == "trainer") {
+                    $query->whereBetween("start_date", [$this->from, $this->to])->whereNotNull("certification_id")->where('trainer_id', $this->trainer_id);
+                }
             }
         })->get();
         $this->footers = [];
@@ -271,7 +288,7 @@ class Report extends Component
 
     public function resetData()
     {
-        $this->reset('headers', 'cells', 'numbers', 'payment_method', 'course_id', 'rows', 'incomes', 'expenses', 'balance');
+        $this->reset('headers', 'cells', 'numbers', 'payment_method', 'course_id', 'rows', 'incomes', 'expenses', 'balance', 'trainer_id');
     }
 
 
@@ -285,71 +302,6 @@ class Report extends Component
         if ($this->to == '') {
             $this->to = date('Y-m-d');
         }
-        $filePath = public_path('center.xlsx');
-
-        $excelSpreadSheetData = Excel::toCollection(null, $filePath);
-        // 15 النوع
-        // 16 رقم المدرب
-        // 17 اسم المدرب
-        //19 رقم البرنامج
-        //20 اسم البرنامج
-        // 23 نوع البرنامج
-        \App\Models\Trainer::where("id", "!=", 0)->delete();
-        for ($i = 1;$i <= 18;$i++) {
-        $row = $excelSpreadSheetData[0][$i];
-        \App\Models\Trainer::create([
-            'id' => $row['16'],
-            'arabic_name' => $row['17'],
-            'gender' => $row['15'],
-            'user_id' => auth()->id(),
-        ]);
-    }
-
-        \App\Models\Course::where("id", "!=", 0)->delete();
-        for ($i = 1;$i <= 33;$i++) {
-            $row = $excelSpreadSheetData[0][$i];
-            \App\Models\Course::create([
-                'id' => $row['19'],
-                'arabic_name' => $row['20'],
-                'type' => $row['23'],
-                'user_id' => auth()->id(),
-            ]);
-        }
-
-        // 9 رقم المدرب
-        //10 رقم البرنامج
-        \App\Models\Batch::where("id", "!=", 0)->delete();
-        $id = 1;
-        for ($i = 1;$i <= 1095;$i++) {
-            $row = $excelSpreadSheetData[0][$i];
-
-            $excelDate = $row[0];
-            if (!is_numeric($excelDate)) {
-                dd($row);
-            }
-
-            $unixTimestamp = ($excelDate - 25569) * 86400; // تحويل إلى الطابع الزمني
-            $date = date('Y-m-d', $unixTimestamp);
-
-            $count = \App\Models\Batch::where('id', $row[11])->count();
-            if ($count == 0) {
-                \App\Models\Batch::create([
-                    'id' => $row[11],
-                    'trainer_id' => $row[9],
-                    'course_id' => $row[10],
-                    'start_date' => $date,
-                    'end_date' => $date,
-                    'user_id' => auth()->id(),
-                ]);
-                $id++;
-            }
-        }
-
-//        $excelDate = $excelSpreadSheetData->first()[1][0];
-//
-//        $unixTimestamp = ($excelDate - 25569) * 86400; // تحويل إلى الطابع الزمني
-//        $this->from = date('Y-m-d', $unixTimestamp);
-//        dd($this->from);
 
         return view('livewire.report', [
             'rows' => $this->rows,

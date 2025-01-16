@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('bank_name');
             $table->string('name');
+            $table->string('account_number')->nullable();
             $table->decimal('initial_balance', 10, 2)->default(0);
             $table->date('date');
             $table->unsignedBigInteger('user_id')->nullable();

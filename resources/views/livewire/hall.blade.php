@@ -17,7 +17,7 @@
 
     @if(!$rentalMode)
         <x-container>
-            <x-table :headers="$headers" model="halls" :$numbers chooseModel="hallRentals" :rows="$halls" :choose="true" :cells="$cells" />
+            <x-table :headers="$headers" model="halls" :$numbers chooseModel="hallRentals" :rows="$halls" chooseText="الحجوزات" :choose="true" :cells="$cells" />
         </x-container>
     @else
         <livewire:hall-rental :$hall_id />
