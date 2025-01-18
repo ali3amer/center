@@ -20,7 +20,9 @@
     </x-container>
 
     <div>
-        <header class="hidden print:block">a</header>
+        <header class="hidden report print:border-b-blue-500 print:block" style="overflow:hidden;height: 150px;border: 2px solid #000;direction: rtl;">
+            <img src="{{asset("js/center.jpg")}}" style="height: 100%">
+        </header>
         @if(!empty($rows))
             @if($type != 'expenses')
 
@@ -29,8 +31,7 @@
                               :disabled="$type == null" label="طباعه"/>
                     @if($type == 'safe')
                         <div class="flex report" style="direction: rtl">
-                            <x-input name="balance" :disabled="true" width="1/4" label="الرصيد"
-                                     value="{{ $incomes - $expenses }}"/>
+                            <span>الرصيد : </span> <span>{{ number_format($incomes - $expenses, 0) }}</span>
                         </div>
                     @endif
                     <div class="report" style="direction: rtl">
