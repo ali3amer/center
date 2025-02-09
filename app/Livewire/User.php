@@ -43,7 +43,7 @@ class User extends Component
     public array $permissionsList = [
         ['banks', 'البنوك'],
         ['batches', 'الدفعات'],
-        ['batchStudents', 'الدارسيم بالدفعه'],
+        ['batchStudents', 'الدارسين بالدفعه'],
         ['batchStudentPayments', 'مدفوعات الدارسين'],
         ['certifications', 'الشهادات'],
         ['courses', 'البرامج التدريبيه'],

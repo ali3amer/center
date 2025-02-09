@@ -22,103 +22,77 @@
             </tr>
             </thead>
             <tbody class="text-center">
-            @if(!$expenses)
-                @foreach ($rows as $rowIndex => $row)
+            @foreach ($rows as $rowIndex => $row)
 
-                    <tr class="border-b">
-                        @if($index)
-                            <td class="px-4 py-1 whitespace-nowrap text-xs text-wrap">{{$rowIndex + 1}}</td>
-                        @endif
-                        @foreach ($cells as $key => $cell)
-                            <td class="px-1 py-1 text-xs whitespace-nowrap text-wrap">
-                                @if(!is_array($cell))
-                                    @if(in_array($cell, $numbers))
-                                        @if($array)
-                                            {{ number_format($row[$cell]) }}
-                                        @else
-                                            {{ number_format($row->$cell) }}
-                                        @endif
+                <tr class="border-b">
+                    @if($index)
+                        <td class="px-4 py-1 whitespace-nowrap text-xs text-wrap">{{$rowIndex + 1}}</td>
+                    @endif
+                    @foreach ($cells as $key => $cell)
+                        <td class="px-1 py-1 text-xs whitespace-nowrap text-wrap">
+                            @if(!is_array($cell))
+                                @if(in_array($cell, $numbers))
+                                    @if($array)
+                                        {{ number_format($row[$cell]) }}
                                     @else
-                                        @if($array)
-                                            {{ $row[$cell] }}
-                                        @else
-                                            {{ $row->$cell }}
-                                        @endif
+                                        {{ number_format($row->$cell) }}
                                     @endif
                                 @else
-                                    {{$cell[$row[$key]]}}
+                                    @if($array)
+                                        {{ $row[$cell] }}
+                                    @else
+                                        {{ $row->$cell }}
+                                    @endif
                                 @endif
-                            </td>
-                        @endforeach
-                        @if($buttons)
-                            <td class="px-6 py-1 whitespace-nowrap">
-                                @if($edit)
-                                    <button
-                                        @disabled(!Auth::user()->hasPermission($model.'-update')) class="bg-cyan-300 rounded text-white px-2 py-1"
-                                        wire:click="edit({{$row}})">
-{{--                                        <i class="fa fa-pen fa-xs"></i>--}}
-                                        تعديل
-                                    </button>
-                                @endif
-                                @if($delete)
-                                    <button
-                                        @disabled(!Auth::user()->hasPermission($model.'-delete')) class="bg-red-600 rounded text-white px-2 py-1"
-                                        wire:click="deleteMessage({{$row['id']}})">
-{{--                                        <i class="fa fa-close fa-xs"></i>--}}
-                                        حذف
-                                    </button>
-                                @endif
-                                @if($choose)
-                                    <button
-                                        @disabled(!Auth::user()->hasPermission($chooseModel.'-read')) class="bg-yellow-400 rounded text-white px-2 py-1"
-                                        wire:click="choose({{$row}})">
-                                        @if($chooseText == '')
-                                            <i class="fa fa-eye fa-xs"></i>
-                                        @else
-                                            {{ $chooseText }}
+                            @else
+                                {{$cell[$row[$key]]}}
+                            @endif
+                        </td>
+                    @endforeach
+                    @if($buttons)
+                        <td class="px-6 py-1 whitespace-nowrap">
+                            @if($edit)
+                                <button
+                                    @disabled(!Auth::user()->hasPermission($model.'-update')) class="bg-cyan-300 rounded text-white px-2 py-1"
+                                    wire:click="edit({{$row}})">
+                                    {{--                                        <i class="fa fa-pen fa-xs"></i>--}}
+                                    تعديل
+                                </button>
+                            @endif
+                            @if($delete)
+                                <button
+                                    @disabled(!Auth::user()->hasPermission($model.'-delete')) class="bg-red-600 rounded text-white px-2 py-1"
+                                    wire:click="deleteMessage({{$row['id']}})">
+                                    {{--                                        <i class="fa fa-close fa-xs"></i>--}}
+                                    حذف
+                                </button>
+                            @endif
+                            @if($choose)
+                                <button
+                                    @disabled(!Auth::user()->hasPermission($chooseModel.'-read')) class="bg-yellow-400 rounded text-white px-2 py-1"
+                                    wire:click="choose({{$row}})">
+                                    @if($chooseText == '')
+                                        <i class="fa fa-eye fa-xs"></i>
+                                    @else
+                                        {{ $chooseText }}
+                                    @endif
+                                </button>
+                            @endif
+                            @if(!empty($functions))
+                                @foreach($functions[$row['id']] as $function)
+                                    <button class="{{$function['color']}} rounded text-white px-2 py-1"
+                                            wire:click="{{$function['name']}}({{$row}})">
+                                        @if($function['icon'])
+                                            <i class="fa {{$function['iconName']}} fa-xs"></i>
                                         @endif
+                                        {{$function['text']}}
                                     </button>
-                                @endif
-                                @if(!empty($functions))
-                                    @foreach($functions[$row['id']] as $function)
-                                        <button class="{{$function['color']}} rounded text-white px-2 py-1"
-                                                wire:click="{{$function['name']}}({{$row}})">
-                                            @if($function['icon'])
-                                                <i class="fa {{$function['iconName']}} fa-xs"></i>
-                                            @endif
-                                            {{$function['text']}}
-                                        </button>
-                                    @endforeach
-                                @endif
-                            </td>
-                        @endif
-                    </tr>
-                @endforeach
-            @else
-                @foreach ($rows as $rowIndex => $row)
-                    <tr class="border-b">
-                        <td class="px-4 py-1 whitespace-nowrap text-xs text-wrap"
-                            rowspan="{{ count($row['details']) }}">{{$rowIndex}}</td>
-                        @foreach ($row['details'] as $key => $expense)
-                            <td class="px-1 py-1 text-xs whitespace-nowrap text-wrap">
-                                {{$expense->description}}
-                            </td>
-                            <td>{{number_format($expense->price)}}</td>
-                            <td>{{$expense->quantity}}</td>
-                            <td>{{number_format($expense->amount)}}</td>
-                            <td>{{$expense->date}}</td>
-                    </tr>
-                @endforeach
-                <tr class="bg-cyan-700 text-white">
-                    <td class="px-1 py-1 rounded-r-2xl">الجمله</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>{{number_format($row['total'])}}</td>
-                    <td class="rounded-l-2xl"></td>
+                                @endforeach
+                            @endif
+                        </td>
+                    @endif
                 </tr>
-                @endforeach
-            @endif
+            @endforeach
             </tbody>
             @if(!empty($footers))
                 <tfoot class="bg-cyan-700 text-white">

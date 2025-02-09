@@ -18,8 +18,8 @@ class Student extends Component
         'delete',
     ];
 
-    public $headers = ['الإسم بالعربي', 'الجنس', 'الهاتف'];
-    public $cells = ['arabic_name' => 'arabic_name', 'gender' => 'gender', 'phone' => 'phone'];
+    public $headers = ['الإسم بالعربي', 'الهاتف'];
+    public $cells = ['arabic_name' => 'arabic_name', 'phone' => 'phone'];
 
     public $id = null;
     #[Rule('required', message: 'هذا الحقل مطلوب')]
@@ -35,11 +35,6 @@ class Student extends Component
     public $search = '';
     public $batchMode = false;
     public $student_id = null;
-
-    public function mount()
-    {
-        $this->cells['gender'] = $this->genders;
-    }
 
     public function save()
     {

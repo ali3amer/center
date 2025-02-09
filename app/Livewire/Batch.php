@@ -13,8 +13,8 @@ class Batch extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['المدرب', 'السعر', 'تاريخ البداية', 'تاريخ النهاية', 'مكتمل', 'عدد الدارسين'];
-    public $cells = ['name' => 'name', 'price' => 'price', 'start_date' => 'start_date', 'end_date' => 'end_date', 'completed' => [true => 'نعم', false => 'لا'], 'studentCount'];
+    public $headers = ['المدرب', 'السعر', 'تاريخ البداية', 'تاريخ النهاية', 'مدفوعه', 'مكتمل', 'عدد الدارسين'];
+    public $cells = ['name' => 'name', 'price' => 'price', 'start_date' => 'start_date', 'end_date' => 'end_date', 'paid' => [true => 'مدفوعه', false => 'مجانية'], 'completed' => [true => 'نعم', false => 'لا'], 'studentCount'];
     public $numbers = ['price'];
     public $functions = [];
     protected $listeners = [

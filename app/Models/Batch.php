@@ -48,7 +48,7 @@ class Batch extends Model
     {
         return $this->batchStudents()->count();
     }
-    public function getcertificationsCountAttribute()
+    public function getCertificationsCountAttribute()
     {
         return $this->batchStudents->where('want_certification', true)->count();
     }
@@ -70,7 +70,7 @@ class Batch extends Model
 
     public function getMonthAttribute()
     {
-        return Carbon::parse($this->start_date)->locale('ar')->translatedFormat('F');
+        return Carbon::parse($this->start_date)->locale('ar')->translatedFormat('F') . ' | ' . Carbon::parse($this->start_date)->year;
     }
 
 }

@@ -14,8 +14,8 @@ class Trainer extends Component
     use LivewireAlert;
     use WithPagination, WithoutUrlPagination;
 
-    public $headers = ['الإسم بالعربي', 'الجنس', 'الهاتف'];
-    public $cells = ['arabic_name' => 'arabic_name', 'gender' => 'gender', 'phone' => 'phone'];
+    public $headers = ['الإسم بالعربي', 'الهاتف'];
+    public $cells = ['arabic_name' => 'arabic_name', 'phone' => 'phone'];
     protected $listeners = [
         'delete',
     ];
@@ -34,10 +34,6 @@ class Trainer extends Component
     public $search = '';
     public $trainer_id = null;
 
-    public function mount()
-    {
-        $this->cells['gender'] = $this->genders;
-    }
 
     public function save()
     {

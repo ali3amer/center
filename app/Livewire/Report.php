@@ -37,6 +37,7 @@ class Report extends Component
         'courses' => 'تقرير منفذ التدريب',
         'employees' => 'تقرير الموظفين',
         'certifications' => 'تقرير الشهادات',
+        'students' => 'تقرير الدارسين',
     ];
     public $coruse_types = ['course' => 'كورس', 'session' => 'دورة', 'workshop' => 'ورشه'];
     public $report_types = ["trainer" => "المدرب", "course" => "البرنامج التدريبي"];
@@ -44,8 +45,10 @@ class Report extends Component
     public $coruse_type = 'course';
     public $type = null;
     public $course_id = null;
+    public $option_id = null;
     public $courses = [];
     public $trainers = [];
+    public $options = [];
     public $rows;
     public $incomes = 0;
     public $expenses = 0;
@@ -57,6 +60,7 @@ class Report extends Component
     {
         $this->courses = \App\Models\Course::pluck("arabic_name", "id")->toArray();
         $this->trainers = \App\Models\Trainer::pluck("arabic_name", "id")->toArray();
+        $this->options = \App\Models\ExpenseOption::pluck("optionName", "id")->toArray();
     }
 
     public function getReport()
@@ -77,6 +81,8 @@ class Report extends Component
             $this->employees();
         } elseif ($this->type === 'certifications') {
             $this->certifications();
+        } elseif ($this->type === 'students') {
+            $this->students();
         }
 //        $this->putInSession();
 
@@ -99,7 +105,7 @@ class Report extends Component
     {
         $this->headers = ['الجهه', 'نوع المؤجر', 'من', 'الى', 'المده', 'السعر', 'التكلفه'];
         $this->cells = ['name', 'rentType', 'start_date', 'end_date', "duration", "price", 'cost'];
-        $this->rows = \App\Models\HallRental::whereBetween('start_date', [$this->from, $this->to])->get();
+        $this->rows = \App\Models\HallRental::whereBetween('start_date', [$this->from, $this->to])->get()->sortBy('start_date');
         $this->numbers = ['price', 'cost'];
         $sum = $this->rows->sum(function ($row) {
             return $row->price * $row->duration;
@@ -118,12 +124,12 @@ class Report extends Component
         $this->headers = ['إسم البرنامج', 'نوع البرنامج', 'عدد الدارسين', 'عدد الشهادات', 'المدرب', 'الشهر'];
 
         if ($this->course_id == null && $this->trainer_id == null) {
-            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get();
+            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get()->sortBy('start_date');
         } else {
             if ($this->report_type == "course") {
-                $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('course_id', $this->course_id)->get();
+                $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('course_id', $this->course_id)->get()->sortBy('start_date');
             } elseif ($this->report_type == "trainer") {
-                $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id)->get();
+                $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id)->get()->sortBy('start_date');
             }
         }
         $totalCount = 0;
@@ -142,6 +148,8 @@ class Report extends Component
         $this->cells['options'] = ['optionName', 'amount'];
         $this->headers['options'] = ['التصنيف', 'المبلغ'];
 
+        $this->rows = [];
+
         $this->rows['options'][] = [
             'optionName' => "غير مصنف",
             'amount' => \App\Models\Expense::whereNull("expense_option_id")->whereBetween("date", [$this->from, $this->to])->get()->sum(function ($expense) {
@@ -149,7 +157,7 @@ class Report extends Component
             }),
         ];
 
-        $expenseOptions = \App\Models\ExpenseOption::all();
+        $expenseOptions = \App\Models\ExpenseOption::get()->sortBy('date');
         foreach ($expenseOptions as $option) {
             $amount = $option->expenses->whereBetween("date", [$this->from, $this->to])->sum(function ($expense) {
                 return $expense->price * $expense->quantity;
@@ -172,53 +180,48 @@ class Report extends Component
         $this->footers['options'] = ['الجمله', number_format(round($totalOptions))];
         $this->numbers['options'] = ['amount'];
 
-        $this->cells['expenses'] = ['description', 'price', 'quantity', 'amount', 'date'];
-        $this->headers['expenses'] = ['التصنيف', 'البيان', 'سعر الوحده', 'الكمية', 'المبلغ', 'التاريخ'];
-        $this->rows['expenses'] = \App\Models\Expense::whereBetween("date", [$this->from, $this->to])
-            ->get()
-            ->groupBy(function ($expense) {
-                return $expense->name;
-            })
-            ->map(function ($group) {
-                return [
-                    'total' => $group->sum(function ($expense) {
-                        return $expense->price * $expense->quantity;
-                    }),
-                    'details' => $group,
-                ];
+        $this->cells['expenses'] = ['description', 'name', 'price', 'quantity', 'amount', 'date'];
+        $this->headers['expenses'] = ['البيان', 'التصنيف', 'سعر الوحده', 'الكمية', 'المبلغ', 'التاريخ'];
+        $expenses = $this->option_id == null ? \App\Models\Expense::whereBetween("date", [$this->from, $this->to]) : \App\Models\Expense::whereBetween("date", [$this->from, $this->to])->where('expense_option_id', $this->option_id);
+        $this->rows['expenses'] = $expenses
+            ->get()->sortBy('date')
+            ->map(function ($expense) {
+                $expense->amount = $expense->price * $expense->quantity;
+                return $expense;
+
             });
         $totalExpenses = 0;
         foreach ($this->rows['expenses'] as $row) {
-            foreach ($row['details'] as $expense) {
-                $totalExpenses += $expense->quantity * $expense->price;
-            }
+            $totalExpenses += round($row->amount);
         }
 
         $this->footers['expenses'] = ['الجمله', '', '', '', number_format(round($totalExpenses)), ''];
-        $this->numbers['expenses'] = ['amount'];
+        $this->numbers['expenses'] = ['amount', 'price'];
     }
 
     public function courses()
     {
-        $this->cells = ['courseName', 'studentCount'];
-        $this->headers = ['إسم البرنامج', 'عدد الدارسين'];
+        $this->cells = ['courseName', 'studentCount', 'certificationsCount'];
+        $this->headers = ['إسم البرنامج', 'عدد الدارسين', 'عدد الشهادات'];
 
         if ($this->course_id == null && $this->trainer_id == null) {
-            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get();
+            $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->get()->sortBy('date');
         } else {
             if ($this->report_type == "course") {
-                $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('course_id', $this->course_id)->get();
+                $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('course_id', $this->course_id)->get()->sortBy('date');
             } elseif ($this->report_type == "trainer") {
-                $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id)->get();
+                $this->rows = \App\Models\Batch::whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id)->get()->sortBy('date');
             }
         }
 
         $totalCount = 0;
+        $totalCountCertification = 0;
         foreach ($this->rows as $row) {
             $totalCount += $row->studentCount;
+            $totalCountCertification += $row->certificationsCount;
         }
 
-        $this->footers = ['الجمله', number_format(round($totalCount))];
+        $this->footers = ['الجمله', number_format(round($totalCount)), number_format(round($totalCountCertification))];
 
     }
 
@@ -227,7 +230,7 @@ class Report extends Component
         $this->cells = ['date', 'name', 'employeeExpenseType', 'payment', 'transaction_id', 'amount'];
         $this->headers = ['التاريخ', 'إسم الموظف', 'نوع العملية', 'وسيلة الدفع', 'رقم العملية', 'المبلغ'];
 
-        $this->rows = \App\Models\EmployeeExpense::whereBetween('date', [$this->from, $this->to])->where("type", "!=", "discount")->where("type", "!=", "paid")->get();
+        $this->rows = \App\Models\EmployeeExpense::whereBetween('date', [$this->from, $this->to])->where("type", "!=", "discount")->where("type", "!=", "paid")->get()->sortBy('date');
         $this->footers = ['الجمله', '', '', '', '', number_format(round($this->rows->sum("amount")))];
         $this->numbers = ['amount'];
     }
@@ -246,9 +249,27 @@ class Report extends Component
                     $query->whereBetween("start_date", [$this->from, $this->to])->whereNotNull("certification_id")->where('trainer_id', $this->trainer_id);
                 }
             }
-        })->get();
+        })->get()->sortBy('start_date');
         $this->footers = [];
         $this->numbers = ['certificationPrice'];
+    }
+
+    public function students()
+    {
+        $this->cells = ['student_number', 'certification_id', 'name', 'course', 'courseType', 'trainer', 'month'];
+        $this->headers = ['الرقم المتسلسل', 'الرقم المتسلسل للشهادة', 'إسم الدارس', 'البرنامج التدريبي', 'نوع البرنامج', 'إسم المدرب', 'الشهر'];
+        $this->rows = \App\Models\BatchStudent::whereHas('batch', function ($query) {
+            if ($this->course_id == null && $this->trainer_id == null) {
+                $query->whereBetween("start_date", [$this->from, $this->to]);
+            } else {
+                if ($this->report_type == "course") {
+                    $query->whereBetween("start_date", [$this->from, $this->to])->where('course_id', $this->course_id);
+                } elseif ($this->report_type == "trainer") {
+                    $query->whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id);
+                }
+            }
+        })->get()->sortBy('start_date');
+        $this->footers = [];
     }
 
     public function putInSession()

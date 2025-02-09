@@ -62,7 +62,7 @@ class BatchStudent extends Model
 
     public function getMonthAttribute()
     {
-        return Carbon::parse($this->batch->start_date)->locale('ar')->translatedFormat('F');
+        return Carbon::parse($this->batch->start_date)->locale('ar')->translatedFormat('F') . ' | ' . Carbon::parse($this->batch->start_date)->year;
     }
 
 

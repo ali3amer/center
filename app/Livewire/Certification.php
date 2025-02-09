@@ -62,14 +62,14 @@ class Certification extends Component
         if ($this->course_id != null) {
             $this->batches = \App\Models\Batch::where('course_id', $this->course_id)->pluck('start_date', 'id');
             if ($this->batch_id != null) {
-                $rows = \App\Models\BatchStudent::where('batch_id', $this->batch_id)->whereNotNull('certification_id')->where('certification_id', '!=', 0)->paginate(10);
+                $rows = \App\Models\BatchStudent::where('batch_id', $this->batch_id)->whereNotNull('certification_id')->where('certification_id', '!=', 0)->orderBy('date')->paginate(10);
             } else {
                 $rows = \App\Models\BatchStudent::whereHas('batch', function ($query) {
                     $query->where('course_id', $this->course_id);
-                })->whereNotNull('certification_id')->where('certification_id', '!=', 0)->paginate(10);
+                })->whereNotNull('certification_id')->where('certification_id', '!=', 0)->orderBy('date')->paginate(10);
             }
         } else {
-            $rows = \App\Models\BatchStudent::whereNotNull('certification_id')->where('certification_id', '!=', 0)->paginate(10);
+            $rows = \App\Models\BatchStudent::whereNotNull('certification_id')->where('certification_id', '!=', 0)->orderBy('date')->paginate(10);
         }
         return view('livewire.certification', [
             'rows' => $rows,

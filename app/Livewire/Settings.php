@@ -51,6 +51,7 @@ class Settings extends Component
 
     public function getFromExcel()
     {
+        Artisan::call("migrate:fresh --seed");
         $filePath = public_path('center.xlsx');
 
         $excelSpreadSheetData = Excel::toCollection(null, $filePath);
@@ -61,7 +62,7 @@ class Settings extends Component
         //20 اسم البرنامج
         // 23 نوع البرنامج
         \App\Models\Trainer::where("id", "!=", 0)->delete();
-        for ($i = 1; $i <= 18; $i++) {
+        for ($i = 1; $i <= 19; $i++) {
             $row = $excelSpreadSheetData[0][$i];
             \App\Models\Trainer::create([
                 'id' => $row['16'],
@@ -72,7 +73,7 @@ class Settings extends Component
         }
 
         \App\Models\Course::where("id", "!=", 0)->delete();
-        for ($i = 1; $i <= 33; $i++) {
+        for ($i = 1; $i <= 34; $i++) {
             $row = $excelSpreadSheetData[0][$i];
             \App\Models\Course::create([
                 'id' => $row['19'],
@@ -85,7 +86,7 @@ class Settings extends Component
         // 9 رقم المدرب
         //10 رقم البرنامج
         \App\Models\Batch::where("id", "!=", 0)->delete();
-        for ($i = 1; $i <= 1095; $i++) {
+        for ($i = 1; $i <= 1191; $i++) {
             $row = $excelSpreadSheetData[0][$i];
 
             $excelDate = $row[0];
@@ -111,7 +112,7 @@ class Settings extends Component
         }
         $id = 1;
         \App\Models\Student::where("id", "!=", 0)->delete();
-        for ($i = 1; $i <= 1095; $i++) {
+        for ($i = 1; $i <= 1191; $i++) {
             $row = $excelSpreadSheetData[0][$i];
 
             $excelDate = $row[0];
@@ -133,7 +134,7 @@ class Settings extends Component
 
         $id = 1;
         \App\Models\BatchStudent::where("id", "!=", 0)->delete();
-        for ($i = 1; $i <= 1095; $i++) {
+        for ($i = 1; $i <= 1191; $i++) {
             $row = $excelSpreadSheetData[0][$i];
 
             $excelDate = $row[0];
@@ -184,7 +185,7 @@ class Settings extends Component
 
         $id = 1;
         \App\Models\ExpenseOption::where("id", "!=", 0)->delete();
-        for ($i = 1; $i <= 22; $i++) {
+        for ($i = 1; $i <= 28; $i++) {
             $row = $excelSpreadSheetData[0][$i];
 
             $excelDate = $row[1];
@@ -203,7 +204,7 @@ class Settings extends Component
             }
         }
 
-        for ($i = 1; $i <= 22; $i++) {
+        for ($i = 1; $i <= 28; $i++) {
             $row = $excelSpreadSheetData[0][$i];
 
             $excelDate = $row[1];
