@@ -249,7 +249,7 @@ class Report extends Component
                     $query->whereBetween("start_date", [$this->from, $this->to])->whereNotNull("certification_id")->where('trainer_id', $this->trainer_id);
                 }
             }
-        })->get()->sortBy('start_date');
+        })->get()->sortBy('certification_id');
         $this->footers = [];
         $this->numbers = ['certificationPrice'];
     }
@@ -268,7 +268,7 @@ class Report extends Component
                     $query->whereBetween("start_date", [$this->from, $this->to])->where('trainer_id', $this->trainer_id);
                 }
             }
-        })->get()->sortBy('start_date');
+        })->get()->sortBy('certification_id');
         $this->footers = [];
     }
 

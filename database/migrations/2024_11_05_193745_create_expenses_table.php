@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('note')->nullable();
             $table->float('quantity')->default(1);
-            $table->decimal('price');
+            $table->decimal('price', 10);
             $table->date('date');
             $table->unsignedBigInteger('expense_option_id')->nullable();
             $table->foreign('expense_option_id')->references('id')->on('expense_options')->onDelete('cascade')->onUpdate('cascade');

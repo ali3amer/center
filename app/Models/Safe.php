@@ -15,18 +15,39 @@ class Safe extends Model
     {
         $prev_date = date('Y-m-d', strtotime($from . ' -1 day'));
         $movements = [];
-        $batchStudentPayments = BatchStudentPayment::whereBetween('date', [$from, $to])->get();
-        foreach ($batchStudentPayments as $batchStudentPayment) {
+
+//        $batchStudentPayments = BatchStudentPayment::whereBetween('date', [$from, $to])->get();
+//        foreach ($batchStudentPayments as $batchStudentPayment) {
+//            $movements[] = [
+//                "income" => $batchStudentPayment->amount,
+//                "expense" => 0,
+//                "date" => $batchStudentPayment->date,
+//                "payment_method" => $batchStudentPayment->payment,
+//                "transaction_id" => $batchStudentPayment->transaction_id,
+//                "bank_id" => $batchStudentPayment->bankName,
+//                "note" => 'الدارس :' . $batchStudentPayment->batchStudent->name,
+//                "created_at" => $batchStudentPayment->created_at,
+//                "updated_at" => $batchStudentPayment->updated_at,
+//            ];
+//        }
+
+        $batches = Batch::whereBetween('start_date', [$from, $to])->get();
+        $payments = 0;
+        foreach ($batches as $batch) {
+            $payment = $batch->batchStudents->sum(function ($batchStudent) {
+                return $batchStudent->batchStudentPayments->sum('amount');
+            });
+            $payments += $payment;
             $movements[] = [
-                "income" => $batchStudentPayment->amount,
+                "income" => $payment,
                 "expense" => 0,
-                "date" => $batchStudentPayment->date,
-                "payment_method" => $batchStudentPayment->payment,
-                "transaction_id" => $batchStudentPayment->transaction_id,
-                "bank_id" => $batchStudentPayment->bankName,
-                "note" => $batchStudentPayment->batchStudent->name,
-                "created_at" => 'الدارس :' . $batchStudentPayment->created_at,
-                "updated_at" => $batchStudentPayment->updated_at,
+                "date" => $batch->start_date,
+                "payment_method" => '',
+                "transaction_id" => '',
+                "bank_id" => '',
+                "note" => $batch->courseName,
+                "created_at" => $batch->created_at,
+                "updated_at" => $batch->updated_at,
             ];
         }
 
@@ -185,7 +206,7 @@ class Safe extends Model
         ];
 
         $expense_balance = $expenses->sum('amount') + $batchTrainerPayments->sum('amount') + $employeeExpenses->where('type', '!=', 'paid')->where('type', '!=', 'discount')->sum('amount') + $batchCertificationPayments->sum('amount');
-        $income_balance = $hallRentalPayments->sum('amount') + $batchStudentPayments->sum('amount') + $initial_balance;
+        $income_balance = $hallRentalPayments->sum('amount') + $payments + $initial_balance;
         $movements = collect($movements)->sortBy('date')->toArray();
         return ['movements' => $movements, 'expenses_balance' => $expense_balance, 'income_balance' => $income_balance, 'initial_balance' => $initial_balance];
 
