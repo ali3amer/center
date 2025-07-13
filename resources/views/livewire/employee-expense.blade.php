@@ -13,7 +13,8 @@
                 <x-select name="payment_method" :disabled="$payment_method == 'bank' && empty($banks)" :live="true" :options="$payment_methods" label="وسيلة الدفع"/>
                 <x-select name="bank_id" :disabled="$payment_method == 'cash' || ($payment_method == 'bank' && empty($banks))" :options="$banks" label="البنك"/>
                 <x-input name="transaction_id" :disabled="$payment_method == 'cash' || ($payment_method == 'bank' && empty($banks))" label="رقم الاشعار"/>
-                <x-button type="submit" :disabled="floatval($amount) == 0 || (floatval($amount) > session($payment_method.'_balance'))" model="employeeExpenses"  label="حفظ"/>
+{{--                <x-button type="submit" :disabled="floatval($amount) == 0 || (floatval($amount) > session($payment_method.'_balance'))" model="employeeExpenses"  label="حفظ"/>--}}
+                <x-button type="submit" :disabled="floatval($amount) == 0" model="employeeExpenses"  label="حفظ"/>
             </div>
         </form>
     </x-container>
